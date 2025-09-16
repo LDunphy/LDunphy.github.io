@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NESA Computing Courses</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .container {
+            max-width: 900px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="container bg-white p-8 md:p-12 rounded-2xl shadow-xl text-center">
+            <!-- Header Section -->
+            <header class="mb-10">
+                <h1 class="text-3xl md:text-5xl font-bold text-gray-900 leading-tight mb-2">
+                    NESA Computing Courses
+                </h1>
+                <p class="text-md md:text-lg text-gray-600">
+                    Explore the official syllabuses for Software Engineering, Enterprise Computing, and Computing Technology.
+                </p>
+            </header>
+
+            <!-- Grid of Course Links -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Software Engineering Card -->
+                <div class="flex flex-col items-center p-6 bg-blue-50 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                    <div class="text-4xl md:text-5xl text-blue-600 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-semibold text-blue-800 mb-4">
+                        Software Engineering
+                    </h2>
+                    <a href="#" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors duration-300">
+                        View Course
+                    </a>
+                </div>
+
+                <!-- Enterprise Computing Card -->
+                <div class="flex flex-col items-center p-6 bg-green-50 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                    <div class="text-4xl md:text-5xl text-green-600 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-6h-2v6zm0-8h2V7h-2v2z"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-semibold text-green-800 mb-4">
+                        Enterprise Computing
+                    </h2>
+                    <a href="#" class="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors duration-300">
+                        View Course
+                    </a>
+                </div>
+
+                <!-- Computing Technology Card -->
+                <div class="flex flex-col items-center p-6 bg-purple-50 rounded-lg shadow-md transition-transform transform hover:scale-105">
+                    <div class="text-4xl md:text-5xl text-purple-600 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM9.5 8.5v3h3v-3h-3zM14 11.5v-3h3v3h-3zM9.5 15.5v-3h3v3h-3zM14 15.5v-3h3v3h-3z"/>
+                        </svg>
+                    </div>
+                    <h2 class="text-xl font-semibold text-purple-800 mb-4">
+                        Computing Technology
+                    </h2>
+                    <a href="#" class="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors duration-300">
+                        View Course
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Footer Section -->
+            <footer class="mt-12 text-sm text-gray-500">
+                <p>&copy; 2024 NESA. All rights reserved.</p>
+            </footer>
+        </div>
+    </div>
+
+</body>
+</html>
