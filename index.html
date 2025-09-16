@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Software Architecture Resources | NESA Stage 6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Soothing Neutrals -->
+    <!-- Application Structure Plan: The application is designed as a single-page educational resource, moving from foundational concepts to practical applications. It starts with an introduction, then explores core principles (CIA Triad) and threat modeling (STRIDE) through interactive components. It then delves into common vulnerabilities (OWASP Top 10) with practical code examples, followed by a summary of secure coding practices. The final section provides curated external resources. This thematic, interactive flow was chosen to build student understanding scaffolded from theory to practice, making complex topics more digestible and engaging than a static document. -->
+    <!-- Visualization & Content Choices: 
+        - CIA Triad: Report Info -> Core security principles. Goal -> Inform/Explain. Viz -> Interactive Cards. Interaction -> Click to reveal details. Justification -> Encourages active learning of fundamental concepts. Method -> HTML/CSS/JS.
+        - STRIDE Model: Report Info -> Threat modeling framework. Goal -> Organize/Explain. Viz -> Interactive Tabs. Interaction -> Click to switch between threat types. Justification -> Presents a multi-part framework in a clean, space-efficient manner. Method -> HTML/CSS/JS.
+        - OWASP Top 10: Report Info -> Common web vulnerabilities. Goal -> Compare/Demonstrate. Viz -> Dropdown-controlled content display. Interaction -> Select vulnerability to see explanation and code examples (vulnerable vs. secure). Justification -> Directly connects abstract threats to practical Python code, aligning with syllabus requirements. Method -> HTML/CSS/JS.
+        - Secure Practices: Report Info -> Key secure coding principles. Goal -> Inform/Summarize. Viz -> Static cards. Interaction -> None. Justification -> Provides a quick, scannable reference of key takeaways. Method -> HTML/CSS.
+        - Resource Lists: Report Info -> External links. Goal -> Organize. Viz -> Curated lists. Interaction -> Hyperlinks. Justification -> Clear, direct access to further learning materials. Method -> HTML.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .section-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .section-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .interactive-tab, .interactive-card {
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+        }
+        .interactive-tab.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .interactive-card.active {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+        }
+        .code-block {
+            background-color: #e9ecef;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .vulnerable { border-left: 4px solid #dc3545; }
+        .secure { border-left: 4px solid #28a745; }
+        .resource-link {
+            transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .resource-link:hover {
+            color: #0056b3;
+            transform: translateX(2px);
+        }
+        #owasp-code-examples {
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">
+                <span class="text-blue-600">Secure</span> Software Architecture
+            </div>
+            <div class="hidden md:flex space-x-6 text-gray-600 font-medium">
+                <a href="#intro" class="hover:text-blue-600 transition-colors">Introduction</a>
+                <a href="#principles" class="hover:text-blue-600 transition-colors">Core Principles</a>
+                <a href="#threats" class="hover:text-blue-600 transition-colors">Threats</a>
+                <a href="#vulnerabilities" class="hover:text-blue-600 transition-colors">Vulnerabilities</a>
+                <a href="#resources" class="hover:text-blue-600 transition-colors">Resources</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="intro" class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">A Student's Guide to Secure Software Architecture</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Welcome! This resource is designed for NESA Year 12 Software Engineering students. Its purpose is to demystify secure software architecture by breaking down key concepts into understandable and interactive modules. Explore the sections below to build a strong foundation in how to design and develop software that is resilient against modern cyber threats.</p>
+        </section>
+
+        <section id="principles" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">The Core Principles: CIA Triad</h2>
+            <p class="text-md text-gray-600 text-center max-w-2xl mx-auto mb-8">The CIA Triad is a foundational model that guides information security policies. It's composed of three key pillars that are essential for protecting software and data. Click on each principle to learn more about its role and see practical examples.</p>
+            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                <div id="cia-confidentiality" class="interactive-card border-2 border-gray-200 p-6 rounded-lg text-center">
+                    <div class="text-5xl mb-4"> Confidentiality</div>
+                    <h3 class="text-xl font-semibold">Ensuring Privacy</h3>
+                </div>
+                <div id="cia-integrity" class="interactive-card border-2 border-gray-200 p-6 rounded-lg text-center">
+                    <div class="text-5xl mb-4"> Integrity</div>
+                    <h3 class="text-xl font-semibold">Maintaining Trustworthiness</h3>
+                </div>
+                <div id="cia-availability" class="interactive-card border-2 border-gray-200 p-6 rounded-lg text-center">
+                    <div class="text-5xl mb-4"> Availability</div>
+                    <h3 class="text-xl font-semibold">Guaranteeing Access</h3>
+                </div>
+            </div>
+            <div id="cia-details" class="section-card p-8 min-h-[150px] flex items-center justify-center">
+                <p class="text-gray-500 text-center">Select a principle above to see its description.</p>
+            </div>
+        </section>
+
+        <section id="threats" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">Identifying Threats: The STRIDE Model</h2>
+            <p class="text-md text-gray-600 text-center max-w-2xl mx-auto mb-8">STRIDE is a threat modeling framework developed by Microsoft that helps software developers identify and categorize potential security threats. Understanding these categories is the first step towards building defenses. Use the tabs below to explore each type of threat.</p>
+            <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8 border-b-2 pb-4">
+                <button data-stride="s" class="interactive-tab active border-2 border-transparent font-medium py-2 px-4 rounded-full">Spoofing</button>
+                <button data-stride="t" class="interactive-tab border-2 border-transparent font-medium py-2 px-4 rounded-full">Tampering</button>
+                <button data-stride="r" class="interactive-tab border-2 border-transparent font-medium py-2 px-4 rounded-full">Repudiation</button>
+                <button data-stride="i" class="interactive-tab border-2 border-transparent font-medium py-2 px-4 rounded-full">Information Disclosure</button>
+                <button data-stride="d" class="interactive-tab border-2 border-transparent font-medium py-2 px-4 rounded-full">Denial of Service</button>
+                <button data-stride="e" class="interactive-tab border-2 border-transparent font-medium py-2 px-4 rounded-full">Elevation of Privilege</button>
+            </div>
+            <div id="stride-content" class="section-card p-8">
+            </div>
+        </section>
+        
+        <section id="vulnerabilities" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">Common Vulnerabilities: OWASP Top 10</h2>
+            <p class="text-md text-gray-600 text-center max-w-2xl mx-auto mb-8">The OWASP Top 10 is a globally recognized list of the most critical security risks to web applications. As a developer, knowing these vulnerabilities is essential. Select a risk from the dropdown to see what it is, along with Python code examples showing a vulnerable approach and a more secure alternative.</p>
+            <div class="max-w-md mx-auto mb-8">
+                <select id="owasp-select" class="w-full p-3 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">Select a vulnerability...</option>
+                </select>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div class="section-card p-8">
+                    <h3 id="owasp-title" class="text-2xl font-bold mb-4 text-gray-800">Select a Vulnerability</h3>
+                    <p id="owasp-description" class="text-gray-600">The description will appear here.</p>
+                </div>
+                <div class="section-card p-8">
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Code Examples (Python)</h3>
+                    <div id="owasp-code-examples" class="space-y-6">
+                        <p class="text-gray-500 text-center">Code examples will be shown here.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="practices" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-2">Key Secure Coding Practices</h2>
+            <p class="text-md text-gray-600 text-center max-w-2xl mx-auto mb-8">Beyond avoiding specific vulnerabilities, building secure software involves adopting a defensive mindset and applying core principles throughout the development lifecycle. Here are some of the most important practices to remember.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="section-card p-6">
+                    <h3 class="font-bold text-lg mb-2">Input Validation</h3>
+                    <p class="text-gray-600">Never trust user input. Always validate, sanitize, and/or escape data from users, APIs, or other external sources before using it.</p>
+                </div>
+                <div class="section-card p-6">
+                    <h3 class="font-bold text-lg mb-2">Principle of Least Privilege</h3>
+                    <p class="text-gray-600">Every module or user should only have access to the information and resources that are necessary for its legitimate purpose.</p>
+                </div>
+                <div class="section-card p-6">
+                    <h3 class="font-bold text-lg mb-2">Defense in Depth</h3>
+                    <p class="text-gray-600">Implement multiple layers of security controls. If one layer fails, another is there to stop an attack.</p>
+                </div>
+                <div class="section-card p-6">
+                    <h3 class="font-bold text-lg mb-2">Fail Securely</h3>
+                    <p class="text-gray-600">When your application encounters an error, it should fail in a way that does not expose sensitive information or security details.</p>
+                </div>
+                <div class="section-card p-6">
+                    <h3 class="font-bold text-lg mb-2">Don't Reinvent the Wheel</h3>
+                    <p class="text-gray-600">Use well-tested, industry-standard libraries and frameworks for security functions like authentication and cryptography.</p>
+                </div>
+                <div class="section-card p-6">
+                    <h3 class="font-bold text-lg mb-2">Keep Security Simple</h3>
+                    <p class="text-gray-600">Complex systems are harder to secure. Strive for simple, understandable designs as they are easier to review and maintain.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="resources">
+            <h2 class="text-3xl font-bold text-center mb-8">Curated Learning Resources</h2>
+            <p class="text-md text-gray-600 text-center max-w-2xl mx-auto mb-8">The following resources have been selected to provide deeper insight into the topics covered. They are categorized to help you find the learning style that works best for you, whether it's watching videos, reading articles, or consulting official documentation.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="section-card p-8">
+                    <h3 class="text-2xl font-bold mb-4">Videos</h3>
+                    <ul class="space-y-3">
+                        <li><a href="https://www.youtube.com/watch?v=aO6hAf_5_ok" target="_blank" class="font-medium text-blue-600 resource-link block">Computerphile: What is the CIA Triad?</a></li>
+                        <li><a href="https://www.youtube.com/watch?v=l4gD72_A6yY" target="_blank" class="font-medium text-blue-600 resource-link block">OWASP: Intro to the Top 10 Web App Security Risks</a></li>
+                        <li><a href="https://www.youtube.com/watch?v=q-q6h90fFGQ" target="_blank" class="font-medium text-blue-600 resource-link block">FreeCodeCamp: Full Ethical Hacking Course</a></li>
+                        <li><a href="https://www.youtube.com/watch?v=8403Yq_B5sE" target="_blank" class="font-medium text-blue-600 resource-link block">John Hammond: Intro to SQL Injection</a></li>
+                    </ul>
+                </div>
+                <div class="section-card p-8">
+                    <h3 class="text-2xl font-bold mb-4">Websites & Articles</h3>
+                    <ul class="space-y-3">
+                        <li><a href="https://owasp.org/www-project-top-ten/" target="_blank" class="font-medium text-blue-600 resource-link block">OWASP Top 10 Project</a></li>
+                        <li><a href="https://cheatsheetseries.owasp.org/" target="_blank" class="font-medium text-blue-600 resource-link block">OWASP Cheat Sheet Series</a></li>
+                        <li><a href="https://www.veracode.com/security/stride" target="_blank" class="font-medium text-blue-600 resource-link block">Veracode: Introduction to STRIDE</a></li>
+                        <li><a href="https://www.cloudflare.com/learning/security/threat-modeling/" target="_blank" class="font-medium text-blue-600 resource-link block">Cloudflare: What is Threat Modeling?</a></li>
+                    </ul>
+                </div>
+                <div class="section-card p-8">
+                    <h3 class="text-2xl font-bold mb-4">Academic & Official Docs</h3>
+                    <ul class="space-y-3">
+                        <li><a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12-2022" target="_blank" class="font-medium text-blue-600 resource-link block">NESA Software Engineering Syllabus</a></li>
+                        <li><a href="https://csrc.nist.gov/publications" target="_blank" class="font-medium text-blue-600 resource-link block">NIST Cybersecurity Publications</a></li>
+                        <li><a href="https://docs.python.org/3/library/security_considerations.html" target="_blank" class="font-medium text-blue-600 resource-link block">Python Security Considerations</a></li>
+                        <li><a href="https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool-getting-started" target="_blank" class="font-medium text-blue-600 resource-link block">Microsoft Threat Modeling Tool</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>This resource was developed to support the NESA Software Engineering Stage 6 Syllabus.</p>
+            <p class="text-sm text-gray-400 mt-2">Content based on materials provided by the NSW Department of Education and NESA.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ciaData = {
+                confidentiality: {
+                    title: 'Confidentiality',
+                    description: 'This principle restricts access to information. It\'s about preventing the disclosure of sensitive data to unauthorized individuals or systems. Think of it as data privacy. In practice, this is often implemented using techniques like encryption, access control lists, and authentication.',
+                    example: '<strong>Example:</strong> A student\'s grades should only be visible to the student, their parents, and authorized school staff. The system uses passwords (authentication) and roles (access control) to enforce this.'
+                },
+                integrity: {
+                    title: 'Integrity',
+                    description: 'This principle ensures that data is trustworthy and has not been tampered with or altered by unauthorized parties. It maintains the accuracy and completeness of data over its entire lifecycle. Techniques like hashing, digital signatures, and version control help maintain integrity.',
+                    example: '<strong>Example:</strong> When you transfer money online, the amount deducted from your account must exactly match the amount deposited into the recipient\'s account. Hashing the transaction details before and after transfer can verify its integrity.'
+                },
+                availability: {
+                    title: 'Availability',
+                    description: 'This principle ensures that information and systems are accessible and usable upon demand by authorized users. It protects against disruptions of service. This is achieved through redundancy, hardware maintenance, regular software updates, and protection against attacks like Denial of Service (DoS).',
+                    example: '<strong>Example:</strong> A school\'s online learning portal must be accessible to students and teachers during school hours, especially during exam periods. Using multiple web servers (redundancy) helps ensure the site remains available even if one server fails.'
+                }
+            };
+
+            const strideData = {
+                s: {
+                    title: 'Spoofing',
+                    description: 'Impersonating someone or something else. An attacker might spoof a user identity, an IP address, or an email address to gain unauthorized access or trick a user into revealing information.',
+                    mitigation: '<strong>Mitigation:</strong> Strong authentication mechanisms like multi-factor authentication (MFA), digital signatures, and secure protocols (e.g., HTTPS) to verify identities.'
+                },
+                t: {
+                    title: 'Tampering',
+                    description: 'Unauthorized modification of data. This could be data in transit over a network or data at rest in a database. The goal is to corrupt data to cause harm or gain an advantage.',
+                    mitigation: '<strong>Mitigation:</strong> Use hashing algorithms (e.g., SHA-256) to verify data integrity, implement robust access controls, and use digital signatures.'
+                },
+                r: {
+                    title: 'Repudiation',
+                    description: 'Denying that an action was performed. An attacker (or even a legitimate user) might perform a malicious action and later claim they never did it. This threat targets accountability.',
+                    mitigation: '<strong>Mitigation:</strong> Implement detailed and secure logging, audit trails, and digital signatures. This creates a non-repudiable record of actions.'
+                },
+                i: {
+                    title: 'Information Disclosure',
+                    description: 'Exposing sensitive information to individuals who are not authorized to see it. This could happen through bugs, misconfigurations, or direct attacks.',
+                    mitigation: '<strong>Mitigation:</strong> Encrypt data both in transit (TLS/SSL) and at rest, enforce strict access controls, and avoid exposing sensitive information in error messages.'
+                },
+                d: {
+                    title: 'Denial of Service (DoS)',
+                    description: 'Making a system or service unavailable to legitimate users. This is often achieved by overwhelming the system with a flood of traffic or requests, causing it to crash or become unresponsive.',
+                    mitigation: '<strong>Mitigation:</strong> Use firewalls and rate limiting to filter malicious traffic, use load balancers to distribute requests, and leverage cloud-based DoS protection services.'
+                },
+                e: {
+                    title: 'Elevation of Privilege',
+                    description: 'Gaining higher-level permissions than originally authorized. An attacker might exploit a vulnerability to escalate from a standard user account to an administrator account, giving them full control of the system.',
+                    mitigation: '<strong>Mitigation:</strong> Enforce the Principle of Least Privilege, validate user permissions for every sensitive action, and keep software patched to fix known privilege escalation vulnerabilities.'
+                }
+            };
+
+            const owaspData = [
+                {
+                    id: "A01:2021-Broken_Access_Control",
+                    title: "Broken Access Control",
+                    description: "This occurs when restrictions on what authenticated users are allowed to do are not properly enforced. Attackers can exploit these flaws to access other users' accounts, view sensitive files, or modify other users' data.",
+                    vulnerable: `
+# Vulnerable: User ID is passed in the URL and not checked on the server
+# e.g., /user/123/profile
+def get_user_profile(request, requested_user_id):
+    # Fails to check if the logged-in user is the same as the requested user
+    user_data = database.get_user(id=requested_user_id)
+    return render_template('profile.html', user=user_data)`,
+                    secure: `
+# Secure: The server checks if the logged-in user is authorized
+def get_user_profile(request, requested_user_id):
+    logged_in_user_id = request.session.get('user_id')
+    # Check for authorization
+    if logged_in_user_id != requested_user_id:
+        return "Unauthorized", 403
+    
+    user_data = database.get_user(id=requested_user_id)
+    return render_template('profile.html', user=user_data)`
+                },
+                {
+                    id: "A03:2021-Injection",
+                    title: "Injection",
+                    description: "Injection flaws, such as SQL injection, occur when untrusted data is sent to an interpreter as part of a command or query. The attacker's hostile data can trick the interpreter into executing unintended commands or accessing data without proper authorization.",
+                    vulnerable: `
+# Vulnerable: Using string formatting to build a query
+def get_user_by_username(username):
+    # This is highly vulnerable to SQL injection
+    query = f"SELECT * FROM users WHERE username = '{username}'"
+    db.execute(query)
+    # If username is "' OR 1=1 --", all users could be returned.`,
+                    secure: `
+# Secure: Using parameterized queries (prepared statements)
+def get_user_by_username(username):
+    # The database driver handles sanitizing the input
+    query = "SELECT * FROM users WHERE username = %s"
+    db.execute(query, (username,))`
+                },
+                {
+                    id: "A05:2021-Security_Misconfiguration",
+                    title: "Security Misconfiguration",
+                    description: "This is often a result of insecure default configurations, incomplete or ad hoc configurations, open cloud storage, misconfigured HTTP headers, and verbose error messages containing sensitive information.",
+                    vulnerable: `
+# Vulnerable: Running a web framework in debug mode in production
+# In frameworks like Flask or Django, debug mode can expose sensitive
+# information through detailed error pages.
+# settings.py
+DEBUG = True # This should NEVER be True in production`,
+                    secure: `
+# Secure: Disabling debug mode and using secure configurations
+# settings.py
+DEBUG = False
+# Also, ensure other settings like database passwords are not hard-coded
+# and are loaded from environment variables.`
+                },
+                 {
+                    id: "A07:2021-Identification_and_Authentication_Failures",
+                    title: "Identification and Authentication Failures",
+                    description: "This category focuses on failures in confirming a user's identity, authentication, and session management. This can lead to attackers compromising user accounts, passwords, or session tokens to assume other users' identities.",
+                    vulnerable: `
+# Vulnerable: Storing passwords in plain text
+def create_user(username, password):
+    # Storing the password directly is extremely insecure
+    db.save_user(username, password)`,
+                    secure: `
+# Secure: Hashing and salting passwords
+import bcrypt
+
+def create_user(username, password):
+    # Generate a salt and hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    db.save_user(username, hashed_password)
+
+def verify_user(username, password):
+    user = db.get_user(username)
+    # Check the provided password against the stored hash
+    return bcrypt.checkpw(password.encode('utf-8'), user.hashed_password)`
+                }
+            ];
+            owaspData.sort((a, b) => a.title.localeCompare(b.title));
+
+
+            const ciaCards = document.querySelectorAll('.interactive-card');
+            const ciaDetails = document.getElementById('cia-details');
+            ciaCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    ciaCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    const principle = card.id.split('-')[1];
+                    const data = ciaData[principle];
+                    ciaDetails.innerHTML = `
+                        <div class="text-left">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">${data.title}</h3>
+                            <p class="text-gray-600 mb-4">${data.description}</p>
+                            <p class="text-gray-600">${data.example}</p>
+                        </div>
+                    `;
+                });
+            });
+
+            const strideTabs = document.querySelectorAll('.interactive-tab');
+            const strideContent = document.getElementById('stride-content');
+            function updateStrideContent(type) {
+                const data = strideData[type];
+                strideContent.innerHTML = `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">${data.title}</h3>
+                    <p class="text-gray-600 mb-4">${data.description}</p>
+                    <p class="text-gray-600">${data.mitigation}</p>
+                `;
+            }
+            strideTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    strideTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    updateStrideContent(tab.dataset.stride);
+                });
+            });
+            updateStrideContent('s');
+
+            const owaspSelect = document.getElementById('owasp-select');
+            const owaspTitle = document.getElementById('owasp-title');
+            const owaspDescription = document.getElementById('owasp-description');
+            const owaspCodeExamples = document.getElementById('owasp-code-examples');
+            
+            owaspData.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                option.textContent = item.title;
+                owaspSelect.appendChild(option);
+            });
+
+            owaspSelect.addEventListener('change', (e) => {
+                const selectedId = e.target.value;
+                const data = owaspData.find(item => item.id === selectedId);
+
+                if (data) {
+                    owaspTitle.textContent = data.title;
+                    owaspDescription.textContent = data.description;
+                    owaspCodeExamples.innerHTML = `
+                        <div>
+                            <h4 class="font-semibold text-red-600 mb-2">Vulnerable Example</h4>
+                            <div class="code-block vulnerable">${data.vulnerable.trim()}</div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-green-600 mb-2">Secure Example</h4>
+                            <div class="code-block secure">${data.secure.trim()}</div>
+                        </div>
+                    `;
+                } else {
+                    owaspTitle.textContent = 'Select a Vulnerability';
+                    owaspDescription.textContent = 'The description will appear here.';
+                    owaspCodeExamples.innerHTML = '<p class="text-gray-500 text-center">Code examples will be shown here.</p>';
+                }
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
