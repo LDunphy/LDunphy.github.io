@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Engineering Course Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #334155;
+        }
+        .container {
+            max-width: 1000px;
+        }
+        .nav-link:hover {
+            color: #2563eb;
+        }
+        .accordion-header {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+        .accordion-header:hover {
+            background-color: #e2e8f0;
+        }
+        .accordion-content {
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .accordion-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-blue-50 p-4 sm:p-8">
+
+    <div class="container mx-auto bg-white rounded-2xl shadow-xl p-6 sm:p-10">
+
+        <!-- Header and Navigation -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2">Software Engineering 11–12</h1>
+            <p class="text-lg text-blue-700 mb-6">Explore the NESA course syllabus and major topics.</p>
+            <nav class="flex justify-center space-x-4 md:space-x-8">
+                <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12" target="_blank" class="nav-link text-blue-600 font-medium hover:underline transition-colors duration-200">
+                    <span class="hidden sm:inline">Course Syllabus</span>
+                    <span class="inline sm:hidden">Syllabus</span>
+                </a>
+                <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12/syllabus" target="_blank" class="nav-link text-blue-600 font-medium hover:underline transition-colors duration-200">
+                    <span class="hidden sm:inline">Course Specifications</span>
+                    <span class="inline sm:hidden">Specifications</span>
+                </a>
+                <a href="#" target="_blank" class="nav-link text-blue-600 font-medium hover:underline transition-colors duration-200">
+                    <span class="hidden sm:inline">Syllabus Support</span>
+                    <span class="inline sm:hidden">Support</span>
+                </a>
+            </nav>
+        </header>
+
+        <!-- Main Content Section -->
+        <main>
+            <!-- Year 11 Section -->
+            <section class="mb-8 p-4 sm:p-6 bg-blue-100 rounded-lg border border-blue-200">
+                <h2 class="text-2xl sm:text-3xl font-bold text-blue-800 mb-4">Year 11 Topics</h2>
+                
+                <!-- Topic 1: Programming fundamentals -->
+                <div class="mb-4">
+                    <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
+                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">1. Programming fundamentals</a>
+                        <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Syntax, variables, data types, and control structures.</li>
+                            <li>Functions and modular programming.</li>
+                            <li>Effective problem-solving and algorithms.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Topic 2: The object-oriented paradigm -->
+                <div class="mb-4">
+                    <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
+                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">2. The object-oriented paradigm</a>
+                        <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Concepts of classes, objects, and encapsulation.</li>
+                            <li>Inheritance and polymorphism.</li>
+                            <li>Applying OOP to solve complex problems.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Topic 3: Programming mechatronics -->
+                <div class="mb-4">
+                    <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
+                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">3. Programming mechatronics</a>
+                        <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Interfacing with hardware and sensors.</li>
+                            <li>Control systems and robotics.</li>
+                            <li>Developing software for mechanical systems.</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Year 12 Section -->
+            <section class="mb-8 p-4 sm:p-6 bg-blue-100 rounded-lg border border-blue-200">
+                <h2 class="text-2xl sm:text-3xl font-bold text-blue-800 mb-4">Year 12 Topics</h2>
+
+                <!-- Topic 1: Secure software architecture -->
+                <div class="mb-4">
+                    <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
+                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">1. Secure software architecture</a>
+                        <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Principles of secure design (e.g., least privilege, defense in depth).</li>
+                            <li>Common vulnerabilities and threat modeling.</li>
+                            <li>Defensive coding practices.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Topic 2: Programming for the web -->
+                <div class="mb-4">
+                    <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
+                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">2. Programming for the web</a>
+                        <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Front-end and back-end development.</li>
+                            <li>Web frameworks and APIs.</li>
+                            <li>Databases and data storage.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <!-- Topic 3: Software automation -->
+                 <div class="mb-4">
+                    <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
+                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">3. Software automation</a>
+                        <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Continuous integration and continuous delivery (CI/CD).</li>
+                            <li>Automated testing and deployment.</li>
+                            <li>Scripting for routine tasks.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <!-- Topic 4: Software engineering project -->
+                 <div class="mb-4">
+                    <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
+                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">4. Software engineering project</a>
+                        <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
+                        <ul class="list-disc list-inside space-y-1">
+                            <li>Managing a complete software development life cycle.</li>
+                            <li>Documentation and user interface design.</li>
+                            <li>Team collaboration and project management.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', (event) => {
+                // Prevent the link from navigating if the header is clicked
+                if (event.target.tagName !== 'A') {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('svg');
+                    
+                    // Toggle active class on content to show/hide
+                    content.classList.toggle('active');
+
+                    // Rotate the icon
+                    icon.classList.toggle('rotate-180');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
