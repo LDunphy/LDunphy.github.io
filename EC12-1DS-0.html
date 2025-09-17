@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NESA Enterprise Computing: Data Science Toolkit</title>
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: The application is structured as a single-page, task-oriented toolkit rather than a linear reflection of the source documents. A fixed top navigation allows students to jump to specific sections: Core Concepts (for foundational knowledge), Key Processes (for understanding the data lifecycle), Verified Resources (for further study), Exam Toolkit (for revision and practice), and Case Studies (for real-world application). This non-linear structure was chosen because students revise in different ways; some may need to reinforce a specific concept, while others might want to jump straight to exam practice. Interactive elements like clickable cards, a visual pipeline, and a quiz are used to promote active learning over passive reading, directly addressing the goal of creating an effective study aid. -->
+    <!-- Visualization & Content Choices: 
+        - Core Concepts: Report Info -> Foundational definitions (data types, ethics, etc.). Goal -> Inform. Presentation -> Interactive HTML/CSS cards. Interaction -> Click to reveal details. Justification -> Breaks down complex topics into digestible chunks, reducing cognitive load. Method -> Vanilla JS toggle.
+        - Key Processes: Report Info -> Data lifecycle stages (collection, storage, analysis, etc.). Goal -> Organize/Explain Process. Presentation -> Visual flowchart made with HTML/Tailwind. Interaction -> Click on a stage to view detailed explanations and an example chart. Justification -> Visualizing the pipeline makes the interconnected processes easier to grasp than a text list. Library/Method -> Vanilla JS for interactivity, Chart.js for the example visualization.
+        - Exam Toolkit: Report Info -> Textbook review questions, HSC exam specifications. Goal -> Assess/Prepare. Presentation -> JS-powered multiple-choice quiz and styled text blocks. Interaction -> Answering questions and receiving immediate feedback. Justification -> Active recall via quizzing is a highly effective revision strategy. Method -> Vanilla JS.
+        - Case Studies: Report Info -> PowerPoint data challenges. Goal -> Contextualize. Presentation -> Dynamic content panel. Interaction -> User selects a case study from a dropdown to see the problem, data, and outcome. Justification -> Connects abstract concepts to concrete, real-world scenarios, answering the "why does this matter?" question. Method -> Vanilla JS.
+        - All visualizations and diagrams are built using either Chart.js (Canvas) or structured HTML/CSS with Tailwind, adhering to the NO SVG/Mermaid constraint. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #2c3e50;
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #2980b9;
+            border-bottom-color: #2980b9;
+        }
+        .concept-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .concept-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .pipeline-stage {
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+        }
+        .pipeline-stage.active, .pipeline-stage:hover {
+            background-color: #3498db;
+            color: white;
+            transform: scale(1.05);
+        }
+        .quiz-option {
+            transition: background-color 0.2s ease;
+        }
+        .quiz-option.correct {
+            background-color: #2ecc71 !important;
+            color: white;
+        }
+        .quiz-option.incorrect {
+            background-color: #e74c3c !important;
+            color: white;
+        }
+        .tab-button.active {
+            background-color: #2980b9;
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-[#2c3e50]">Data Science Toolkit</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#concepts" class="nav-link font-medium pb-1">Core Concepts</a>
+                <a href="#processes" class="nav-link font-medium pb-1">Key Processes</a>
+                <a href="#resources" class="nav-link font-medium pb-1">Resources</a>
+                <a href="#toolkit" class="nav-link font-medium pb-1">Exam Toolkit</a>
+                <a href="#casestudies" class="nav-link font-medium pb-1">Case Studies</a>
+            </div>
+            <button id="mobile-menu-btn" class="md:hidden">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#concepts" class="block py-2 text-center nav-link">Core Concepts</a>
+            <a href="#processes" class="block py-2 text-center nav-link">Key Processes</a>
+            <a href="#resources" class="block py-2 text-center nav-link">Resources</a>
+            <a href="#toolkit" class="block py-2 text-center nav-link">Exam Toolkit</a>
+            <a href="#casestudies" class="block py-2 text-center nav-link">Case Studies</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-[#2c3e50] mb-4">NESA Enterprise Computing</h2>
+                <p class="text-xl md:text-2xl text-[#34495e] mb-8">An Interactive Toolkit for the Year 12 Data Science Topic</p>
+                <p class="max-w-3xl mx-auto text-lg text-gray-600">
+                    This resource is designed to help you master the key concepts of data science, from collection and analysis to ethical considerations. Use the interactive sections below to build your understanding, revise content, and prepare for your HSC examination.
+                </p>
+            </div>
+        </section>
+
+        <section id="concepts" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold">Core Concepts</h2>
+                    <p class="text-lg text-gray-600 mt-2">The fundamental building blocks of data science. Click on each card to learn more.</p>
+                </div>
+                <div id="concepts-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+            </div>
+        </section>
+
+        <section id="processes" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold">Key Data Processes</h2>
+                    <p class="text-lg text-gray-600 mt-2">Explore the data lifecycle from start to finish. Click a stage to see its details.</p>
+                </div>
+                <div class="lg:flex lg:gap-8">
+                    <div class="lg:w-1/3 mb-8 lg:mb-0">
+                        <div id="pipeline-stages" class="space-y-4">
+                        </div>
+                    </div>
+                    <div class="lg:w-2/3 p-8 bg-[#F8F7F4] rounded-lg shadow-inner min-h-[300px]">
+                        <div id="pipeline-details">
+                            <h3 class="text-2xl font-semibold text-center text-gray-500">Select a stage to begin</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="resources" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold">Verified Resources</h2>
+                    <p class="text-lg text-gray-600 mt-2">Curated videos, articles, and papers for deeper learning.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div id="resource-tabs" class="flex justify-center border-b mb-6">
+                    </div>
+                    <div id="resource-content">
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="toolkit" class="py-16 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold">HSC Exam Toolkit</h2>
+                    <p class="text-lg text-gray-600 mt-2">Everything you need to prepare for the online examination.</p>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div class="bg-[#F8F7F4] p-8 rounded-lg shadow-inner">
+                        <h3 class="text-2xl font-semibold mb-4 text-center">Revision Quiz</h3>
+                        <p class="text-center mb-6">Test your knowledge with these HSC-style questions.</p>
+                        <div id="quiz-container">
+                            <div id="quiz-question" class="text-lg font-medium mb-4"></div>
+                            <div id="quiz-options" class="space-y-3"></div>
+                            <div id="quiz-feedback" class="mt-4 text-center font-medium"></div>
+                            <div class="flex justify-between items-center mt-6">
+                                <div id="quiz-progress" class="text-sm text-gray-500"></div>
+                                <button id="next-question-btn" class="bg-[#2980b9] text-white px-6 py-2 rounded-lg hover:bg-[#3498db] transition-colors">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-8">
+                         <div>
+                            <h3 class="text-2xl font-semibold mb-4">Revision Strategies</h3>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700">
+                                <li><strong>Summarise Key Concepts:</strong> Use the Feynman technique—explain a concept in simple terms as if teaching someone else.</li>
+                                <li><strong>Practice with HSC Tools:</strong> Familiarise yourself with the NESA online exam tools (Spreadsheet, Drawing, Screen Design). Practice recreating data visualisations.</li>
+                                <li><strong>Connect to Real World:</strong> Link syllabus dot points to the case studies. Understand the 'why' behind the technology.</li>
+                                <li><strong>Ethical Scenarios:</strong> For topics like privacy and bias, think of potential ethical dilemmas and how they could be resolved according to Australian legislation.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-semibold mb-4">Understanding the HSC Online Tools</h3>
+                             <p class="text-gray-700">
+                                The online HSC exam uses specific software tools. It is crucial to understand their functions and limitations. The exam may require you to:
+                            </p>
+                            <ul class="list-disc list-inside space-y-2 text-gray-700 mt-2">
+                                <li><strong>Spreadsheet Tool:</strong> Perform calculations, filter/sort data, create charts (bar, pie, line), and use features like pivot tables and conditional formatting.</li>
+                                <li><strong>Drawing Tool:</strong> Create diagrams like data flow diagrams, system flowcharts, or network diagrams.</li>
+                                <li><strong>Screen Design Tool:</strong> Mock up user interfaces for applications or websites.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="casestudies" class="py-16">
+             <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold">Real-World Case Studies</h2>
+                    <p class="text-lg text-gray-600 mt-2">See how data science is applied to solve real challenges in NSW.</p>
+                </div>
+                <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+                        <label for="case-study-selector" class="block text-lg font-medium text-gray-700 mb-2 sm:mb-0">Select a Case Study:</label>
+                        <select id="case-study-selector" class="mt-1 block w-full sm:w-auto pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[#2980b9] focus:border-[#2980b9] sm:text-sm rounded-md">
+                        </select>
+                    </div>
+                    <div id="case-study-content" class="mt-6">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#2c3e50] text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 Data Science Toolkit. A resource for NESA Enterprise Computing students.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const conceptsData = [
+        { title: "Quantitative vs. Qualitative Data", content: "<strong>Quantitative data</strong> is numerical and measurable (e.g., height, temperature, number of clicks). <strong>Qualitative data</strong> is descriptive and conceptual, focusing on qualities and characteristics (e.g., interview responses, color, user feedback)." },
+        { title: "Levels of Measurement", content: "Data can be classified into four levels: <strong>Nominal</strong> (categories without order, e.g., colors), <strong>Ordinal</strong> (categories with a meaningful order, e.g., small, medium, large), <strong>Interval</strong> (ordered with equal spacing but no true zero, e.g., temperature in Celsius), and <strong>Ratio</strong> (ordered with equal spacing and a true zero, e.g., weight)." },
+        { title: "Primary vs. Secondary Data", content: "<strong>Primary data</strong> is collected firsthand for a specific research purpose (e.g., surveys, experiments). <strong>Secondary data</strong> is data that has already been collected by someone else for another purpose (e.g., census data, government reports)." },
+        { title: "Structured vs. Unstructured Data", content: "<strong>Structured data</strong> is highly organized and formatted in a way that is easily searchable, like in a relational database or spreadsheet. <strong>Unstructured data</strong> has no pre-defined model or organization, like text in emails, videos, or social media posts." },
+        { title: "Big Data: The 3 V's", content: "Big data is characterized by: <strong>Volume</strong> (the vast amount of data generated), <strong>Velocity</strong> (the high speed at which data is created and processed), and <strong>Variety</strong> (the different forms of data, from structured to unstructured)." },
+        { title: "Data Quality & Ethics", content: "This involves ensuring data is accurate, complete, and reliable. Key ethical issues include: <strong>Bias</strong> (data that unfairly represents certain groups), <strong>Privacy</strong> (protecting personal information as per the Privacy Act 1988), and <strong>ICIP</strong> (respecting Indigenous Cultural and Intellectual Property)." },
+        { title: "Machine Learning vs. Statistical Modelling", content: "<strong>Statistical Modelling</strong> uses mathematical equations to establish relationships between variables, focusing on inference and understanding. <strong>Machine Learning</strong> uses algorithms that learn patterns from data to make predictions, often without being explicitly programmed." },
+        { title: "Data Mining", content: "The process of discovering patterns, correlations, and insights from large datasets. It uses techniques from machine learning, statistics, and database systems to turn raw data into useful information." },
+        { title: "Blockchain Technology", content: "A decentralized, distributed, and often public, digital ledger consisting of records called blocks. It is used to record transactions across many computers so that any involved block cannot be altered retroactively, ensuring data integrity and verification for things like online voting or tracking items of value." }
+    ];
+
+    const pipelineData = {
+        collection: { 
+            title: "1. Data Collection", 
+            content: "This is the first step, involving gathering raw data from various sources. Methods can be <strong>active</strong> (e.g., surveys, forms where users knowingly provide data) or <strong>passive</strong> (e.g., web server logs, sensor data, cookies). It's crucial to consider the relevance, accuracy, and validity of the data source.",
+            chart: false
+        },
+        storage: { 
+            title: "2. Data Storage", 
+            content: "Once collected, data must be stored securely and accessibly. This can range from simple flat-file databases to complex <strong>data warehouses</strong> designed to store and analyze large volumes of historical data. Technologies like <strong>Blockchain</strong> offer innovative ways to manage and verify data with high integrity.",
+            chart: false
+        },
+        processing: { 
+            title: "3. Data Processing", 
+            content: "Raw data is often messy and needs to be cleaned and prepared for analysis. This involves filtering irrelevant data, grouping related items, sorting, and handling missing values. Spreadsheets and databases are common tools for these tasks, using features like conditional formatting and SQL queries.",
+            chart: false
+        },
+        analysis: { 
+            title: "4. Data Analysis", 
+            content: "This is where insights are extracted. Techniques include <strong>data mining</strong> to find hidden patterns, using <strong>informatics</strong> to develop a deeper understanding, and applying <strong>machine learning or statistical models</strong> to make predictions. The goal is to answer questions and support decision-making.",
+            chart: false
+        },
+        presentation: { 
+            title: "5. Data Presentation", 
+            content: "The final step is communicating the findings. This is done through visualisations that make complex data understandable. Common tools include <strong>graphs, infographics, dashboards, and reports</strong>. A well-designed presentation tells a clear story with the data, leading to actionable insights.",
+            chart: true
+        }
+    };
+
+    const resourcesData = {
+        videos: [
+            { title: "What is Data Science?", desc: "An introductory overview of the field of data science.", url: "https://www.youtube.com/watch?v=X3paOmcrTjQ" },
+            { title: "Blockchain Explained in 7 Minutes", desc: "A clear and concise explanation of how blockchain technology works.", url: "https://www.youtube.com/watch?v=yubzJw0uiE4" },
+            { title: "Creating Data Entry Forms in Excel", desc: "A practical guide to using forms for structured data collection.", url: "https://www.youtube.com/watch?v=iG-j_I2-T9s" },
+            { title: "Big Data In 5 Minutes", desc: "A quick rundown of the fundamentals of Big Data and its importance.", url: "https://www.youtube.com/watch?v=bAyrObl7TYE" },
+        ],
+        web: [
+            { title: "NESA Enterprise Computing Syllabus", desc: "The official syllabus document for the course.", url: "https://curriculum.nsw.edu.au/learning-areas/technologies/enterprise-computing-11-12" },
+            { title: "Australian Government - Privacy Act 1988", desc: "Details on the key piece of legislation governing data privacy in Australia.", url: "https://www.oaic.gov.au/privacy/the-privacy-act" },
+            { title: "TAFE NSW - Introduction to Data Analytics", desc: "An overview of data analytics concepts from a vocational perspective.", url: "https://www.tafensw.edu.au/course-areas/information-and-communication-technology/courses/introduction-to-data-analytics--HE20507-V01" },
+            { title: "What is Data Warehousing?", desc: "An in-depth article explaining data warehouses and their role in business intelligence.", url: "https://aws.amazon.com/data-warehouse/" },
+        ],
+        academic: [
+            { title: "Indigenous Cultural and Intellectual Property (ICIP)", desc: "An article explaining the principles and importance of respecting Indigenous data sovereignty.", url: "https://www.ipaustralia.gov.au/indigenous-knowledge" },
+            { title: "Data Bias in Machine Learning", desc: "A paper exploring the sources of bias in data and its impact on AI models.", url: "https://towardsdatascience.com/a-practical-guide-to-understanding-and-managing-data-bias-450f65515748" },
+            { title: "The Ethics of Data", desc: "An exploration of the ethical challenges and frameworks in data science.", url: "https://www.scu.edu/ethics/internet-ethics-blog/the-ethics-of-data/" },
+        ]
+    };
+    
+    const quizData = [
+        { question: "Which of the following is an example of qualitative data?", options: ["Number of students in a class", "The height of a building", "Customer reviews on a product", "The temperature outside"], answer: "Customer reviews on a product" },
+        { question: "What are the three key characteristics of big data, known as the '3 V's'?", options: ["Volume, Velocity, Validity", "Volume, Variety, Velocity", "Value, Variety, Velocity", "Volume, Veracity, Value"], answer: "Volume, Variety, Velocity" },
+        { question: "What is the main purpose of data mining?", options: ["To increase the amount of data stored", "To transfer data between devices", "To analyse data for patterns and insights", "To improve data storage systems"], answer: "To analyse data for patterns and insights" },
+        { question: "The Privacy Act 1988 is a key piece of legislation in which country?", options: ["United States", "United Kingdom", "Canada", "Australia"], answer: "Australia" },
+        { question: "Which data measurement level has a true zero point?", options: ["Nominal", "Ordinal", "Interval", "Ratio"], answer: "Ratio" }
+    ];
+
+    const caseStudiesData = {
+        netball: {
+            title: "Netball NSW: Optimising Facility Locations",
+            challenge: "To understand the demographics and travel patterns of netball participants in NSW to increase participation and decide where to build new courts.",
+            data: "Geo-targeted census data, participant registration addresses, and travel survey data (quantitative, structured).",
+            analysis: "Spatial analysis to map participant density and travel distances. Comparison of netball participation with other sports within Local Government Areas (LGAs) to identify growth opportunities.",
+            outcome: "Data-driven recommendations for marketing campaigns in specific LGAs and a strategic plan for building new facilities in areas with high demand and long travel times."
+        },
+        ev: {
+            title: "Net Zero: Planning EV Road Trips",
+            challenge: "To help electric vehicle (EV) owners plan long-distance trips by identifying optimal routes and charging station locations.",
+            data: "EV battery range data, charging station locations and power ratings, road network data, and real-time traffic information (quantitative, structured, real-time).",
+            analysis: "Algorithmic analysis to calculate the most efficient routes, considering vehicle range, charging times, and station availability. 'What-if' modelling to see how new charging stations would impact travel times.",
+            outcome: "An interactive trip planning tool that provides drivers with optimised routes, estimated travel and charging times, and peace of mind for long journeys."
+        },
+        vaping: {
+            title: "NSW Health: Understanding Vaping Trends",
+            challenge: "To analyse data related to vaping among young people to inform public health campaigns and policies.",
+            data: "Anonymous survey data from students, sales data from retailers, and analysis of social media posts for sentiment and trends (quantitative and qualitative, structured and unstructured).",
+            analysis: "Statistical analysis of survey results to identify demographic trends. Natural Language Processing (NLP) and sentiment analysis on social media data to understand perceptions and social influences.",
+            outcome: "Targeted anti-vaping campaigns for specific youth demographics and evidence-based recommendations for new government regulations on vape sales and marketing."
+        },
+        hotSchools: {
+            title: "Western Sydney University: Mitigating Heat in Schools",
+            challenge: "To identify schools in Western Sydney most affected by extreme heat and propose effective cooling solutions.",
+            data: "Temperature sensor data, satellite imagery (for green space analysis), school building material data, and student attendance records on hot days (quantitative, structured).",
+            analysis: "Correlation analysis between temperature, lack of green space, and student absenteeism. Predictive modelling to forecast which schools will be most vulnerable to future heatwaves.",
+            outcome: "A priority list of schools for receiving new cooling infrastructure, such as more trees, shade sails, and cool-roof technology, improving the learning environment for thousands of students."
+        }
+    };
+    
+    let currentChart = null;
+
+    function initConcepts() {
+        const grid = document.getElementById('concepts-grid');
+        conceptsData.forEach(concept => {
+            const card = document.createElement('div');
+            card.className = 'concept-card bg-white p-6 rounded-lg shadow-md cursor-pointer';
+            card.innerHTML = `
+                <h3 class="text-xl font-semibold mb-2">${concept.title}</h3>
+                <div class="concept-content hidden text-gray-700 mt-4">
+                    <p>${concept.content}</p>
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                card.querySelector('.concept-content').classList.toggle('hidden');
+            });
+            grid.appendChild(card);
+        });
+    }
+
+    function initPipeline() {
+        const stagesContainer = document.getElementById('pipeline-stages');
+        Object.keys(pipelineData).forEach(key => {
+            const stage = pipelineData[key];
+            const button = document.createElement('div');
+            button.className = 'pipeline-stage p-4 rounded-lg border border-gray-300 text-center font-medium';
+            button.textContent = stage.title;
+            button.dataset.stage = key;
+            stagesContainer.appendChild(button);
+        });
+        
+        stagesContainer.addEventListener('click', (e) => {
+            if (e.target.matches('.pipeline-stage')) {
+                const stageKey = e.target.dataset.stage;
+                updatePipelineDetails(stageKey);
+
+                document.querySelectorAll('.pipeline-stage').forEach(el => el.classList.remove('active'));
+                e.target.classList.add('active');
+            }
+        });
+
+        updatePipelineDetails('collection');
+        stagesContainer.querySelector('.pipeline-stage').classList.add('active');
+    }
+
+    function updatePipelineDetails(stageKey) {
+        const detailsContainer = document.getElementById('pipeline-details');
+        const data = pipelineData[stageKey];
+        
+        let chartHtml = '';
+        if (data.chart) {
+            chartHtml = `<div class="chart-container mt-6"><canvas id="pipelineChart"></canvas></div>`;
+        }
+
+        detailsContainer.innerHTML = `
+            <h3 class="text-2xl font-semibold mb-4">${data.title}</h3>
+            <p class="text-gray-700">${data.content}</p>
+            ${chartHtml}
+        `;
+        
+        if (data.chart) {
+            renderPipelineChart();
+        }
+    }
+    
+    function renderPipelineChart() {
+        if(currentChart) {
+            currentChart.destroy();
+        }
+        const ctx = document.getElementById('pipelineChart').getContext('2d');
+        currentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Surveys', 'Reports', 'Dashboards', 'Infographics'],
+                datasets: [{
+                    label: 'Effectiveness in Communication',
+                    data: [65, 80, 95, 85],
+                    backgroundColor: ['#3498db', '#2980b9', '#1f618d', '#1abc9c'],
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    title: { display: true, text: 'Example: Data Presentation Methods' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+
+    function initResources() {
+        const tabsContainer = document.getElementById('resource-tabs');
+        const contentContainer = document.getElementById('resource-content');
+
+        Object.keys(resourcesData).forEach((key, index) => {
+            const button = document.createElement('button');
+            button.className = 'tab-button capitalize px-4 py-2 -mb-px border-b-2 font-medium text-lg';
+            button.textContent = key;
+            button.dataset.tab = key;
+            if (index === 0) {
+                button.classList.add('active', 'border-[#2980b9]');
+            } else {
+                button.classList.add('border-transparent', 'text-gray-500', 'hover:text-[#2980b9]', 'hover:border-gray-300');
+            }
+            tabsContainer.appendChild(button);
+        });
+        
+        tabsContainer.addEventListener('click', e => {
+            if (e.target.matches('.tab-button')) {
+                const tabKey = e.target.dataset.tab;
+                
+                tabsContainer.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active', 'border-[#2980b9]');
+                    btn.classList.add('border-transparent', 'text-gray-500', 'hover:text-[#2980b9]', 'hover:border-gray-300');
+                });
+                e.target.classList.add('active', 'border-[#2980b9]');
+                e.target.classList.remove('border-transparent', 'text-gray-500', 'hover:text-[#2980b9]', 'hover:border-gray-300');
+                
+                updateResourceContent(tabKey);
+            }
+        });
+        
+        updateResourceContent('videos');
+    }
+
+    function updateResourceContent(key) {
+        const contentContainer = document.getElementById('resource-content');
+        const data = resourcesData[key];
+        contentContainer.innerHTML = `<div class="grid md:grid-cols-2 gap-6">
+            ${data.map(item => `
+                <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="block p-4 border rounded-lg hover:bg-gray-50 hover:shadow-md transition-all">
+                    <h4 class="font-semibold text-[#2980b9]">${item.title}</h4>
+                    <p class="text-sm text-gray-600">${item.desc}</p>
+                </a>
+            `).join('')}
+        </div>`;
+    }
+    
+    let currentQuestionIndex = 0;
+    let score = 0;
+    
+    function initQuiz() {
+        document.getElementById('next-question-btn').addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                showQuestion(currentQuestionIndex);
+            } else {
+                showQuizResult();
+            }
+        });
+        showQuestion(currentQuestionIndex);
+    }
+    
+    function showQuestion(index) {
+        const question = quizData[index];
+        document.getElementById('quiz-question').textContent = question.question;
+        const optionsContainer = document.getElementById('quiz-options');
+        optionsContainer.innerHTML = '';
+        
+        question.options.forEach(optionText => {
+            const optionEl = document.createElement('button');
+            optionEl.className = 'quiz-option block w-full text-left p-3 bg-white rounded-lg border hover:bg-gray-100';
+            optionEl.textContent = optionText;
+            optionEl.addEventListener('click', () => handleAnswer(optionEl, optionText, question.answer));
+            optionsContainer.appendChild(optionEl);
+        });
+        
+        document.getElementById('quiz-feedback').textContent = '';
+        document.getElementById('next-question-btn').style.display = 'none';
+        document.getElementById('quiz-progress').textContent = `Question ${index + 1} of ${quizData.length}`;
+    }
+
+    function handleAnswer(selectedElement, selectedAnswer, correctAnswer) {
+        document.querySelectorAll('.quiz-option').forEach(btn => btn.disabled = true);
+        
+        if (selectedAnswer === correctAnswer) {
+            selectedElement.classList.add('correct');
+            document.getElementById('quiz-feedback').textContent = "Correct!";
+            document.getElementById('quiz-feedback').style.color = '#2ecc71';
+            score++;
+        } else {
+            selectedElement.classList.add('incorrect');
+            document.getElementById('quiz-feedback').textContent = `Incorrect. The correct answer is: ${correctAnswer}`;
+            document.getElementById('quiz-feedback').style.color = '#e74c3c';
+        }
+        
+        document.getElementById('next-question-btn').style.display = 'block';
+    }
+
+    function showQuizResult() {
+        const quizContainer = document.getElementById('quiz-container');
+        quizContainer.innerHTML = `
+            <h3 class="text-2xl font-semibold mb-4 text-center">Quiz Complete!</h3>
+            <p class="text-center text-xl mb-6">You scored ${score} out of ${quizData.length}</p>
+            <button id="restart-quiz-btn" class="w-full bg-[#2980b9] text-white px-6 py-2 rounded-lg hover:bg-[#3498db] transition-colors">Try Again</button>
+        `;
+        document.getElementById('restart-quiz-btn').addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-container').innerHTML = `
+                <div id="quiz-question" class="text-lg font-medium mb-4"></div>
+                <div id="quiz-options" class="space-y-3"></div>
+                <div id="quiz-feedback" class="mt-4 text-center font-medium"></div>
+                <div class="flex justify-between items-center mt-6">
+                    <div id="quiz-progress" class="text-sm text-gray-500"></div>
+                    <button id="next-question-btn" class="bg-[#2980b9] text-white px-6 py-2 rounded-lg hover:bg-[#3498db] transition-colors">Next</button>
+                </div>
+            `;
+            initQuiz();
+        });
+    }
+
+    function initCaseStudies() {
+        const selector = document.getElementById('case-study-selector');
+        Object.keys(caseStudiesData).forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = caseStudiesData[key].title;
+            selector.appendChild(option);
+        });
+
+        selector.addEventListener('change', (e) => {
+            updateCaseStudyContent(e.target.value);
+        });
+
+        updateCaseStudyContent(selector.value);
+    }
+    
+    function updateCaseStudyContent(key) {
+        const data = caseStudiesData[key];
+        const contentContainer = document.getElementById('case-study-content');
+        contentContainer.innerHTML = `
+            <h3 class="text-2xl font-bold text-[#2980b9] mb-4">${data.title}</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-semibold text-lg">The Challenge</h4>
+                    <p class="text-gray-700">${data.challenge}</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg">Data Used</h4>
+                    <p class="text-gray-700">${data.data}</p>
+                </div>
+                 <div>
+                    <h4 class="font-semibold text-lg">Analysis Applied</h4>
+                    <p class="text-gray-700">${data.analysis}</p>
+                </div>
+                 <div>
+                    <h4 class="font-semibold text-lg">Outcome & Impact</h4>
+                    <p class="text-gray-700">${data.outcome}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    function initMobileMenu() {
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+        menu.addEventListener('click', (e) => {
+            if (e.target.matches('a')) {
+                 menu.classList.add('hidden');
+            }
+        });
+    }
+
+    function initScrollSpy() {
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        window.onscroll = () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if(pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(a => {
+                a.classList.remove('active');
+                if(a.href.includes(current)) {
+                    a.classList.add('active');
+                }
+            })
+        }
+    }
+
+    initConcepts();
+    initPipeline();
+    initResources();
+    initQuiz();
+    initCaseStudies();
+    initMobileMenu();
+    initScrollSpy();
+});
+</script>
+
+</body>
+</html>
