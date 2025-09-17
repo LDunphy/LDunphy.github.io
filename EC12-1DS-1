@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NESA Enterprise Computing: Data Science Infographic</title>
+    <!-- Chosen Palette: Brilliant Blues & Purples -->
+    <!-- Application Structure Plan: The application is structured as a linear, scrollable infographic that tells the story of data science, from foundational concepts to real-world application, mirroring the learning journey in the NESA curriculum. The narrative flow is: 1) Hook with a big stat, 2) Defining Data, 3) The Data Lifecycle Process, 4) Deep dive into Analysis, 5) The art of Visualization, 6) Real-world Case Studies. This single-page, top-to-bottom structure was chosen for its simplicity and effectiveness in presenting a guided narrative, which is ideal for an infographic format aimed at student understanding and revision. -->
+    <!-- Visualization & Content Choices: 
+        - Big Data Growth: Report Info -> Big Data Volume. Goal -> Inform/Hook. Viz -> Single Big Number. Justification -> High impact to grab attention. Method -> Styled HTML.
+        - Data Types: Report Info -> Quant vs Qual, Struct vs Unstruct. Goal -> Compare. Viz -> HTML/CSS comparison diagram. Justification -> Clearly contrasts fundamental concepts. Method -> Tailwind Flexbox.
+        - Data Lifecycle: Report Info -> Data process stages. Goal -> Organize. Viz -> Vertical Flowchart. Justification -> Visualizes the process flow logically. Method -> Styled HTML/CSS.
+        - Data Bias Sources: Report Info -> Data Quality/Bias. Goal -> Inform. Viz -> Donut Chart. Justification -> Shows composition/parts of a whole effectively. Library -> Chart.js (Canvas).
+        - Analysis Techniques: Report Info -> ML vs Stats. Goal -> Compare. Viz -> HTML Comparison Table. Justification -> A clear, side-by-side breakdown of complex terms. Method -> Styled HTML Table.
+        - Chart Examples (Bar, Line, Pie): Report Info -> HSC exam chart types & case studies. Goal -> Inform/Compare/Change. Viz -> Bar, Line, and Pie charts. Justification -> Demonstrates the primary visualization types students must know, using relevant examples from the syllabus case studies. Library -> Chart.js (Canvas).
+        - All visualizations are built using Chart.js (Canvas) or structured HTML/CSS with Tailwind. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #003f5c;
+        }
+        .stat-card {
+            background-color: #ffa600;
+            color: white;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 384px;
+            }
+        }
+        .flow-step {
+            border-left: 4px solid #7a5195;
+            position: relative;
+            padding-left: 2rem;
+            padding-bottom: 2rem;
+        }
+        .flow-step:last-child {
+            border-left: none;
+        }
+        .flow-step::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background-color: #7a5195;
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <main class="container mx-auto px-4 sm:px-6 py-12">
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-6xl font-black text-[#003f5c] tracking-tight">The Story of Data</h1>
+            <p class="mt-4 text-xl md:text-2xl text-[#374c80]">An Infographic for NESA Enterprise Computing</p>
+        </header>
+        
+        <section id="hook" class="mb-20">
+            <div class="max-w-3xl mx-auto text-center">
+                <div class="stat-card p-8 rounded-2xl shadow-2xl">
+                    <p class="text-2xl font-semibold">By 2025, the total amount of digital data created worldwide is projected to reach</p>
+                    <p class="text-7xl md:text-8xl font-black my-4">181</p>
+                    <p class="text-4xl font-bold">Zettabytes</p>
+                </div>
+                <p class="mt-6 text-lg text-gray-600">Understanding how to collect, analyse, and present this data is the core of Data Science. This skill is essential for making informed decisions in every industry.</p>
+            </div>
+        </section>
+
+        <section id="definitions" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c]">What is Data? The Building Blocks</h2>
+                <p class="mt-2 text-lg text-gray-700 max-w-2xl mx-auto">All data can be categorised based on its nature and organisation. These distinctions are fundamental to how we work with it.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-[#7a5195] mb-4">By Nature</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-lg">📈 Quantitative</h4>
+                            <p class="text-gray-600">Numerical data that can be measured. It answers 'how much?' or 'how many?'. Example: Number of students, temperature.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg">🗣️ Qualitative</h4>
+                            <p class="text-gray-600">Descriptive data observed but not measured. It answers 'why?'. Example: Interview feedback, brand colours.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-[#bc5090] mb-4">By Organisation</h3>
+                     <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-lg">🗃️ Structured</h4>
+                            <p class="text-gray-600">Highly organised data that fits a predefined model, like a spreadsheet or database table.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg"> unstructured</h4>
+                            <p class="text-gray-600">Data with no predefined structure. Examples include emails, videos, and social media posts.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="lifecycle" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c]">The Data Science Lifecycle</h2>
+                <p class="mt-2 text-lg text-gray-700 max-w-2xl mx-auto">From raw numbers to actionable insights, data goes on a journey. This process ensures that conclusions are reliable and meaningful.</p>
+            </div>
+            <div class="max-w-2xl mx-auto">
+                <div class="flow-step">
+                    <h3 class="text-xl font-bold mb-1 text-[#7a5195]">1. Collection</h3>
+                    <p class="text-gray-600">Gathering raw data from primary (surveys, sensors) or secondary (reports, databases) sources using active or passive methods.</p>
+                </div>
+                <div class="flow-step">
+                    <h3 class="text-xl font-bold mb-1 text-[#7a5195]">2. Storage & Processing</h3>
+                    <p class="text-gray-600">Storing data in databases or data warehouses, then cleaning and preparing it by filtering, sorting, and handling errors.</p>
+                </div>
+                <div class="flow-step">
+                    <h3 class="text-xl font-bold mb-1 text-[#7a5195]">3. Analysis</h3>
+                    <p class="text-gray-600">Using techniques like data mining, statistical modelling, or machine learning to uncover patterns, correlations, and insights.</p>
+                </div>
+                <div class="flow-step">
+                    <h3 class="text-xl font-bold mb-1 text-[#7a5195]">4. Presentation</h3>
+                    <p class="text-gray-600">Communicating findings through visualisations like charts, dashboards, and infographics to tell a clear and compelling story.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="quality" class="mb-20">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-left">
+                    <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c]">Quality is Everything</h2>
+                    <p class="mt-4 text-lg text-gray-700">Poor quality data leads to flawed conclusions. It's crucial to be aware of ethical issues and potential for bias. Under the <strong class="text-[#ef5675]">Privacy Act 1988</strong>, organisations have a legal duty to protect personal information.</p>
+                    <p class="mt-4 text-lg text-gray-700">Bias can unintentionally skew results, making them unfair or inaccurate. Understanding its sources is the first step to mitigating it.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-center text-xl font-bold text-[#003f5c] mb-4">Common Sources of Data Bias</h3>
+                    <div class="chart-container">
+                        <canvas id="biasChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="analysis" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c]">Making Sense of It All: Analysis Techniques</h2>
+                <p class="mt-2 text-lg text-gray-700 max-w-2xl mx-auto">Different tools are used to analyse data depending on the goal. Statistical models seek to explain, while machine learning aims to predict.</p>
+            </div>
+            <div class="bg-white p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+                 <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b-2 border-[#ff764a]">
+                                <th class="p-4 text-xl font-bold">Technique</th>
+                                <th class="p-4 text-xl font-bold">Primary Goal</th>
+                                <th class="p-4 text-xl font-bold">Example Use</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-4 font-semibold">Statistical Modelling</td>
+                                <td class="p-4">Explain relationships between variables ("Why?").</td>
+                                <td class="p-4">Analysing survey data to see if age impacts purchasing habits.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold">Machine Learning</td>
+                                <td class="p-4">Make predictions based on patterns in data ("What will happen next?").</td>
+                                <td class="p-4">Forecasting future weather patterns based on historical data.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="visualisation" class="mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c]">Telling the Story with Data Visualisation</h2>
+                <p class="mt-2 text-lg text-gray-700 max-w-2xl mx-auto">Choosing the right chart is key to clear communication. The NESA syllabus requires you to be proficient with several types, each with its own strength.</p>
+            </div>
+            <div class="grid lg:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-center text-xl font-bold text-[#bc5090] mb-2">Bar Chart: Comparing Categories</h3>
+                    <p class="text-center text-sm text-gray-600 mb-4">Ideal for comparing values across different groups.</p>
+                    <div class="chart-container h-80">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-center text-xl font-bold text-[#ef5675] mb-2">Line Chart: Showing Trends</h3>
+                    <p class="text-center text-sm text-gray-600 mb-4">Perfect for tracking changes over a period of time.</p>
+                    <div class="chart-container h-80">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-center text-xl font-bold text-[#ff764a] mb-2">Pie Chart: Showing Proportions</h3>
+                    <p class="text-center text-sm text-gray-600 mb-4">Best for showing parts of a whole (use with few categories).</p>
+                    <div class="chart-container h-80">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="casestudies" class="mb-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-[#003f5c]">Data Science in Action: NSW Case Studies</h2>
+                <p class="mt-2 text-lg text-gray-700 max-w-2xl mx-auto">These real-world examples show how data science is used to solve problems right here in NSW.</p>
+            </div>
+             <div class="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-lg flex items-start space-x-4">
+                    <div class="text-4xl">🏀</div>
+                    <div>
+                        <h3 class="font-bold text-lg text-[#7a5195]">Netball NSW: Finding Court Locations</h3>
+                        <p class="text-gray-600">Used census and registration data to analyse travel patterns and identify the best locations for new netball facilities to increase participation.</p>
+                    </div>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg flex items-start space-x-4">
+                    <div class="text-4xl">🔌</div>
+                    <div>
+                        <h3 class="font-bold text-lg text-[#bc5090]">Net Zero: EV Road Trip Planning</h3>
+                        <p class="text-gray-600">Analysed charger locations, vehicle range, and traffic data to create an algorithm that plans the most efficient long-distance routes for electric vehicles.</p>
+                    </div>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg flex items-start space-x-4">
+                    <div class="text-4xl">🚭</div>
+                    <div>
+                        <h3 class="font-bold text-lg text-[#ef5675]">NSW Health: Vaping Trends</h3>
+                        <p class="text-gray-600">Combined survey results with social media sentiment analysis (unstructured data) to understand vaping habits and inform targeted health campaigns.</p>
+                    </div>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg flex items-start space-x-4">
+                    <div class="text-4xl">☀️</div>
+                    <div>
+                        <h3 class="font-bold text-lg text-[#ff764a]">WSU: Cooling Hot Schools</h3>
+                        <p class="text-gray-600">Correlated temperature data, satellite imagery, and attendance records to identify schools most at risk from extreme heat and prioritise them for cooling solutions.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="text-center py-8">
+        <p class="text-gray-600">Ready for the HSC? Remember to practice using the online Spreadsheet and Drawing tools to create your own visualisations.</p>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tooltipTitleCallback = function(tooltipItems) {
+        const item = tooltipItems[0];
+        let label = item.chart.data.labels[item.dataIndex];
+        if (Array.isArray(label)) {
+          return label.join(' ');
+        } else {
+          return label;
+        }
+    };
+    
+    const sharedChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: '#003f5c',
+                    font: {
+                        family: "'Inter', sans-serif"
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    title: tooltipTitleCallback
+                }
+            }
+        },
+        scales: {
+            y: {
+                ticks: { color: '#374c80' },
+                grid: { color: '#e0e0e0' }
+            },
+            x: {
+                ticks: { color: '#374c80' },
+                grid: { display: false }
+            }
+        }
+    };
+    
+    function wrapLabel(str, maxWidth) {
+        if (str.length <= maxWidth) return str;
+        let words = str.split(' ');
+        let lines = [];
+        let currentLine = words[0];
+        for (let i = 1; i < words.length; i++) {
+            if (currentLine.length + words[i].length + 1 < maxWidth) {
+                currentLine += ' ' + words[i];
+            } else {
+                lines.push(currentLine);
+                currentLine = words[i];
+            }
+        }
+        lines.push(currentLine);
+        return lines;
+    }
+
+    const biasCtx = document.getElementById('biasChart');
+    if (biasCtx) {
+        new Chart(biasCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Selection Bias', 'Confirmation Bias', 'Measurement Bias', ['Algorithmic', 'Bias']],
+                datasets: [{
+                    label: 'Sources of Bias',
+                    data: [35, 25, 20, 20],
+                    backgroundColor: ['#7a5195', '#bc5090', '#ef5675', '#ff764a'],
+                    borderColor: '#ffffff',
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '#003f5c',
+                             font: {
+                                family: "'Inter', sans-serif"
+                            }
+                        }
+                    },
+                    tooltip: {
+                         callbacks: {
+                            title: tooltipTitleCallback
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const barCtx = document.getElementById('barChart');
+    if (barCtx) {
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Parramatta', 'Blacktown', 'Penrith', 'Liverpool', 'Campbelltown'],
+                datasets: [{
+                    label: 'Active Netball Participants',
+                    data: [2800, 2500, 2200, 1900, 1750],
+                    backgroundColor: '#bc5090',
+                }]
+            },
+            options: sharedChartOptions
+        });
+    }
+
+    const lineCtx = document.getElementById('lineChart');
+    if (lineCtx) {
+        new Chart(lineCtx, {
+            type: 'line',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025 (Proj.)'],
+                datasets: [{
+                    label: 'Public EV Chargers in NSW',
+                    data: [300, 450, 700, 1100, 1800, 2600],
+                    borderColor: '#ef5675',
+                    backgroundColor: 'rgba(239, 86, 117, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: sharedChartOptions
+        });
+    }
+
+    const pieCtx = document.getElementById('pieChart');
+    if (pieCtx) {
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: ['14-17 years', '18-24 years', '25+ years'],
+                datasets: [{
+                    label: 'Vaping Survey Respondents',
+                    data: [55, 35, 10],
+                    backgroundColor: ['#ff764a', '#ffa600', '#f0f2f5'],
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#003f5c',
+                             font: {
+                                family: "'Inter', sans-serif"
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                           title: tooltipTitleCallback
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
+
+</body>
+</html>
+
