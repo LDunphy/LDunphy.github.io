@@ -34,6 +34,13 @@
         .accordion-content.active {
             display: block;
         }
+        .explore-button {
+            transition: all 0.2s;
+        }
+        .explore-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
     </style>
 </head>
 <body class="bg-blue-50 p-4 sm:p-8">
@@ -45,11 +52,11 @@
             <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-900 mb-2">Software Engineering 11–12</h1>
             <p class="text-lg text-blue-700 mb-6">Explore the NESA course syllabus and major topics.</p>
             <nav class="flex justify-center space-x-4 md:space-x-8">
-                <a href="https://curriculum.nsw.edu.au/learning-areas/tas/software-engineering-11-12-2022/overview" target="_blank" class="nav-link text-blue-600 font-medium hover:underline transition-colors duration-200">
+                <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12" target="_blank" class="nav-link text-blue-600 font-medium hover:underline transition-colors duration-200">
                     <span class="hidden sm:inline">Course Syllabus</span>
                     <span class="inline sm:hidden">Syllabus</span>
                 </a>
-                <a href="https://curriculum.nsw.edu.au/file/b746704f-f613-4bce-9466-19835b2623fc/software-engineering-11-12-2022-higher-school-certificate-course-specifications.pdf" target="_blank" class="nav-link text-blue-600 font-medium hover:underline transition-colors duration-200">
+                <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12/syllabus" target="_blank" class="nav-link text-blue-600 font-medium hover:underline transition-colors duration-200">
                     <span class="hidden sm:inline">Course Specifications</span>
                     <span class="inline sm:hidden">Specifications</span>
                 </a>
@@ -69,7 +76,10 @@
                 <!-- Topic 1: Programming fundamentals -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">1. Programming fundamentals</a>
+                        <span class="text-lg font-semibold text-blue-900">1. Programming fundamentals</span>
+                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                            Explore
+                        </a>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
@@ -84,7 +94,10 @@
                 <!-- Topic 2: The object-oriented paradigm -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">2. The object-oriented paradigm</a>
+                        <span class="text-lg font-semibold text-blue-900">2. The object-oriented paradigm</span>
+                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                            Explore
+                        </a>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
@@ -99,7 +112,10 @@
                 <!-- Topic 3: Programming mechatronics -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">3. Programming mechatronics</a>
+                        <span class="text-lg font-semibold text-blue-900">3. Programming mechatronics</span>
+                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                            Explore
+                        </a>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
@@ -120,7 +136,10 @@
                 <!-- Topic 1: Secure software architecture -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <a href="SE12-1SSA-0" class="text-lg font-semibold text-blue-900 hover:underline">1. Secure software architecture</a>
+                        <span class="text-lg font-semibold text-blue-900">1. Secure software architecture</span>
+                        <a href="12SE-1SSA-0" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                            Explore
+                        </a>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
@@ -135,7 +154,10 @@
                 <!-- Topic 2: Programming for the web -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">2. Programming for the web</a>
+                        <span class="text-lg font-semibold text-blue-900">2. Programming for the web</span>
+                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                            Explore
+                        </a>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
@@ -150,7 +172,10 @@
                  <!-- Topic 3: Software automation -->
                  <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">3. Software automation</a>
+                        <span class="text-lg font-semibold text-blue-900">3. Software automation</span>
+                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                            Explore
+                        </a>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
@@ -165,7 +190,10 @@
                  <!-- Topic 4: Software engineering project -->
                  <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <a href="#" class="text-lg font-semibold text-blue-900 hover:underline">4. Software engineering project</a>
+                        <span class="text-lg font-semibold text-blue-900">4. Software engineering project</span>
+                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                            Explore
+                        </a>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
@@ -183,8 +211,8 @@
     <script>
         document.querySelectorAll('.accordion-header').forEach(header => {
             header.addEventListener('click', (event) => {
-                // Prevent the link from navigating if the header is clicked
-                if (event.target.tagName !== 'A') {
+                // Prevent the link from navigating if the button or icon is clicked
+                if (event.target.tagName !== 'A' && event.target.tagName !== 'svg' && event.target.tagName !== 'path') {
                     const content = header.nextElementSibling;
                     const icon = header.querySelector('svg');
                     
