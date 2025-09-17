@@ -41,6 +41,16 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
+        .accordion-content a {
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+            display: inline-block;
+        }
+        .accordion-content a:hover {
+            background-color: #e2e8f0;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body class="bg-blue-50 p-4 sm:p-8">
@@ -76,17 +86,18 @@
                 <!-- Topic 1: Programming fundamentals -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <span class="text-lg font-semibold text-blue-900">1. Programming fundamentals</span>
-                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
-                            Explore
-                        </a>
+                        <div class="flex-grow flex items-center">
+                            <span class="text-lg font-semibold text-blue-900 flex-grow">1. Programming fundamentals</span>
+                            <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12/syllabus" target="_blank" class="explore-button ml-auto mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">Explore</a>
+                        </div>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
-                        <ul class="list-disc list-inside space-y-1">
-                            <li>Syntax, variables, data types, and control structures.</li>
-                            <li>Functions and modular programming.</li>
-                            <li>Effective problem-solving and algorithms.</li>
+                        <ul class="list-disc list-outside space-y-1 pl-6">
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Software development</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Designing algorithms</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Data for software engineering</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Developing solutions with code</span></li>
                         </ul>
                     </div>
                 </div>
@@ -94,17 +105,16 @@
                 <!-- Topic 2: The object-oriented paradigm -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <span class="text-lg font-semibold text-blue-900">2. The object-oriented paradigm</span>
-                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
-                            Explore
-                        </a>
+                        <div class="flex-grow flex items-center">
+                            <span class="text-lg font-semibold text-blue-900 flex-grow">2. The object-oriented paradigm</span>
+                            <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12/syllabus" target="_blank" class="explore-button ml-auto mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">Explore</a>
+                        </div>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
-                        <ul class="list-disc list-inside space-y-1">
-                            <li>Concepts of classes, objects, and encapsulation.</li>
-                            <li>Inheritance and polymorphism.</li>
-                            <li>Applying OOP to solve complex problems.</li>
+                        <ul class="list-disc list-outside space-y-1 pl-6">
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Understanding OOP</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Programming in OOP</span></li>
                         </ul>
                     </div>
                 </div>
@@ -112,17 +122,17 @@
                 <!-- Topic 3: Programming mechatronics -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <span class="text-lg font-semibold text-blue-900">3. Programming mechatronics</span>
-                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
-                            Explore
-                        </a>
+                        <div class="flex-grow flex items-center">
+                            <span class="text-lg font-semibold text-blue-900 flex-grow">3. Programming mechatronics</span>
+                            <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12/syllabus" target="_blank" class="explore-button ml-auto mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">Explore</a>
+                        </div>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
-                        <ul class="list-disc list-inside space-y-1">
-                            <li>Interfacing with hardware and sensors.</li>
-                            <li>Control systems and robotics.</li>
-                            <li>Developing software for mechanical systems.</li>
+                        <ul class="list-disc list-outside space-y-1 pl-6">
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Understanding mechatronic hardware and software</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Designing control algorithms</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Programming and building</span></li>
                         </ul>
                     </div>
                 </div>
@@ -136,17 +146,19 @@
                 <!-- Topic 1: Secure software architecture -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <span class="text-lg font-semibold text-blue-900">1. Secure software architecture</span>
-                        <a href="SE12-1SSA-0.html" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
-                            Explore
-                        </a>
+                        <div class="flex-grow flex items-center">
+                            <span class="text-lg font-semibold text-blue-900 flex-grow">1. Secure software architecture</span>
+                            <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12/syllabus" target="_blank" class="explore-button ml-auto mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                                Explore
+                            </a>
+                        </div>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
-                        <ul class="list-disc list-inside space-y-1">
-                            <li>Principles of secure design (e.g., least privilege, defense in depth).</li>
-                            <li>Common vulnerabilities and threat modeling.</li>
-                            <li>Defensive coding practices.</li>
+                        <ul class="list-disc list-outside space-y-1 pl-6">
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Designing Software</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Developing secure code</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Impact of safe and secure software development</span></li>
                         </ul>
                     </div>
                 </div>
@@ -154,17 +166,18 @@
                 <!-- Topic 2: Programming for the web -->
                 <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <span class="text-lg font-semibold text-blue-900">2. Programming for the web</span>
-                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
-                            Explore
-                        </a>
+                        <div class="flex-grow flex items-center">
+                            <span class="text-lg font-semibold text-blue-900 flex-grow">2. Programming for the web</span>
+                            <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12/syllabus" target="_blank" class="explore-button ml-auto mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                                Explore
+                            </a>
+                        </div>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
-                        <ul class="list-disc list-inside space-y-1">
-                            <li>Front-end and back-end development.</li>
-                            <li>Web frameworks and APIs.</li>
-                            <li>Databases and data storage.</li>
+                        <ul class="list-disc list-outside space-y-1 pl-6">
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Data transmission using the web</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Designing web applications</span></li>
                         </ul>
                     </div>
                 </div>
@@ -172,17 +185,19 @@
                  <!-- Topic 3: Software automation -->
                  <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <span class="text-lg font-semibold text-blue-900">3. Software automation</span>
-                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
-                            Explore
-                        </a>
+                        <div class="flex-grow flex items-center">
+                            <span class="text-lg font-semibold text-blue-900 flex-grow">3. Software automation</span>
+                            <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12/syllabus" target="_blank" class="explore-button ml-auto mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                                Explore
+                            </a>
+                        </div>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
-                        <ul class="list-disc list-inside space-y-1">
-                            <li>Continuous integration and continuous delivery (CI/CD).</li>
-                            <li>Automated testing and deployment.</li>
-                            <li>Scripting for routine tasks.</li>
+                        <ul class="list-disc list-outside space-y-1 pl-6">
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Algorithms in machine learning</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Programming for automation</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Significance and impact of ML and AI</span></li>
                         </ul>
                     </div>
                 </div>
@@ -190,17 +205,20 @@
                  <!-- Topic 4: Software engineering project -->
                  <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-blue-200 rounded-lg">
-                        <span class="text-lg font-semibold text-blue-900">4. Software engineering project</span>
-                        <a href="#" class="explore-button bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
-                            Explore
-                        </a>
+                        <div class="flex-grow flex items-center">
+                            <span class="text-lg font-semibold text-blue-900 flex-grow">4. Software engineering project</span>
+                            <a href="https://curriculum.nsw.edu.au/learning-areas/technologies/software-engineering-11-12/syllabus" target="_blank" class="explore-button ml-auto mr-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-200">
+                                Explore
+                            </a>
+                        </div>
                         <svg class="w-6 h-6 text-blue-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </div>
                     <div class="accordion-content p-4 bg-white border border-blue-300 rounded-b-lg mt-0.5">
-                        <ul class="list-disc list-inside space-y-1">
-                            <li>Managing a complete software development life cycle.</li>
-                            <li>Documentation and user interface design.</li>
-                            <li>Team collaboration and project management.</li>
+                        <ul class="list-disc list-outside space-y-1 pl-6">
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Identifying and defining</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Research and planning</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Producing and implementing</span></li>
+                            <li class="flex justify-between items-center"><span class="text-blue-700">Testing and evaluating</span></li>
                         </ul>
                     </div>
                 </div>
@@ -211,8 +229,8 @@
     <script>
         document.querySelectorAll('.accordion-header').forEach(header => {
             header.addEventListener('click', (event) => {
-                // Prevent the link from navigating if the button or icon is clicked
-                if (event.target.tagName !== 'A' && event.target.tagName !== 'svg' && event.target.tagName !== 'path') {
+                // Check if the click target is the `a` tag or its children (svg, path)
+                if (event.target.tagName !== 'A' && event.target.closest('a') === null) {
                     const content = header.nextElementSibling;
                     const icon = header.querySelector('svg');
                     
