@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSC Enterprise Computing: Data Visualisation Revision</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .tab-button.active {
+            border-color: #0d9488;
+            color: #0d9488;
+            font-weight: 600;
+        }
+        .resource-card a {
+            transition: all 0.2s ease-in-out;
+        }
+        .resource-card a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans">
+    <!-- Chosen Palette: Warm Neutrals (Stone, Teal) -->
+    <!-- Application Structure Plan: The application is structured as a tabbed interface with four main sections corresponding to the key syllabus sub-topics. This design was chosen for its clear, intuitive navigation, allowing students to focus on one area at a time without being overwhelmed. Within each tab, content is organized into cards, interactive modules (like quizzes or chart manipulators), and accordions. This chunking of information aids revision and retention. The user flow is simple: select a topic tab, engage with the interactive elements, and review the curated resources. This structure directly supports a focused, self-paced learning experience ideal for exam preparation. -->
+    <!-- Visualization & Content Choices: 
+    - Info: Key concepts from the syllabus. Goal: Inform. Method: Accordion sections and text cards. Interaction: Click to expand/collapse. Justification: Condenses large amounts of text, allowing students to drill down into specifics without cluttering the UI. Method: HTML/JS.
+    - Info: Bias in data. Goal: Compare/Analyze. Method: Interactive quiz with a Chart.js bar chart. Interaction: User selects a potential bias, receives feedback. Justification: Actively engages students in identifying misleading visualisations, a critical analysis skill. Library: Chart.js (Canvas).
+    - Info: Data interrogation techniques. Goal: Explore/Understand. Method: Interactive Chart.js line chart with filter/aggregate controls. Interaction: Buttons update the chart's data and a descriptive text block. Justification: Provides a hands-on demonstration of how filtering and aggregation affect data interpretation. Library: Chart.js (Canvas).
+    - Info: UX/UI Principles. Goal: Compare/Organize. Method: "Do's and Don'ts" interactive cards. Interaction: Clicking a principle reveals good and bad visual examples. Justification: A highly visual and memorable way to teach design best practices. Method: HTML/CSS/JS.
+    - Info: Choosing chart types. Goal: Organize/Inform. Method: A simple "Chart Chooser" tool. Interaction: User selects a data relationship goal from a dropdown, and the tool suggests an appropriate chart. Justification: Practical, task-oriented tool that reinforces foundational knowledge. Method: HTML/JS.
+    - All external resources are presented in styled cards with links for easy access. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <div id="app" class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-teal-800">Data Visualisation Revision</h1>
+            <p class="text-stone-600 mt-2">An interactive guide for Year 12 Enterprise Computing HSC students.</p>
+        </header>
+
+        <nav class="flex flex-wrap justify-center border-b-2 border-stone-200 mb-8">
+            <button data-tab="story" class="tab-button active text-sm md:text-base py-3 px-4 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600 transition-colors">1. Telling a Story</button>
+            <button data-tab="interpreting" class="tab-button text-sm md:text-base py-3 px-4 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600 transition-colors">2. Interpreting Visualisations</button>
+            <button data-tab="ux" class="tab-button text-sm md:text-base py-3 px-4 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600 transition-colors">3. Designing for UX</button>
+            <button data-tab="creating" class="tab-button text-sm md:text-base py-3 px-4 border-b-2 border-transparent hover:border-teal-500 hover:text-teal-600 transition-colors">4. Creating Visualisations</button>
+        </nav>
+
+        <main>
+            <!-- Section 1: Using data to tell a story -->
+            <section id="story" class="tab-content">
+                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h2 class="text-2xl font-bold text-teal-700 mb-4">Using Data to Tell a Story</h2>
+                    <p class="text-stone-600">This section focuses on the foundational principles of data visualisation. The goal is not just to present data, but to craft a narrative that simplifies understanding, highlights key insights, and communicates a clear message. We'll explore how to ensure data integrity and recognise potential biases that can distort the story your data is trying to tell.</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Interactive Challenge: Spot the Bias</h3>
+                        <p class="mb-4 text-stone-600">This chart shows user engagement for a new app feature. Can you identify how it might be misleading?</p>
+                        <div class="chart-container mb-4">
+                            <canvas id="biasChart"></canvas>
+                        </div>
+                        <div id="bias-options" class="flex flex-wrap gap-2">
+                             <button class="bias-btn bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm" data-correct="true">Truncated Y-Axis</button>
+                             <button class="bias-btn bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm">Cherry-Picking Data</button>
+                             <button class="bias-btn bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm">Confusing Colors</button>
+                        </div>
+                        <p id="bias-feedback" class="mt-4 text-sm font-medium"></p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Core Concepts</h3>
+                        <div class="space-y-2">
+                            <div class="accordion-item border rounded-md">
+                                <button class="accordion-header w-full text-left p-4 font-medium flex justify-between items-center">
+                                    <span>Purpose of Data Visualisation</span>
+                                    <span class="transform transition-transform duration-300">▼</span>
+                                </button>
+                                <div class="accordion-content px-4 pb-4">
+                                    <ul class="list-disc list-inside text-stone-600 space-y-1">
+                                        <li><strong>Simplify Understanding:</strong> Translate complex datasets into digestible visuals.</li>
+                                        <li><strong>Tell a Story:</strong> Guide the audience through the data to a conclusion.</li>
+                                        <li><strong>Highlight Significance:</strong> Make key results, trends, and outliers immediately obvious.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                             <div class="accordion-item border rounded-md">
+                                <button class="accordion-header w-full text-left p-4 font-medium flex justify-between items-center">
+                                    <span>Data Integrity & Warehousing</span>
+                                    <span class="transform transition-transform duration-300">▼</span>
+                                </button>
+                                <div class="accordion-content px-4 pb-4">
+                                     <p class="text-stone-600">Assess data integrity by checking its <strong>ownership, source, and validation</strong>. Enterprise data warehouses provide historical context, allowing for analysis of long-term trends and correlation with current data.</p>
+                                </div>
+                            </div>
+                            <div class="accordion-item border rounded-md">
+                                <button class="accordion-header w-full text-left p-4 font-medium flex justify-between items-center">
+                                    <span>Impact of Big Data & Technology</span>
+                                     <span class="transform transition-transform duration-300">▼</span>
+                                </button>
+                                <div class="accordion-content px-4 pb-4">
+                                     <p class="text-stone-600">The evolution of processing power, storage, and communication media enables more complex visualisations from vast datasets (Big Data). This allows for deeper insights but requires careful design to manage the scope of visible information.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Revision Resources</h3>
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 resource-card">
+                        <a href="https://www.tableau.com/learn/articles/data-storytelling" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Web: What is data storytelling?</h4>
+                            <p class="text-sm text-stone-500">An introduction from Tableau, a leading analytics platform.</p>
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=8Kk2I4f_V3E" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                             <h4 class="font-bold text-teal-700">Video: The Beauty of Data Visualization</h4>
+                            <p class="text-sm text-stone-500">A classic TED talk by David McCandless on how data can reveal hidden patterns.</p>
+                        </a>
+                        <a href="https://dl.acm.org/doi/10.1145/2145204.2145211" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Academic: Narrative Visualization</h4>
+                            <p class="text-sm text-stone-500">A paper by Segel and Heer on telling stories with data.</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Interpreting data visualisations -->
+            <section id="interpreting" class="tab-content hidden">
+                 <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h2 class="text-2xl font-bold text-teal-700 mb-4">Interpreting Data Visualisations</h2>
+                    <p class="text-stone-600">Effectively interpreting a visualisation is a critical skill. It involves more than just looking at a chart; it requires active interrogation of the data. This section provides an interactive tool to explore how techniques like filtering, aggregation, and identifying outliers can change your understanding of a dataset. We will also review the software tools used to build these visualisations.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Interactive Analysis: Sales Data Explorer</h3>
+                    <p class="mb-4 text-stone-600">Use the buttons below to manipulate the sales data chart. Observe how each action changes the visual representation and the insights you can draw from it. The interpretation text will update based on your selection.</p>
+                    <div class="chart-container mb-4">
+                        <canvas id="interpretingChart"></canvas>
+                    </div>
+                     <div class="flex flex-wrap justify-center gap-3 mb-4">
+                         <button id="interp-reset" class="bg-teal-600 text-white px-4 py-2 rounded-lg shadow hover:bg-teal-700">Raw Monthly Data</button>
+                         <button id="interp-aggregate" class="bg-teal-100 text-teal-800 px-4 py-2 rounded-lg hover:bg-teal-200">Aggregate Quarterly</button>
+                         <button id="interp-filter" class="bg-teal-100 text-teal-800 px-4 py-2 rounded-lg hover:bg-teal-200">Filter (Exclude Q4)</button>
+                         <button id="interp-outlier" class="bg-teal-100 text-teal-800 px-4 py-2 rounded-lg hover:bg-teal-200">Show Outlier Impact</button>
+                    </div>
+                    <div class="bg-stone-100 p-4 rounded-md">
+                        <h4 class="font-semibold">Interpretation:</h4>
+                        <p id="interp-text" class="text-stone-700 text-sm">The raw monthly data shows significant fluctuation in sales, with a notable peak towards the end of the year.</p>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Revision Resources</h3>
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 resource-card">
+                        <a href="https://hbr.org/2016/06/visualizations-that-really-work" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Web: Visualizations That Really Work</h4>
+                            <p class="text-sm text-stone-500">A Harvard Business Review article on choosing the right chart.</p>
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=fSgEeI2Xpdc" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Video: How to Spot a Misleading Graph</h4>
+                            <p class="text-sm text-stone-500">A TED-Ed lesson on critically evaluating data visualisations.</p>
+                        </a>
+                        <a href="https://www.researchgate.net/publication/220395345_A_Review_of_Overview_first_Zoom_and_filter_Detail_on_demand" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Academic: Shneiderman's Mantra</h4>
+                            <p class="text-sm text-stone-500">The core principle of information seeking: "Overview first, zoom and filter, then details-on-demand."</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 3: Designing for user experience -->
+            <section id="ux" class="tab-content hidden">
+                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h2 class="text-2xl font-bold text-teal-700 mb-4">Designing for User Experience (UX)</h2>
+                    <p class="text-stone-600">An effective data visualisation is not just accurate—it's also usable and intuitive. User Experience (UX) design principles ensure that the visualisation is relevant to the audience, easy to interpret, and provides a clear, valuable experience. This section covers key UX considerations, from choosing appropriate colours and layouts to understanding how emerging technologies are shaping user interfaces.</p>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">UX Principles: Do's and Don'ts</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="p-4 border rounded-lg">
+                            <h4 class="font-bold text-lg mb-2">✅ Do: Use color with purpose</h4>
+                            <p class="text-sm text-stone-600">Use colour to highlight key data points or group related information. Ensure high contrast for readability and consider colour blindness.</p>
+                        </div>
+                        <div class="p-4 border border-red-300 bg-red-50 rounded-lg">
+                            <h4 class="font-bold text-lg mb-2 text-red-700">❌ Don't: Use too many colors</h4>
+                            <p class="text-sm text-stone-600">Overusing colours or using them without clear meaning can create visual clutter and confuse the viewer, making the chart difficult to interpret.</p>
+                        </div>
+                        <div class="p-4 border rounded-lg">
+                            <h4 class="font-bold text-lg mb-2">✅ Do: Keep it simple</h4>
+                            <p class="text-sm text-stone-600">Remove unnecessary elements like gridlines, borders, or 3D effects. Every element should serve a purpose in clarifying the data.</p>
+                        </div>
+                        <div class="p-4 border border-red-300 bg-red-50 rounded-lg">
+                            <h4 class="font-bold text-lg mb-2 text-red-700">❌ Don't: Misrepresent data with chart choice</h4>
+                            <p class="text-sm text-stone-600">Using a pie chart for data that doesn't add up to 100% or a line chart for non-continuous data can be highly misleading.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Revision Resources</h3>
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 resource-card">
+                        <a href="https://www.nngroup.com/articles/definition-user-experience/" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Web: The Definition of User Experience</h4>
+                            <p class="text-sm text-stone-500">A foundational article by the Nielsen Norman Group, leaders in UX research.</p>
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=J3s0W5vcL_I" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Video: How to design for the user experience?</h4>
+                            <p class="text-sm text-stone-500">An explainer video covering the core concepts of UX design.</p>
+                        </a>
+                         <a href="https://www.interaction-design.org/literature/topics/user-experience-ux" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Academic: Interaction Design Foundation</h4>
+                            <p class="text-sm text-stone-500">A collection of articles and resources on UX design principles.</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Section 4: Creating data visualisations -->
+            <section id="creating" class="tab-content hidden">
+                <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+                    <h2 class="text-2xl font-bold text-teal-700 mb-4">Creating Data Visualisations</h2>
+                    <p class="text-stone-600">This final section covers the practical aspects of creating a data visualisation, from sourcing and organising data to ensuring its security. The process involves making deliberate design choices to represent trends, patterns, and relationships effectively. Use the "Chart Chooser" tool below to practice selecting the right visualisation for a specific purpose, a key skill for development.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Tool: Chart Chooser</h3>
+                        <p class="text-stone-600 mb-4">What is the primary goal of your visualisation?</p>
+                        <select id="chart-chooser" class="w-full p-2 border border-stone-300 rounded-md bg-white">
+                            <option value="default" selected>Select a goal...</option>
+                            <option value="comparison">Compare values between different categories</option>
+                            <option value="composition">Show parts of a whole</option>
+                            <option value="distribution">Show the frequency and distribution of data</p>
+                            <option value="relationship">Investigate relationships between variables</p>
+                            <option value="time">Track changes over time</option>
+                        </select>
+                        <div id="chart-recommendation" class="mt-4 bg-stone-100 p-4 rounded-md min-h-[100px]">
+                            <p class="text-stone-500">Your recommendation will appear here.</p>
+                        </div>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Data Security Checklist</h3>
+                        <p class="text-stone-600 mb-4">When creating visualisations, especially with sensitive enterprise data, security is paramount.</p>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <span class="text-teal-500 mr-2">✓</span>
+                                <div><strong>Cybersecurity:</strong> Implement access controls. Who is authorized to see this visualisation and the underlying data? Use secure protocols (HTTPS, VPN) for data transfer.</div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-teal-500 mr-2">✓</span>
+                                <div><strong>Data Backup:</strong> Regularly back up the source data. Understand the difference between full, incremental, and differential backups to ensure recoverability.</div>
+                            </li>
+                             <li class="flex items-start">
+                                <span class="text-teal-500 mr-2">✓</span>
+                                <div><strong>Data Storage:</strong> Encrypt sensitive data both at rest (in the database) and in transit (when being sent to the browser for visualisation).</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Revision Resources</h3>
+                    <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4 resource-card">
+                        <a href="https://datavizproject.com/" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Web: The Data Visualisation Project</h4>
+                            <p class="text-sm text-stone-500">An extensive library of different chart types with examples.</p>
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=M-iKCC2T-bI" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Video: Data visualization for beginners</h4>
+                            <p class="text-sm text-stone-500">A step-by-step guide on creating effective data visualisations.</p>
+                        </a>
+                         <a href="https://www.abs.gov.au/websitedbs/d3310114.nsf/home/data+visualisation" target="_blank" class="block bg-white p-4 rounded-lg shadow hover:shadow-lg">
+                            <h4 class="font-bold text-teal-700">Academic/Gov: Australian Bureau of Statistics</h4>
+                            <p class="text-sm text-stone-500">Best practices and examples from Australia's national statistical agency.</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.tab-button');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(item => item.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    const target = tab.getAttribute('data-tab');
+                    contents.forEach(content => {
+                        if (content.id === target) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            const accordions = document.querySelectorAll('.accordion-header');
+            accordions.forEach(accordion => {
+                accordion.addEventListener('click', () => {
+                    const content = accordion.nextElementSibling;
+                    const icon = accordion.querySelector('span:last-child');
+                    accordion.parentElement.classList.toggle('border-teal-500');
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        icon.style.transform = 'rotate(0deg)';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        icon.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+
+            let biasChartInstance;
+            function renderBiasChart() {
+                const ctx = document.getElementById('biasChart').getContext('2d');
+                if(biasChartInstance) {
+                    biasChartInstance.destroy();
+                }
+                biasChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Feature A', 'Feature B', 'Feature C'],
+                        datasets: [{
+                            label: 'Daily Active Users',
+                            data: [1050, 1020, 1080],
+                            backgroundColor: '#0d9488',
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                min: 1000, 
+                                title: {
+                                    display: true,
+                                    text: 'Users'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'User Engagement This Week'
+                            }
+                        }
+                    }
+                });
+            }
+            renderBiasChart();
+            
+            const biasBtns = document.querySelectorAll('.bias-btn');
+            const biasFeedback = document.getElementById('bias-feedback');
+            biasBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const isCorrect = btn.getAttribute('data-correct') === 'true';
+                    if (isCorrect) {
+                        biasFeedback.textContent = "Correct! The Y-axis starts at 1000, which exaggerates the small differences between the features, making Feature C look dramatically more successful than it is. This is a common way to mislead with data.";
+                        biasFeedback.className = 'mt-4 text-sm font-medium text-green-700';
+                    } else {
+                        biasFeedback.textContent = "Not quite. While that can be a form of bias, the most prominent issue here is the Y-axis. Look closely at where it starts.";
+                        biasFeedback.className = 'mt-4 text-sm font-medium text-red-700';
+                    }
+                });
+            });
+            
+            let interpChartInstance;
+            const interpText = document.getElementById('interp-text');
+            const rawData = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                data: [120, 150, 170, 140, 180, 200, 190, 220, 240, 210, 280, 350]
+            };
+            const outlierData = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                data: [120, 150, 170, 140, 180, 200, 190, 220, 240, 800, 280, 350]
+            };
+
+            function renderInterpChart(labels, data, title) {
+                const ctx = document.getElementById('interpretingChart').getContext('2d');
+                if (interpChartInstance) {
+                    interpChartInstance.destroy();
+                }
+                interpChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Sales ($1000s)',
+                            data: data,
+                            borderColor: '#0d9488',
+                            backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                            fill: true,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true } },
+                        plugins: {
+                            title: { display: true, text: title },
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+
+            document.getElementById('interp-reset').addEventListener('click', () => {
+                renderInterpChart(rawData.labels, rawData.data, 'Monthly Sales Data');
+                interpText.textContent = "The raw monthly data shows significant fluctuation in sales, with a clear upward trend and a notable peak towards the end of the year in December.";
+            });
+
+            document.getElementById('interp-aggregate').addEventListener('click', () => {
+                const quarterlyLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
+                const quarterlyData = [
+                    (rawData.data[0] + rawData.data[1] + rawData.data[2])/3,
+                    (rawData.data[3] + rawData.data[4] + rawData.data[5])/3,
+                    (rawData.data[6] + rawData.data[7] + rawData.data[8])/3,
+                    (rawData.data[9] + rawData.data[10] + rawData.data[11])/3
+                ];
+                renderInterpChart(quarterlyLabels, quarterlyData, 'Average Quarterly Sales');
+                interpText.textContent = "By aggregating data quarterly, we smooth out the monthly noise. The chart now clearly shows a steady, positive growth trend across the year.";
+            });
+            
+            document.getElementById('interp-filter').addEventListener('click', () => {
+                const filteredLabels = rawData.labels.slice(0, 9);
+                const filteredData = rawData.data.slice(0, 9);
+                renderInterpChart(filteredLabels, filteredData, 'Sales Data (Q1-Q3 Only)');
+                interpText.textContent = "Filtering to show only the first three quarters removes the year-end sales peak. This focused view is useful for analyzing performance without the influence of seasonal holiday sales.";
+            });
+
+            document.getElementById('interp-outlier').addEventListener('click', () => {
+                renderInterpChart(outlierData.labels, outlierData.data, 'Monthly Sales with Data Anomaly');
+                interpText.textContent = "Introducing an outlier (a data error or an exceptional event) in October dramatically skews the chart. This highlights the importance of identifying and reasoning about outliers, as they can heavily influence interpretation and predictive models.";
+            });
+
+            document.getElementById('interp-reset').click();
+
+            const chartChooser = document.getElementById('chart-chooser');
+            const chartRecommendation = document.getElementById('chart-recommendation');
+            const recommendations = {
+                default: '<p class="text-stone-500">Your recommendation will appear here.</p>',
+                comparison: '<h4>Best for Comparison:</h4><p>Use a <strong>Bar Chart</strong> for direct category comparison or a <strong>Column Chart</strong> if you have many categories.</p>',
+                composition: '<h4>Best for Composition:</h4><p>Use a <strong>Pie Chart</strong> or <strong>Donut Chart</strong> for a simple share of the total. For composition changes over time, use a <strong>Stacked Area Chart</strong>.</p>',
+                distribution: '<h4>Best for Distribution:</h4><p>Use a <strong>Histogram</strong> to show frequency distribution. A <strong>Box Plot</strong> is excellent for showing quartiles and outliers.</p>',
+                relationship: '<h4>Best for Relationships:</h4><p>Use a <strong>Scatter Plot</strong> to show the correlation between two variables. A <strong>Bubble Chart</strong> can add a third dimension.</p>',
+                time: '<h4>Best for Time-Series:</h4><p>Use a <strong>Line Chart</strong>. It is the most effective way to display continuous data over time and show trends.</p>',
+            };
+            chartChooser.addEventListener('change', (e) => {
+                chartRecommendation.innerHTML = recommendations[e.target.value];
+            });
+        });
+    </script>
+</body>
+</html>
