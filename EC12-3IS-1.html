@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Systems: An HSC Revision Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Application Structure Plan: The infographic follows a "From Theory to Practice" narrative, designed for a scrolling experience. It starts with fundamental definitions (DSS vs. ES), progresses to the underlying mechanics and evolution of these systems, addresses the critical topic of data and ethics, and concludes with practical, exam-focused skills for creating these systems. The layout uses a responsive two-column grid to present related concepts side-by-side, enhancing comparison and comprehension. This linear, thematic structure is ideal for revision as it logically builds upon concepts, mirroring the syllabus flow to reinforce learning for Year 12 students. -->
+    <!-- Visualization & Content Choices: 
+        - DSS vs ES Comparison -> Goal: Compare -> Viz: Side-by-side cards (HTML/CSS) -> Justification: Allows for direct, point-by-point comparison of key features.
+        - Decision Types -> Goal: Organize -> Viz: Flowchart (HTML/CSS) -> Justification: Visually maps decision categories to appropriate system types, clarifying their primary use cases.
+        - System Evolution -> Goal: Change -> Viz: Timeline (HTML/CSS) -> Justification: Effectively illustrates the technological progression from simple rule-based systems to complex probabilistic models over time.
+        - ES Components -> Goal: Organize -> Viz: Diagram (HTML/CSS) -> Justification: Breaks down a complex system into its three core, understandable parts.
+        - Ethical Concerns -> Goal: Compare/Inform -> Viz: Donut Chart (Chart.js/Canvas) -> Justification: Provides a high-impact visual summary of the key ethical pillars, weighting them equally as critical considerations.
+        - DSS in Practice -> Goal: Inform/Compare -> Viz: Bar Chart (Chart.js/Canvas) -> Justification: Simulates a typical DSS output by comparing quantitative data (course costs), a core skill for the HSC exam.
+        - ES in Practice -> Goal: Organize -> Viz: Decision Tree (HTML/CSS) -> Justification: Visually represents the logical IF-THEN pathways of an expert system, clarifying how it reaches a conclusion.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFFFEA;
+            color: #002A32;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #FF5E5B;
+            border: 4px solid #FFFFEA;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-7xl">
+
+        <header class="text-center py-8">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-[#002A32]">A Student's Guide to</h1>
+            <h2 class="text-5xl md:text-7xl font-extrabold text-[#FF5E5B]">Intelligent Systems</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-gray-700">Your essential infographic for mastering Decision Support Systems, Expert Systems, and the core concepts for the Enterprise Computing HSC exam.</p>
+        </header>
+
+        <section id="what-are-systems" class="py-12">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-[#002A32]">What Are Intelligent Systems?</h3>
+                <p class="mt-2 text-md text-gray-600">At their core, intelligent systems help organizations make better decisions. They come in two main flavors: Decision Support Systems that augment human intelligence, and Expert Systems that emulate it.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-8 border-[#00CECB]">
+                    <h4 class="text-2xl font-bold mb-4 flex items-center"><span class="text-3xl mr-3">🧠</span> Decision Support System (DSS)</h4>
+                    <p class="mb-4">A DSS is an interactive system that helps decision-makers use data and models to solve semi-structured or unstructured problems. Think of it as a powerful co-pilot for analysis.</p>
+                    <ul class="space-y-2 list-inside list-disc">
+                        <li><strong>Goal:</strong> To <span class="font-semibold">support</span> and enhance human decision-making.</li>
+                        <li><strong>Users:</strong> Managers, analysts, and executives.</li>
+                        <li><strong>Example:</strong> A university enrollment dashboard that models student intake based on ATAR ranges, subject choices, and demographic data to help plan for future resource allocation.</li>
+                    </ul>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-8 border-[#FF5E5B]">
+                    <h4 class="text-2xl font-bold mb-4 flex items-center"><span class="text-3xl mr-3">⚙️</span> Expert System (ES)</h4>
+                    <p class="mb-4">An ES captures the knowledge of a human expert in a specific domain and uses it to provide advice or solve problems. It gives the user a conclusion or recommendation.</p>
+                     <ul class="space-y-2 list-inside list-disc">
+                        <li><strong>Goal:</strong> To <span class="font-semibold">emulate</span> and replicate expert-level decision-making.</li>
+                        <li><strong>Users:</strong> Novices, technicians, or customers needing expert advice.</li>
+                        <li><strong>Example:</strong> An online troubleshooting guide that asks a series of questions about a faulty device and provides a specific solution based on a knowledge base of common issues.</li>
+                    </ul>
+                </div>
+            </div>
+             <div class="mt-12 bg-white rounded-xl shadow-lg p-6">
+                <h4 class="text-2xl font-bold mb-4 text-center">Matching the System to the Decision</h4>
+                <p class="text-center text-gray-600 mb-6">DSS and ES are designed for different types of problems. The structure of the decision determines which tool is the right fit.</p>
+                <div class="flex flex-col md:flex-row justify-around items-center text-center space-y-4 md:space-y-0">
+                    <div class="p-4 rounded-lg bg-[#FFFFEA] border border-gray-200 w-full md:w-1/4">
+                        <h5 class="font-bold text-lg">Structured</h5>
+                        <p class="text-sm">Routine decisions with clear rules (e.g., inventory re-order). Often automated.</p>
+                    </div>
+                    <div class="font-bold text-2xl text-[#00CECB]">→</div>
+                    <div class="p-4 rounded-lg bg-[#E6FFFA] border-2 border-[#00CECB] w-full md:w-1/4">
+                        <h5 class="font-bold text-lg">Semi-Structured</h5>
+                        <p class="text-sm">Partially defined problems needing human judgment aided by data (e.g., marketing budgets). <span class="font-bold">Perfect for a DSS.</span></p>
+                    </div>
+                    <div class="font-bold text-2xl text-[#FF5E5B]">→</div>
+                    <div class="p-4 rounded-lg bg-[#FFEBEB] border-2 border-[#FF5E5B] w-full md:w-1/4">
+                        <h5 class="font-bold text-lg">Unstructured</h5>
+                        <p class="text-sm">Complex problems with no clear solution path (e.g., new product launch). Often needs an <span class="font-bold">Expert System</span> for guidance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="evolution" class="py-12">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-[#002A32]">The Evolution of Expertise</h3>
+                <p class="mt-2 text-md text-gray-600">Expert systems have become significantly more powerful by moving from rigid rules to handling uncertainty with probability.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="text-2xl font-bold mb-6 text-center">From Rules to Reasoning</h4>
+                    <div class="relative pl-8 border-l-4 border-gray-200">
+                        <div class="timeline-item mb-12 relative">
+                            <h5 class="font-bold text-xl">Early 1980s: Rule-Based Systems</h5>
+                            <p class="text-gray-600">Systems relied on a simple set of IF-THEN rules programmed by an expert. They were powerful but brittle; they couldn't handle situations outside their specific rules.</p>
+                        </div>
+                        <div class="timeline-item relative">
+                            <h5 class="font-bold text-xl">Late 1990s - Today: Probabilistic Systems</h5>
+                            <p class="text-gray-600">Driven by more data and computing power, systems began using probability (like Bayesian networks) to manage uncertainty. Instead of a definite "yes" or "no", they provide a likelihood, making them far more flexible and useful in the real world.</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="bg-[#002A32] text-white rounded-xl shadow-lg p-8">
+                    <h4 class="text-2xl font-bold mb-4 text-center text-[#00CECB]">Anatomy of an Expert System</h4>
+                    <div class="space-y-4">
+                        <div class="bg-[#004A55] p-4 rounded-lg text-center">
+                            <h5 class="font-bold text-lg">User Interface</h5>
+                            <p class="text-sm text-gray-300">The mechanism for the user to ask questions and receive answers.</p>
+                        </div>
+                         <div class="text-center text-2xl font-bold text-white">↕</div>
+                        <div class="bg-[#004A55] p-4 rounded-lg">
+                            <h5 class="font-bold text-lg text-center">Inference Engine</h5>
+                            <p class="text-sm text-gray-300 text-center">The 'brain' that applies logical rules to the knowledge base to derive a conclusion.</p>
+                        </div>
+                         <div class="text-center text-2xl font-bold text-white">↕</div>
+                        <div class="bg-[#004A55] p-4 rounded-lg">
+                            <h5 class="font-bold text-lg text-center">Knowledge Base</h5>
+                            <p class="text-sm text-gray-300 text-center">A database containing facts and 'heuristics' (rules of thumb) from human experts.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="data-ethics" class="py-12">
+             <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-[#002A32]">The Fuel: Data & Ethics ⚖️</h3>
+                <p class="mt-2 text-md text-gray-600">Intelligent systems are only as good as the data they are trained on, which raises critical ethical questions.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                 <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="text-2xl font-bold mb-4 text-center">Key Ethical Concerns</h4>
+                    <p class="text-center text-gray-600 mb-6">When building or using intelligent systems, we must consider the potential for harm. These four areas are of primary concern.</p>
+                    <div class="chart-container">
+                        <canvas id="ethicsChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                     <h4 class="text-2xl font-bold mb-4 text-center">Critical Questions to Ask</h4>
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-[#002A32]">Bias</h5>
+                            <p>Is the data used to train the system representative of the real world, or will it lead to unfair outcomes for certain groups?</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-[#002A32]">Privacy</h5>
+                            <p>How is personal data being collected, stored, and used? Have individuals given informed consent?</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-[#002A32]">Accountability</h5>
+                            <p>If the system makes a mistake that causes harm, who is responsible? The developer, the owner, or the user?</p>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h5 class="font-semibold text-[#002A32]">Transparency</h5>
+                            <p>Can we understand how the system reached its conclusion? Or is it a "black box" that we cannot explain or audit?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="building-skills" class="py-12">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-bold text-[#002A32]">Building Your Own: HSC Exam Skills 🛠️</h3>
+                <p class="mt-2 text-md text-gray-600">In the HSC exam, you'll need to apply your knowledge to create basic intelligent systems using provided software.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                 <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="text-2xl font-bold mb-4">Creating a DSS in a Spreadsheet</h4>
+                    <p class="mb-4 text-gray-600">Use spreadsheet functions to model data and help a user make a decision. The key is to transform raw data into clear, comparable information.</p>
+                    <p class="mb-4 font-semibold">Key Tools: <code class="bg-gray-200 p-1 rounded">IF()</code>, <code class="bg-gray-200 p-1 rounded">VLOOKUP()</code>, Conditional Formatting, Pivot Tables, and Charts.</p>
+                    <p class="mb-4 font-bold">Scenario: University Course Selector</p>
+                    <div class="chart-container">
+                        <canvas id="dssChart"></canvas>
+                    </div>
+                     <p class="mt-4 text-sm text-center text-gray-600">This chart helps a student quickly compare the annual fees of different courses, supporting their decision-making process.</p>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <h4 class="text-2xl font-bold mb-4">Creating an ES with Rules</h4>
+                    <p class="mb-4 text-gray-600">Use an expert system shell to create a knowledge base with IF-THEN rules. The system will guide a user through a series of questions to reach a logical conclusion.</p>
+                    <p class="mb-4 font-semibold">Key Skill: Writing clear, logical <code class="bg-gray-200 p-1 rounded">IF-THEN</code> rules.</p>
+                    <p class="mb-4 font-bold">Scenario: Holiday Recommender</p>
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <div class="text-center font-bold mb-2">Start: What is your budget?</div>
+                        <div class="flex justify-around">
+                            <div class="text-center">
+                                <p>Low</p>
+                                <div class="text-2xl">↓</div>
+                                <div class="font-bold mb-2">Interest?</div>
+                                <div class="flex justify-around space-x-4">
+                                    <div>
+                                        <p>Relaxing</p>
+                                        <div class="text-2xl">↓</div>
+                                        <div class="p-2 bg-[#00CECB] text-white rounded-md text-sm">Beach Camping</div>
+                                    </div>
+                                    <div>
+                                        <p>Adventure</p>
+                                        <div class="text-2xl">↓</div>
+                                        <div class="p-2 bg-[#00CECB] text-white rounded-md text-sm">Hiking Trip</div>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="text-center">
+                                <p>High</p>
+                                <div class="text-2xl">↓</div>
+                                <div class="p-2 bg-[#FF5E5B] text-white rounded-md text-sm">Skiing in Japan</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-center text-gray-600">This decision tree shows how the expert system follows different paths based on user input.</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center py-8 mt-12 border-t border-gray-300">
+            <p class="text-gray-600">This toolkit is a revision guide. Always refer to the official NESA syllabus and materials for complete information. Good luck with your studies!</p>
+        </footer>
+
+    </div>
+
+    <script>
+        const tooltipCallback = {
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems[0];
+                            let label = item.chart.data.labels[item.dataIndex];
+                            if (Array.isArray(label)) {
+                                return label.join(' ');
+                            } else {
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const ethicsChartCtx = document.getElementById('ethicsChart').getContext('2d');
+        new Chart(ethicsChartCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Bias', 'Privacy', 'Accountability', 'Transparency'],
+                datasets: [{
+                    label: 'Ethical Concerns',
+                    data: [25, 25, 25, 25],
+                    backgroundColor: ['#FF5E5B', '#00CECB', '#002A32', '#F0D43A'],
+                    borderColor: '#FFFFEA',
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: tooltipCallback.plugins.tooltip
+                }
+            }
+        });
+        
+        const dssChartCtx = document.getElementById('dssChart').getContext('2d');
+        new Chart(dssChartCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Computer Science', 'Business', 'Engineering', 'Medicine', 'Arts'],
+                datasets: [{
+                    label: 'Annual Course Fees ($)',
+                    data: [11500, 9800, 12300, 15500, 8500],
+                    backgroundColor: ['#00CECB', '#00CECB', '#00CECB', '#FF5E5B', '#00CECB'],
+                    borderColor: '#002A32',
+                    borderWidth: 2,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value / 1000 + 'k';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                     legend: {
+                        display: false
+                    },
+                    tooltip: {
+                         ...tooltipCallback.plugins.tooltip,
+                        callbacks: {
+                             ...tooltipCallback.plugins.tooltip.callbacks,
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
