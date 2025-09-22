@@ -8,16 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: "Calm Sage" - A calming and academic palette with a soft beige background, sage green accents, and dark slate for text. -->
-    <!-- Application Structure Plan: A single-page application with a fixed sidebar for primary navigation between the three core syllabus topics and a dedicated section for interactive revision activities. This structure directly mirrors the syllabus, making it intuitive for students to find relevant content. The main content area uses an accordion-style layout for each syllabus dot point, breaking down complex information into manageable, focused chunks. This design prevents overwhelming the user and promotes a step-by-step learning process, which is ideal for revision. User flow is simple: select a major topic, then expand individual dot points to study. -->
-    <!-- Visualization & Content Choices: 
-        - Goal: Organize & Inform -> Presentation: Main navigation and nested accordions -> Interaction: Click to reveal content -> Justification: Aligns with syllabus structure and chunks information for better cognitive load management.
-        - Goal: Inform -> Presentation: Key concept summaries, strategy lists, and curated resource links with icons (HTML/CSS) -> Interaction: Reading, clicking external links -> Justification: Provides core knowledge and pathways for deeper learning.
-        - Goal: Engage & Assess -> Presentation: Interactive Quiz (HTML/JS) -> Interaction: Multiple-choice questions with immediate feedback -> Justification: Active recall is a powerful revision technique; this gamifies the process.
-        - Goal: Engage & Memorize -> Presentation: Interactive Flashcards (HTML/CSS/JS) -> Interaction: Click to flip, next/shuffle buttons -> Justification: Targets memorization of key terms and definitions, another core revision activity.
-        - All visual elements like icons (Unicode) and layouts are created with HTML/Tailwind to adhere to constraints.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -42,28 +32,15 @@
         .content-section.active {
             display: block;
         }
-        .flashcard-container {
-            perspective: 1000px;
+        .draggable {
+            cursor: grab;
         }
-        .flashcard {
-            width: 100%;
-            height: 200px;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
+        .droppable.drag-over {
+            border: 2px dashed #6A994E;
         }
-        .flashcard.is-flipped {
-            transform: rotateY(180deg);
-        }
-        .flashcard-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .flashcard-back {
-            transform: rotateY(180deg);
+        .correct-match {
+            background-color: #D4EDDA; /* Light green */
+            border-color: #6A994E;
         }
     </style>
 </head>
@@ -116,21 +93,13 @@
                     
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div class="bg-white p-6 rounded-xl shadow-md">
-                            <h3 class="text-xl font-bold text-[#386641] mb-4">Key Terms Flashcards</h3>
-                            <div class="flashcard-container">
-                                <div id="flashcard" class="flashcard cursor-pointer shadow-lg rounded-xl">
-                                    <div id="flashcard-front" class="flashcard-face bg-gradient-to-br from-green-100 to-lime-100 p-4 rounded-xl flex items-center justify-center text-center">
-                                        <p class="text-2xl font-semibold text-slate-800"></p>
-                                    </div>
-                                    <div id="flashcard-back" class="flashcard-face bg-gradient-to-br from-slate-100 to-gray-200 p-4 rounded-xl flex items-center justify-center text-center">
-                                        <p class="text-md text-slate-700"></p>
-                                    </div>
-                                </div>
+                            <h3 class="text-xl font-bold text-[#386641] mb-4">Term Matching</h3>
+                            <p class="text-sm text-slate-500 mb-4">Drag a term from the left onto its correct definition on the right.</p>
+                            <div class="flex flex-col md:flex-row gap-8">
+                                <div id="terms-container" class="flex-1 space-y-4"></div>
+                                <div id="definitions-container" class="flex-1 space-y-4"></div>
                             </div>
-                             <div class="flex justify-between items-center mt-4">
-                                <button id="shuffle-flashcards" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition">Shuffle 🔀</button>
-                                <button id="next-flashcard" class="px-4 py-2 bg-[#6A994E] text-white rounded-lg font-semibold hover:bg-[#5a8342] transition">Next Card →</button>
-                            </div>
+                             <button id="reset-button" class="mt-6 w-full px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition">Reset</button>
                         </div>
 
                         <div class="bg-white p-6 rounded-xl shadow-md">
@@ -263,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ]
     };
 
-    const flashcards = [
+    const termMatches = [
         { term: 'Decision Support System (DSS)', definition: 'A computer system that supports decision-making activities by helping managers solve semi-structured and unstructured problems.' },
         { term: 'Expert System (ES)', definition: 'A computer system that emulates the decision-making ability of a human expert in a specific domain.' },
         { term: 'Knowledge Base', definition: 'A repository of facts, rules, and relationships that represents expertise, used by an expert system.' },
@@ -303,14 +272,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
 
-    let currentFlashcardIndex = 0;
-    let shuffledFlashcards = [...flashcards];
-
     let currentQuestionIndex = 0;
     let score = 0;
 
     const sidebarNav = document.getElementById('sidebar-nav');
     const contentContainer = document.getElementById('content-container');
+    const termsContainer = document.getElementById('terms-container');
+    const definitionsContainer = document.getElementById('definitions-container');
+    const resetButton = document.getElementById('reset-button');
+    let matchedCount = 0;
+    let totalMatches = termMatches.length;
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
 
     function createAccordionItem(item, index) {
         const div = document.createElement('div');
@@ -366,39 +345,90 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById(targetId).classList.add('active');
     });
 
-    const flashcardEl = document.getElementById('flashcard');
-    const flashcardFront = document.getElementById('flashcard-front').querySelector('p');
-    const flashcardBack = document.getElementById('flashcard-back').querySelector('p');
+    function renderTermMatching() {
+        termsContainer.innerHTML = '';
+        definitionsContainer.innerHTML = '';
+        matchedCount = 0;
 
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
+        const shuffledTerms = shuffle([...termMatches]);
+        const shuffledDefinitions = shuffle([...termMatches]);
+
+        shuffledTerms.forEach(item => {
+            const termEl = document.createElement('div');
+            termEl.className = 'draggable bg-green-100 p-4 rounded-lg shadow cursor-grab text-center font-medium';
+            termEl.setAttribute('draggable', true);
+            termEl.setAttribute('data-term', item.term);
+            termEl.textContent = item.term;
+            termsContainer.appendChild(termEl);
+        });
+
+        shuffledDefinitions.forEach(item => {
+            const definitionEl = document.createElement('div');
+            definitionEl.className = 'droppable bg-gray-100 p-4 rounded-lg shadow text-sm border-2 border-transparent';
+            definitionEl.setAttribute('data-term', item.term);
+            definitionEl.textContent = item.definition;
+            definitionsContainer.appendChild(definitionEl);
+        });
     }
-    
-    function loadFlashcard() {
-        flashcardEl.classList.remove('is-flipped');
+
+    function handleDragStart(e) {
+        e.dataTransfer.setData('text/plain', e.target.dataset.term);
         setTimeout(() => {
-            const card = shuffledFlashcards[currentFlashcardIndex];
-            flashcardFront.textContent = card.term;
-            flashcardBack.textContent = card.definition;
-        }, 200);
+            e.target.classList.add('hidden');
+        }, 0);
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.target.closest('.droppable').classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+        e.target.closest('.droppable').classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.target.closest('.droppable').classList.remove('drag-over');
+
+        const draggedTerm = e.dataTransfer.getData('text/plain');
+        const droppedTerm = e.target.closest('.droppable').dataset.term;
+        const droppedElement = e.target.closest('.droppable');
+
+        if (draggedTerm === droppedTerm) {
+            droppedElement.textContent = draggedTerm;
+            droppedElement.classList.add('correct-match', 'text-slate-800');
+            droppedElement.classList.remove('bg-gray-100', 'droppable');
+            droppedElement.style.border = 'none';
+            matchedCount++;
+            if (matchedCount === totalMatches) {
+                 setTimeout(() => {
+                    const messageBox = document.createElement('div');
+                    messageBox.className = 'fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50';
+                    messageBox.innerHTML = `
+                        <div class="bg-white p-8 rounded-xl shadow-lg text-center">
+                            <h3 class="text-2xl font-bold text-[#386641] mb-4">Great Job!</h3>
+                            <p class="text-slate-600 mb-6">You've successfully matched all the terms.</p>
+                            <button id="close-message" class="px-4 py-2 bg-[#6A994E] text-white rounded-lg font-semibold hover:bg-[#5a8342] transition">Awesome!</button>
+                        </div>
+                    `;
+                    document.body.appendChild(messageBox);
+                    document.getElementById('close-message').addEventListener('click', () => {
+                        messageBox.remove();
+                    });
+                 }, 500);
+            }
+        } else {
+            const originalTermElement = document.querySelector(`[data-term="${draggedTerm}"]`);
+            originalTermElement.classList.remove('hidden');
+        }
     }
     
-    flashcardEl.addEventListener('click', () => flashcardEl.classList.toggle('is-flipped'));
-
-    document.getElementById('next-flashcard').addEventListener('click', () => {
-        currentFlashcardIndex = (currentFlashcardIndex + 1) % shuffledFlashcards.length;
-        loadFlashcard();
-    });
-    
-    document.getElementById('shuffle-flashcards').addEventListener('click', () => {
-        shuffledFlashcards = shuffle([...flashcards]);
-        currentFlashcardIndex = 0;
-        loadFlashcard();
-    });
+    termsContainer.addEventListener('dragstart', handleDragStart);
+    definitionsContainer.addEventListener('dragover', handleDragOver);
+    definitionsContainer.addEventListener('dragleave', handleDragLeave);
+    definitionsContainer.addEventListener('drop', handleDrop);
+    resetButton.addEventListener('click', renderTermMatching);
 
 
     const quizQuestionEl = document.getElementById('quiz-question');
@@ -469,7 +499,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     renderAccordions();
-    loadFlashcard();
+    renderTermMatching();
     loadQuestion();
 });
 </script>
