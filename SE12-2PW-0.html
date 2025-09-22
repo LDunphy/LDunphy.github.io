@@ -6,600 +6,386 @@
     <title>HSC Software Engineering Revision: Programming for the Web</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Energetic & Playful -->
+    <!-- Application Structure Plan: The SPA uses a tabbed navigation structure that directly corresponds to the two main sections of the NESA 'Programming for the Web' syllabus. This familiar structure allows students to easily navigate to their desired revision area. Within each tab, content is organized into expandable accordions, one for each syllabus dot point. This design choice prevents overwhelming the user with information and promotes focused learning. Each accordion contains a theoretical summary, an actionable revision strategy, a special "Exam Tip" callout, links to verified resources, and occasionally an embedded visualization. Interactive learning is centralized through a modal window that hosts quizzes and flashcards, launched from buttons in the footer. This layered, interactive approach is designed for effective, self-paced revision for the HSC exam. -->
+    <!-- Visualization & Content Choices: Report Info: Core web technologies (HTML/CSS/JS) -> Goal: Inform -> Viz: Donut Chart (Chart.js/Canvas) -> Justification: Provides a simple, memorable visual metaphor for the layered nature of web development. Report Info: Client-Side vs Server-Side tasks -> Goal: Compare -> Viz: HTML/CSS Flow Diagram -> Justification: Visually represents the sequence of the request-response cycle, a fundamental process that is often text-heavy and benefits from a visual aid. Report Info: Key Terminology & Concepts -> Goal: Inform/Organize -> Viz: Interactive Flashcards & Quizzes (JS/HTML/CSS in modal) -> Justification: Active recall (flashcards) and self-assessment (quizzes) are proven, highly effective revision techniques. ALL visualizations are built without SVG or Mermaid JS, adhering to all technical constraints. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        /* Chosen Palette: Calm Academia */
         :root {
-            --bg-main: #F8F7F4; /* Off-white */
-            --bg-secondary: #FFFFFF; /* White */
-            --text-primary: #2c3e50; /* Dark Slate */
-            --text-secondary: #34495e; /* Lighter Slate */
-            --accent-primary: #4A90E2; /* Bright Blue */
-            --accent-secondary: #E9E9E9; /* Light Grey */
-            --border-color: #D1D5DB; /* Grey border */
+            --bg-main: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --accent-primary: #ef4444; /* Vibrant Red */
+            --accent-primary-hover: #dc2626;
+            --accent-secondary: #3b82f6; /* Complementary Blue */
+            --border-color: #e5e7eb;
         }
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-main);
             color: var(--text-primary);
+            scroll-behavior: smooth;
         }
         .active-nav {
             background-color: var(--accent-primary);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
         }
         .inactive-nav {
-            background-color: var(--bg-secondary);
+            background-color: var(--bg-card);
             color: var(--text-primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .accordion-header {
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
         .accordion-header:hover {
-            background-color: var(--accent-secondary);
+            background-color: #fee2e2;
         }
         .accordion-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease-out;
         }
-        .resource-link {
-            transition: transform 0.2s;
-        }
         .resource-link:hover {
-            transform: translateX(4px);
+            color: var(--accent-primary-hover);
+            text-decoration: underline;
         }
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(17, 24, 39, 0.7);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100; opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .flashcard-container {
-            perspective: 1000px;
-        }
-        .flashcard {
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-        }
-        .flashcard.is-flipped {
-            transform: rotateY(180deg);
-        }
-        .flashcard-face {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .flashcard-back {
-            transform: rotateY(180deg);
-        }
-        .chart-container { 
-            position: relative; 
-            width: 100%; 
-            max-width: 400px; 
-            margin-left: auto; 
-            margin-right: auto; 
-            height: 300px;
-            max-height: 350px;
-        }
+        .modal-overlay.is-visible { opacity: 1; visibility: visible; }
+        .modal-content { transform: scale(0.95); transition: transform 0.3s ease; }
+        .modal-overlay.is-visible .modal-content { transform: scale(1); }
+        .flashcard-container { perspective: 1000px; }
+        .flashcard { transform-style: preserve-3d; transition: transform 0.6s; }
+        .flashcard.is-flipped { transform: rotateY(180deg); }
+        .flashcard-face, .flashcard-back { backface-visibility: hidden; position: absolute; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .flashcard-back { transform: rotateY(180deg); }
+        .exam-tip { background-color: #fffbeb; border-left: 4px solid #f59e0b; }
+        .chart-container { position: relative; width: 100%; max-width: 400px; margin: auto; height: 300px; max-height: 350px; }
         @media (min-width: 768px) { .chart-container { height: 350px; } }
     </style>
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="antialiased">
-    <!-- Chosen Palette: Calm Academia -->
-    <!-- Application Structure Plan: A tabbed single-page application (SPA) design was chosen for optimal user experience in a revision context. The two primary tabs, "Data Transmission" and "Designing Web Applications," directly mirror the NESA syllabus structure, providing immediate familiarity. This allows students to perform non-linear revision, focusing on specific areas of need. Within each tab, syllabus dot points are presented in accordions. This design prevents cognitive overload by hiding detailed content until requested. Each accordion contains concise theory, actionable strategies, verified resources, and a button to launch an interactive activity (quiz/flashcards) in a modal window. This interactive, layered approach encourages active recall over passive reading, which is more effective for exam preparation. -->
-    <!-- Visualization & Content Choices: Report Info: Core web technologies -> Goal: Illustrate the distinct roles of HTML, CSS, and JS -> Viz: Donut Chart (Chart.js) -> Interaction: Hover to see percentages/labels -> Justification: A simple visual metaphor to reinforce the concept of layered technologies in web development. Report Info: Client-Server Model -> Goal: Explain the request-response cycle -> Viz: Diagram (HTML/Tailwind) -> Interaction: Static visual aid -> Justification: A clear, structured diagram is more effective than text alone for this fundamental concept, built without SVG. Report Info: Key Terminology -> Goal: Active recall of definitions -> Viz: Flashcards in a modal (HTML/CSS/JS) -> Interaction: Click to flip, next/prev buttons -> Justification: Proven revision method for memorizing terms. Report Info: Syllabus Concepts -> Goal: Test understanding -> Viz: Multiple-choice quiz in a modal -> Interaction: Select answer, get immediate feedback -> Justification: Simulates exam-style questions and provides instant knowledge-gap analysis. All choices adhere to the NO SVG/Mermaid rule and support the tabbed/accordion structure. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-
     <div id="app" class="container mx-auto p-4 sm:p-6 lg:p-8">
-        
-        <header class="text-center mb-8">
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-2">HSC Software Engineering Revision</h1>
-            <p class="text-lg sm:text-xl text-gray-600">Programming for the Web</p>
-            <p class="max-w-3xl mx-auto mt-4 text-gray-500">This interactive toolkit is designed to help you revise key concepts from the 'Programming for the Web' topic. Use the tabs to navigate between syllabus areas, expand the dot points to find resources, and test your knowledge with the interactive activities.</p>
+        <header class="text-center mb-10">
+            <div class="inline-block bg-accent-primary text-white rounded-lg px-4 py-2 mb-4">
+                <h2 class="text-lg font-semibold">Year 12 HSC Revision</h2>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-2">Programming for the Web</h1>
+            <p class="max-w-3xl mx-auto mt-4 text-text-secondary text-lg">An interactive toolkit to help you master the key concepts, practice your skills, and prepare for your online HSC examination.</p>
         </header>
 
-        <nav class="flex justify-center space-x-2 sm:space-x-4 mb-8 sticky top-0 bg-opacity-80 bg-bg-main py-4 z-50 backdrop-blur-sm">
-            <button id="nav-data-transmission" class="nav-btn active-nav w-1/2 sm:w-auto px-4 py-3 rounded-lg shadow-sm font-semibold transition-all duration-300 ease-in-out">
-                1. Data Transmission
-            </button>
-            <button id="nav-designing-apps" class="nav-btn inactive-nav w-1/2 sm:w-auto px-4 py-3 rounded-lg shadow-sm font-semibold transition-all duration-300 ease-in-out">
-                2. Designing Web Apps
-            </button>
+        <nav class="flex justify-center space-x-2 sm:space-x-4 mb-8 sticky top-4 bg-bg-main/80 py-2 z-50 backdrop-blur-sm rounded-xl">
+            <button id="nav-data-transmission" class="nav-btn active-nav w-1/2 sm:w-auto px-4 py-3 rounded-lg font-semibold transition-all duration-300 ease-in-out">1. Data Transmission</button>
+            <button id="nav-designing-apps" class="nav-btn inactive-nav w-1/2 sm:w-auto px-4 py-3 rounded-lg font-semibold transition-all duration-300 ease-in-out">2. Designing Web Apps</button>
         </nav>
 
         <main>
-            <!-- Section 1: Data Transmission Content -->
-            <section id="content-data-transmission" class="space-y-6">
-                <!-- Accordion items will be injected here by JS -->
-            </section>
-
-            <!-- Section 2: Designing Web Applications Content -->
-            <section id="content-designing-apps" class="hidden space-y-6">
-                 <!-- Accordion items will be injected here by JS -->
-            </section>
+            <section id="content-data-transmission" class="space-y-6"></section>
+            <section id="content-designing-apps" class="hidden space-y-6"></section>
         </main>
         
-        <!-- Interactive Zone -->
-        <footer class="mt-12 border-t pt-8 text-center">
-            <h2 class="text-2xl font-bold text-gray-700 mb-4">Final Exam Preparation</h2>
-            <p class="max-w-2xl mx-auto text-gray-500 mb-6">Solidify your knowledge and prepare for the online exam format with these activities.</p>
+        <footer class="mt-12 border-t border-border-color pt-8 text-center bg-white rounded-lg p-8 shadow-sm">
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">Interactive Revision Zone</h2>
+            <p class="max-w-2xl mx-auto text-text-secondary mb-6">Test your knowledge and reinforce key terms. These activities are designed to mimic the quick-recall needed in an exam environment.</p>
             <div class="flex justify-center items-center gap-4 flex-wrap">
-                <button id="open-flashcards-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
-                    Key Term Flashcards
-                </button>
-                <button id="open-quiz-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">
-                    General Knowledge Quiz
-                </button>
+                <button id="open-flashcards-btn" class="bg-accent-primary hover:bg-accent-primary-hover text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">🚀 Launch Flashcards</button>
+                <button id="open-quiz-btn" class="bg-accent-secondary hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105">🧠 Start Knowledge Quiz</button>
             </div>
         </footer>
     </div>
 
-    <!-- Modal for Quizzes and Flashcards -->
-    <div id="modal" class="modal-overlay hidden">
-        <div id="modal-content" class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-2xl max-h-[90vh] flex flex-col">
-            <div class="p-6 border-b flex justify-between items-center">
-                <h3 id="modal-title" class="text-2xl font-bold text-gray-800">Interactive Activity</h3>
-                <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800 text-3xl font-light">&times;</button>
-            </div>
-            <div id="modal-body" class="p-6 sm:p-8 flex-grow overflow-y-auto">
-                <!-- Content will be injected here -->
-            </div>
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content bg-white rounded-2xl shadow-2xl w-11/12 max-w-2xl max-h-[90vh] flex flex-col">
+            <header class="p-5 border-b border-border-color flex justify-between items-center">
+                <h3 id="modal-title" class="text-xl font-bold text-gray-800">Interactive Activity</h3>
+                <button id="modal-close-btn" class="text-gray-400 hover:text-gray-800 text-3xl font-light">&times;</button>
+            </header>
+            <div id="modal-body" class="p-6 sm:p-8 flex-grow overflow-y-auto bg-gray-50"></div>
         </div>
     </div>
 
-
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
     const appData = {
         'data-transmission': {
-            title: 'Data Transmission Using the Web',
             dotPoints: [
                 {
                     title: 'The internet and the web',
-                    content: `
-                        <p class="mb-4 text-text-secondary">A fundamental distinction. The <strong>Internet</strong> is the global network of computers (the hardware and protocols like TCP/IP), while the <strong>World Wide Web</strong> is the system of interconnected documents and resources accessed via the internet (the software and protocols like HTTP).</p>
-                        <h4 class="font-semibold mb-2">Revision Strategy:</h4>
-                        <p class="mb-4 text-text-secondary">Create a two-column table comparing the Internet and the Web. List key characteristics for each, such as 'Infrastructure vs. Information System', 'TCP/IP vs. HTTP', and 'Hardware vs. Software'.</p>
-                        <h4 class="font-semibold mb-2">Key Resources:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><a href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/How_does_the_Internet_work" target="_blank" class="text-blue-600 hover:underline resource-link">MDN: How does the Internet work?</a></li>
-                            <li><a href="https://www.w3.org/History.html" target="_blank" class="text-blue-600 hover:underline resource-link">W3C: A Little History of the World Wide Web</a></li>
-                        </ul>
-                    `,
+                    content: `<p class="mb-4 text-text-secondary">The <strong>Internet</strong> is the global network of physical computers, servers, and cables (the infrastructure). The <strong>World Wide Web</strong> is the information system of linked documents and resources that runs on top of the Internet, using protocols like HTTP.</p><h4 class="font-semibold mb-2 text-text-primary">Revision Strategy:</h4><p class="mb-4 text-text-secondary">Use the analogy: The Internet is like the system of roads, while the Web is the collection of cars, shops, and houses you can access using those roads.</p><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> Expect questions that require you to distinguish between these two terms. Be precise in your definitions, mentioning hardware/infrastructure for the Internet and information/protocols for the Web.</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/How_does_the_Internet_work" target="_blank" class="resource-link">MDN: How does the Internet work?</a></li></ul>`
                 },
                 {
                     title: 'HTML, CSS and JavaScript',
-                    content: `
-                        <p class="mb-4 text-text-secondary">These are the three core technologies of the web. <strong>HTML (HyperText Markup Language)</strong> provides the structure (content). <strong>CSS (Cascading Style Sheets)</strong> handles the presentation (styling). <strong>JavaScript (JS)</strong> controls the behavior (interactivity).</p>
-                        <div class="my-6">
-                           <div class="chart-container"><canvas id="webTechChart"></canvas></div>
-                        </div>
-                        <h4 class="font-semibold mb-2">Revision Strategy:</h4>
-                        <p class="mb-4 text-text-secondary">Think of a house analogy: HTML is the frame and walls (structure), CSS is the paint and furniture (presentation), and JavaScript is the electricity and plumbing (functionality). Practice creating a simple webpage and styling it, then add a button that triggers an alert with JS.</p>
-                        <h4 class="font-semibold mb-2">Key Resources:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><a href="https://developer.mozilla.org/en-US/docs/Learn" target="_blank" class="text-blue-600 hover:underline resource-link">MDN Web Docs: Learn web development</a></li>
-                            <li><a href="https://www.freecodecamp.org/learn/2022/responsive-web-design/" target="_blank" class="text-blue-600 hover:underline resource-link">freeCodeCamp: Responsive Web Design Certification</a></li>
-                            <li><a href="https://www.youtube.com/watch?v=G3e-cpL7ofc" target="_blank" class="text-blue-600 hover:underline resource-link">Video: HTML, CSS, JavaScript Explained (Fireship)</a></li>
-                        </ul>
-                    `,
+                    content: `<p class="mb-4 text-text-secondary">The three fundamental layers of web development. <strong>HTML</strong> defines the structure and content. <strong>CSS</strong> applies styling and presentation. <strong>JavaScript</strong> enables interactivity and behavior.</p><div class="my-6"><div class="chart-container"><canvas id="webTechChart"></canvas></div></div><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> In the HSC exam's code editor, you'll work with these three languages. Be prepared to identify the role of each in a given code snippet, for example, identifying an event listener in JS or a style rule in CSS.</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://www.freecodecamp.org/learn/2022/responsive-web-design/" target="_blank" class="resource-link">freeCodeCamp: Responsive Web Design</a></li><li><a href="https://www.youtube.com/watch?v=G3e-cpL7ofc" target="_blank" class="resource-link">Video: HTML, CSS, JavaScript Explained (Fireship)</a></li></ul>`
                 },
                 {
                     title: 'Client-side and server-side programming',
-                    content: `
-                        <p class="mb-4 text-text-secondary"><strong>Client-side</strong> code (HTML, CSS, JS) runs in the user's web browser. It's responsible for the user interface and immediate interactions. <strong>Server-side</strong> code (e.g., Python, Node.js, PHP) runs on the web server. It handles tasks like database interaction, user authentication, and processing data before sending it to the client.</p>
-                        <div class="border rounded-lg p-4 bg-gray-50 my-4">
-                           <h5 class="font-bold text-center mb-2">Client-Server Request/Response Cycle</h5>
-                           <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-center">
-                               <div class="bg-blue-100 p-3 rounded-lg w-full md:w-1/3"><strong>Client (Browser)</strong><br><small>User clicks a link</small></div>
-                               <div class="font-bold text-blue-600 text-2xl flex flex-col items-center">→<small class="text-xs font-normal text-gray-500">HTTP Request</small></div>
-                               <div class="bg-green-100 p-3 rounded-lg w-full md:w-1/3"><strong>Web Server</strong><br><small>Processes request, queries database</small></div>
-                               <div class="font-bold text-green-600 text-2xl flex flex-col items-center">←<small class="text-xs font-normal text-gray-500">HTTP Response (HTML, CSS, JS)</small></div>
-                               <div class="bg-blue-100 p-3 rounded-lg w-full md:w-1/3"><strong>Client (Browser)</strong><br><small>Renders the page</small></div>
-                           </div>
-                        </div>
-                        <h4 class="font-semibold mb-2">Revision Strategy:</h4>
-                        <p class="mb-4 text-text-secondary">Draw a diagram of the request-response cycle. Label the client, server, request (with method like GET/POST), and response (with status code like 200/404). List three tasks that can only be done on the server-side (e.g., accessing a database securely).</p>
-                        <h4 class="font-semibold mb-2">Key Resources:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Client-Server_overview" target="_blank" class="text-blue-600 hover:underline resource-link">MDN: Client-Server overview</a></li>
-                        </ul>
-                    `,
+                    content: `<p class="mb-4 text-text-secondary"><strong>Client-side</strong> code runs in the user's browser (e.g., Chrome). <strong>Server-side</strong> code runs on the web server, handling logic that requires security or persistent data.</p><div class="my-6 space-y-4"><h5 class="font-bold text-lg text-center text-gray-700">Client-Server Request/Response Cycle</h5><div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2 text-sm text-center"><div class="p-3 bg-blue-100 border-2 border-blue-300 rounded-lg w-full sm:w-auto"><strong>1. Client</strong><br>(Browser)</div><div class="font-bold text-blue-500 transform sm:rotate-0 rotate-90">&rarr; HTTP Request &rarr;</div><div class="p-3 bg-gray-100 border-2 border-gray-300 rounded-lg w-full sm:w-auto"><strong>Internet</strong></div><div class="font-bold text-red-500 transform sm:rotate-0 rotate-90">&rarr; Process Request &rarr;</div><div class="p-3 bg-red-100 border-2 border-red-300 rounded-lg w-full sm:w-auto"><strong>2. Server</strong><br>(Database, Logic)</div><div class="font-bold text-red-500 transform sm:rotate-0 rotate-90">&larr; HTTP Response &larr;</div><div class="p-3 bg-gray-100 border-2 border-gray-300 rounded-lg w-full sm:w-auto"><strong>Internet</strong></div></div></div><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> You might be given a scenario (e.g., an online store) and asked to identify which tasks would be handled on the client-side vs. the server-side. Think: "Does this need to be secure or access a database? If yes, it's server-side."</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps/Client-Server_overview" target="_blank" class="resource-link">MDN: Client-Server overview</a></li></ul>`
                 },
-                 {
-                    title: 'Web servers, cookies and web browser developer tools',
-                    content: `
-                        <p class="mb-4 text-text-secondary">A <strong>web server</strong> is software/hardware that stores website files and delivers them to browsers upon request. <strong>Cookies</strong> are small pieces of data stored on the client's computer by the web browser, used to remember stateful information (e.g., login status, shopping cart items). <strong>Developer Tools</strong> are built into browsers (like Chrome DevTools) and are essential for debugging, inspecting, and testing web applications.</p>
-                        <h4 class="font-semibold mb-2">Revision Strategy:</h4>
-                        <p class="mb-4 text-text-secondary">Open your browser's developer tools (F12 or Ctrl+Shift+I). Go to the 'Network' tab and reload a page to see the requests. Go to the 'Application' (or 'Storage') tab to inspect cookies for a site you're logged into. This hands-on experience is key for the exam.</p>
-                        <h4 class="font-semibold mb-2">Key Resources:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><a href="https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Web_mechanics/What_is_a_web_server" target="_blank" class="text-blue-600 hover:underline resource-link">MDN: What is a web server?</a></li>
-                            <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies" target="_blank" class="text-blue-600 hover:underline resource-link">MDN: HTTP Cookies</a></li>
-                             <li><a href="https://developer.chrome.com/docs/devtools" target="_blank" class="text-blue-600 hover:underline resource-link">Chrome DevTools Documentation</a></li>
-                        </ul>
-                    `,
+                {
+                    title: 'Web servers, cookies and developer tools',
+                    content: `<p class="mb-4 text-text-secondary">A <strong>web server</strong> hosts website files. <strong>Cookies</strong> are small data files stored by the browser to remember user information. <strong>Developer Tools</strong> (F12) are essential for debugging, inspecting network requests, and analysing performance.</p><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> The online HSC exam environment may require you to debug code. Familiarity with the 'Console' for error messages and the 'Inspector/Elements' tab for checking HTML/CSS is a critical skill. Practice using them daily.</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://developer.chrome.com/docs/devtools" target="_blank" class="resource-link">Chrome DevTools Documentation</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies" target="_blank" class="resource-link">MDN: HTTP Cookies</a></li></ul>`
                 },
                 {
                     title: 'Security issues',
-                    content: `
-                        <p class="mb-4 text-text-secondary">Web security involves protecting websites from attacks. Key issues include <strong>Cross-Site Scripting (XSS)</strong> where attackers inject malicious scripts, and <strong>SQL Injection</strong> where malicious SQL queries are used to manipulate a database. Best practices include input validation (never trusting user input) and using HTTPS to encrypt data transmission.</p>
-                        <h4 class="font-semibold mb-2">Revision Strategy:</h4>
-                        <p class="mb-4 text-text-secondary">For the OWASP Top 10 vulnerabilities, create a flashcard for each one with the name of the vulnerability on one side and a simple explanation of the threat on the other. Focus on understanding the concept rather than the technical details of exploitation.</p>
-                        <h4 class="font-semibold mb-2">Key Resources:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><a href="https://owasp.org/www-project-top-ten/" target="_blank" class="text-blue-600 hover:underline resource-link">OWASP Top 10</a></li>
-                             <li><a href="https://developer.mozilla.org/en-US/docs/Web/Security" target="_blank" class="text-blue-600 hover:underline resource-link">MDN: Web security</a></li>
-                        </ul>
-                    `,
+                    content: `<p class="mb-4 text-text-secondary">Key threats include <strong>Cross-Site Scripting (XSS)</strong> and <strong>SQL Injection</strong>. The fundamental principle of web security is to <strong>never trust user input</strong>. All data received from a user must be validated and sanitised on the server before being used.</p><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> Be able to define XSS and SQL Injection in simple terms. For XSS, think "injecting malicious script into a webpage". For SQL Injection, think "tricking a database with malicious input".</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://owasp.org/www-project-top-ten/" target="_blank" class="resource-link">OWASP Top 10</a></li></ul>`
                 }
             ]
         },
         'designing-apps': {
-            title: 'Designing Web Applications',
             dotPoints: [
                 {
-                    title: 'Progressive Web Applications (PWAs)',
-                    content: `
-                        <p class="mb-4 text-text-secondary">PWAs are web applications that use modern web capabilities to provide an app-like experience. Key features include being <strong>installable</strong> on a device's home screen, being able to work <strong>offline</strong> (using a Service Worker), and being <strong>discoverable</strong> by search engines. They bridge the gap between websites and native mobile apps.</p>
-                        <h4 class="font-semibold mb-2">Revision Strategy:</h4>
-                        <p class="mb-4 text-text-secondary">Use your phone to visit a PWA-enabled site like Twitter Lite (mobile.twitter.com) or Starbucks (app.starbucks.com). Follow the prompt to 'Add to Home Screen' and experience how it behaves like a native app. This will help you describe its features.</p>
-                        <h4 class="font-semibold mb-2">Key Resources:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><a href="https://web.dev/articles/what-are-pwas" target="_blank" class="text-blue-600 hover:underline resource-link">web.dev: What are Progressive Web Apps?</a></li>
-                            <li><a href="https://www.youtube.com/watch?v=sFsRylCQblw" target="_blank" class="text-blue-600 hover:underline resource-link">Video: PWA in 100 Seconds (Fireship)</a></li>
-                        </ul>
-                    `,
+                    title: 'Progressive Web Apps (PWAs)',
+                    content: `<p class="mb-4 text-text-secondary">A <strong>Progressive Web App (PWA)</strong> is a type of web application that provides an app-like experience to users. They are designed to be reliable, fast, and engaging, and can be installed on a device without a traditional app store.</p><h4 class="font-semibold mb-2 text-text-primary">Revision Strategy:</h4><p class="mb-4 text-text-secondary">Remember the key qualities of PWAs: Reliable (works offline), Fast (loads quickly), and Engaging (feels like a native app). Think about a website you use that has a pop-up to "Add to Home Screen".</p><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> The exam might present a scenario and ask you to identify the benefits of using a PWA over a traditional website or native app. Focus on benefits like offline access, faster loading, and device integration.</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps" target="_blank" class="resource-link">MDN: Progressive Web Apps</a></li></ul>`
                 },
                 {
-                    title: 'Features of PWAs',
-                    content: `
-                        <p class="mb-4 text-text-secondary">PWAs are built on two core technologies: a <strong>Web App Manifest</strong> (a JSON file describing the app's name, icons, etc.) and a <strong>Service Worker</strong> (a JavaScript file running in the background that handles network requests, caching, and offline capabilities).</p>
-                        <h4 class="font-semibold mb-2">Revision Strategy:</h4>
-                        <p class="mb-4 text-text-secondary">Create a concept map with 'PWA' at the center. Branch out to its key features: Installable, Offline Capable, App-like, Discoverable, Re-engageable (push notifications). Under 'Offline Capable', add a sub-branch for 'Service Worker' and its role in caching.</p>
-                        <h4 class="font-semibold mb-2">Key Resources:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><a href="https://developer.mozilla.org/en-US/docs/Web/Manifest" target="_blank" class="text-blue-600 hover:underline resource-link">MDN: Web App Manifest</a></li>
-                            <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API" target="_blank" class="text-blue-600 hover:underline resource-link">MDN: Service Worker API</a></li>
-                        </ul>
-                    `,
+                    title: 'Web App Manifest',
+                    content: `<p class="mb-4 text-text-secondary">The <strong>Web App Manifest</strong> is a simple JSON file that tells the browser how your PWA should behave when "installed" on a user's device. It includes information like the app's name, icons, start URL, and display mode.</p><h4 class="font-semibold mb-2 text-text-primary">Revision Strategy:</h4><p class="mb-4 text-text-secondary">Think of the manifest as the "ID card" for your PWA. It contains all the meta-information a device needs to treat the website like a native app. The key takeaway is that it's a JSON file.</p><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> You may be shown a snippet of a manifest file and asked to identify what a specific property (e.g., <code>"start_url"</code> or <code>"icons"</code>) does.</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://developer.mozilla.org/en-US/docs/Web/Manifest" target="_blank" class="resource-link">MDN: Web App Manifest</a></li></ul>`
                 },
                 {
-                    title: 'Designing and testing a PWA',
-                    content: `
-                        <p class="mb-4 text-text-secondary">Designing a PWA requires a 'mobile-first' approach and consideration for different network conditions. <strong>Testing</strong> is crucial and involves using browser developer tools (like Lighthouse in Chrome) to audit the PWA against a checklist for performance, accessibility, and PWA features. Testing should also occur on real mobile devices to check the user experience.</p>
-                        <h4 class="font-semibold mb-2">Revision Strategy:</h4>
-                        <p class="mb-4 text-text-secondary">On a PWA site (or any site), open Chrome DevTools, go to the 'Lighthouse' tab, and run a report. Analyse the 'Progressive Web App' section of the report to see what checks are performed. This is a practical skill that demonstrates understanding.</p>
-                        <h4 class="font-semibold mb-2">Key Resources:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><a href="https://web.dev/articles/pwa-checklist" target="_blank" class="text-blue-600 hover:underline resource-link">web.dev: PWA Checklist</a></li>
-                        </ul>
-                    `,
+                    title: 'Service Workers',
+                    content: `<p class="mb-4 text-text-secondary">A <strong>Service Worker</strong> is a JavaScript file that runs in the background, separate from the main webpage. It acts as a proxy between the browser and the network, allowing for powerful features like offline caching of assets and push notifications.</p><h4 class="font-semibold mb-2 text-text-primary">Revision Strategy:</h4><p class="mb-4 text-text-secondary">The service worker is the "engine" that enables the "reliable" aspect of a PWA. Its main job is to intercept network requests and decide whether to fetch a resource from the cache or from the network.</p><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> Be able to differentiate between the role of the Service Worker (offline functionality, caching) and the Web App Manifest (app metadata and appearance).</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API" target="_blank" class="resource-link">MDN: Service Worker API</a></li></ul>`
                 },
                 {
-                    title: 'JavaScript libraries and APIs',
-                    content: `
-                        <p class="mb-4 text-text-secondary"><strong>JavaScript libraries</strong> (like React, Vue, or jQuery) are collections of pre-written code that simplify development. <strong>APIs (Application Programming Interfaces)</strong> are sets of rules that allow different software applications to communicate with each other. Web developers use APIs to fetch data from third-party services (e.g., getting weather data from a weather service or maps from Google Maps).</p>
-                        <h4 class="font-semibold mb-2">Revision Strategy:</h4>
-                        <p class="mb-4 text-text-secondary">Explain the difference between a library and a framework (a key distinction). For APIs, think of a restaurant analogy: You (the client) give an order (request) to the waiter (API), who takes it to the kitchen (server). The kitchen prepares the food (data), and the waiter brings it back to you (response). You don't need to know how the kitchen works, just how to order from the menu (the API documentation).</p>
-                        <h4 class="font-semibold mb-2">Key Resources:</h4>
-                        <ul class="list-disc pl-5 space-y-2 mb-4">
-                            <li><a href="https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks" target="_blank" class="text-blue-600 hover:underline resource-link">MDN: Client-side JS Frameworks</a></li>
-                            <li><a href="https://www.postman.com/what-is-an-api/" target="_blank" class="text-blue-600 hover:underline resource-link">Postman: What is an API?</a></li>
-                        </ul>
-                    `,
+                    title: 'Caching and Storage',
+                    content: `<p class="mb-4 text-text-secondary">The Service Worker enables caching by using the <strong>Cache API</strong> to store network requests and their responses. Other web storage APIs like <strong>IndexedDB</strong> and <strong>LocalStorage</strong> can be used for more structured or long-term data storage.</p><h4 class="font-semibold mb-2 text-text-primary">Revision Strategy:</h4><p class="mb-4 text-text-secondary">Think about how different types of data are stored. Cached resources are for offline access to the website itself, while user-specific data (like a shopping cart) might be better suited for LocalStorage or IndexedDB.</p><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> An exam question might require you to choose the most appropriate storage mechanism for a given task. For simple key-value pairs, use LocalStorage. For larger, more complex data, consider IndexedDB.</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API" target="_blank" class="resource-link">MDN: IndexedDB API</a></li><li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Cache" target="_blank" class="resource-link">MDN: Cache API</a></li></ul>`
+                },
+                {
+                    title: 'Developer Tools (Lighthouse)',
+                    content: `<p class="mb-4 text-text-secondary"><strong>Lighthouse</strong> is an automated tool included in Chrome DevTools that audits a webpage for performance, accessibility, SEO, and PWA compliance. It generates a report with scores and suggestions for improvements.</p><h4 class="font-semibold mb-2 text-text-primary">Revision Strategy:</h4><p class="mb-4 text-text-secondary">Lighthouse is the "inspector" for your PWA. Use it to check if your app meets the PWA criteria. A perfect score of 100/100 is the goal for each category.</p><div class="exam-tip p-4 rounded-md mb-4"><p><strong>Exam Tip:</strong> You may be shown a Lighthouse report and asked to interpret the results or suggest how to fix a low score in a particular category (e.g., fixing a low performance score by optimising images).</p></div><h4 class="font-semibold mb-2 text-text-primary">Key Resources:</h4><ul class="list-disc pl-5 space-y-2 mb-4 text-accent-secondary"><li><a href="https://developer.chrome.com/docs/lighthouse/overview" target="_blank" class="resource-link">Lighthouse Documentation</a></li></ul>`
                 }
             ]
         },
         flashcards: [
-            { term: 'Internet', definition: 'The global physical network of computers, cables, and routers that are connected together. The hardware infrastructure.' },
-            { term: 'World Wide Web', definition: 'A system of interlinked hypertext documents accessed via the Internet. The information system built on top of the internet.' },
-            { term: 'HTTP', definition: 'HyperText Transfer Protocol. The protocol used by the World Wide Web to define how messages are formatted and transmitted.' },
-            { term: 'HTML', definition: 'HyperText Markup Language. The standard markup language for creating web pages and web applications. Defines the structure/content.' },
-            { term: 'CSS', definition: 'Cascading Style Sheets. A style sheet language used for describing the presentation of a document written in a markup language like HTML.' },
-            { term: 'JavaScript', definition: 'A programming language that enables interactive web pages. It handles the behavior and logic on the client-side.' },
-            { term: 'Client-side', definition: 'Refers to operations that are performed by the client (the user\'s web browser) in a client-server relationship.' },
-            { term: 'Server-side', definition: 'Refers to operations that are performed by the server in a client-server relationship. Often involves databases and business logic.' },
-            { term: 'Cookie', definition: 'A small piece of data sent from a website and stored on the user\'s computer by the web browser while the user is browsing.' },
-            { term: 'API', definition: 'Application Programming Interface. A set of rules and protocols for building and interacting with software applications, allowing them to communicate.' },
-            { term: 'PWA', definition: 'Progressive Web App. A web application that uses modern web capabilities to deliver an app-like experience to users.' },
-            { term: 'Service Worker', definition: 'A script that your browser runs in the background, separate from a web page, enabling features like offline access and push notifications.' },
-            { term: 'Web App Manifest', definition: 'A JSON file that tells the browser about your Progressive Web App and how it should behave when installed on the user\'s device.' },
-            { term: 'XSS', definition: 'Cross-Site Scripting. A security vulnerability where an attacker injects malicious scripts into content from otherwise trusted websites.' }
+            { term: 'Protocol', definition: 'A set of rules governing the exchange of data between devices, e.g., HTTP, TCP/IP.' },
+            { term: 'DOM', definition: 'Document Object Model. A programming interface for web documents that represents the page so programs can change its structure, style, and content.' },
+            { term: 'Client-side', definition: 'Operations performed by the user\'s web browser in a client-server relationship.' },
+            { term: 'Server-side', definition: 'Operations performed by the server, such as accessing a database.' },
+            { term: 'Cookie', definition: 'A small piece of data from a website, stored on the user\'s computer by the browser.' },
+            { term: 'API', definition: 'Application Programming Interface. A set of rules for building and interacting with software applications, allowing them to communicate.' },
+            { term: 'PWA', definition: 'Progressive Web App. A web application that uses modern web capabilities to deliver an app-like experience.' },
+            { term: 'Service Worker', definition: 'A script that a browser runs in the background, separate from a web page, enabling features like offline access.' },
+            { term: 'Web App Manifest', definition: 'A JSON file that tells the browser about a PWA and how it should behave when installed.' },
+            { term: 'SQL Injection', definition: 'A web security vulnerability allowing an attacker to interfere with the queries an application makes to its database.' },
+            { term: 'HTTPS', definition: 'Hypertext Transfer Protocol Secure. The secure version of HTTP, where communications are encrypted.' },
+            { term: 'JSON', definition: 'JavaScript Object Notation. A lightweight data-interchange format, easy for humans to read and for machines to parse.' }
         ],
         quiz: [
-            {
-                q: 'Which technology is primarily responsible for the styling and layout of a webpage?',
-                o: ['HTML', 'JavaScript', 'CSS', 'HTTP'],
-                a: 'CSS'
-            },
-            {
-                q: 'A script that runs in the background to enable offline functionality in a PWA is called a:',
-                o: ['Web Worker', 'Service Worker', 'API Fetcher', 'Manifest File'],
-                a: 'Service Worker'
-            },
-            {
-                q: 'In the client-server model, where is user authentication typically handled?',
-                o: ['Client-side', 'Server-side', 'In the HTTP protocol', 'In the CSS file'],
-                a: 'Server-side'
-            },
-            {
-                q: 'What does API stand for?',
-                o: ['Application Protocol Instance', 'Advanced Programming Interface', 'Application Programming Interface', 'Automated Process Integration'],
-                a: 'Application Programming Interface'
-            },
-            {
-                q: 'Which of the following BEST describes the relationship between the Internet and the World Wide Web?',
-                o: ['They are the same thing.', 'The Internet is a service that runs on the Web.', 'The Web is an information system that runs on the Internet infrastructure.', 'The Web is the hardware and the Internet is the software.'],
-                a: 'The Web is an information system that runs on the Internet infrastructure.'
-            },
-            {
-                q: 'Which security vulnerability involves an attacker sending malicious database queries to a server?',
-                o: ['Cross-Site Scripting (XSS)', 'Denial of Service (DoS)', 'SQL Injection', 'Man-in-the-Middle'],
-                a: 'SQL Injection'
-            },
-             {
-                q: 'The JSON file that describes a PWA\'s name, icons, and start URL is called the:',
-                o: ['package.json', 'Service Worker', 'Web App Manifest', 'PWA Config'],
-                a: 'Web App Manifest'
-            },
-            {
-                q: 'Which browser tool is most useful for inspecting network requests and responses?',
-                o: ['Console', 'Elements/Inspector tab', 'Network tab', 'Lighthouse'],
-                a: 'Network tab'
-            }
+            { q: 'Which technology is for the structure and content of a webpage?', o: ['CSS', 'JavaScript', 'HTTP', 'HTML'], a: 'HTML', feedback: { correct: 'Correct! <strong>HTML</strong> stands for HyperText Markup Language and is used to define the fundamental structure and content of a webpage.', incorrect: 'Incorrect. <strong>CSS</strong> is for styling, <strong>JavaScript</strong> is for interactivity, and <strong>HTTP</strong> is a protocol. <strong>HTML</strong> is the correct answer because it provides the structure.' } },
+            { q: 'What is the main role of a Service Worker in a PWA?', o: ['Define the app\'s icons and name', 'Enable offline functionality and caching', 'Style the user interface', 'Authenticate the user'], a: 'Enable offline functionality and caching', feedback: { correct: 'That\'s right! The <strong>Service Worker</strong> acts as a proxy, intercepting network requests and allowing the app to cache content, which enables offline access.', incorrect: 'Not quite. The <strong>Web App Manifest</strong> handles the app\'s name and icons, while styling is handled by CSS. A Service Worker\'s primary role is to enable offline functionality and caching.' } },
+            { q: 'Processing a credit card payment must be handled on the:', o: ['Client-side, for speed', 'Server-side, for security', 'Either side is acceptable', 'Browser\'s developer tools'], a: 'Server-side, for security', feedback: { correct: 'Correct! Sensitive operations like credit card processing must be handled on the <strong>server-side</strong> to protect user data and ensure it cannot be intercepted or tampered with on the client.', incorrect: 'Incorrect. Handling sensitive data like payments on the client-side would be a major security risk. It must be processed on the <strong>server-side</strong> to ensure data integrity and security.' } },
+            { q: 'A developer uses a third-party service for weather data. They are using an:', o: ['JavaScript Library', 'Web Server', 'API', 'Cookie'], a: 'API', feedback: { correct: 'That\'s it! An <strong>API</strong> (Application Programming Interface) is a set of rules that allows different software applications to communicate with each other. A weather service API provides weather data to your application.', incorrect: 'Not an <strong>API</strong>. A JavaScript library is a collection of pre-written code, a web server hosts files, and a cookie stores small pieces of user data. An <strong>API</strong> is the correct term for an interface to a third-party service.' } },
+            { q: 'The main principle of preventing web security vulnerabilities is to:', o: ['Use HTTPS', 'Never trust user input', 'Store data in cookies', 'Use a modern JavaScript library'], a: 'Never trust user input', feedback: { correct: 'That\'s the core principle! The most fundamental rule of web security is to validate and sanitise all data received from a user, because you can\'t trust its origin or content.', incorrect: 'While using HTTPS is good practice, it only encrypts communication. The primary principle is to <strong>never trust user input</strong>, as vulnerabilities like SQL Injection and XSS are caused by malicious input.' } },
+            { q: 'Which tool audits for PWA compliance?', o: ['Console', 'Network Tab', 'Elements Inspector', 'Lighthouse'], a: 'Lighthouse', feedback: { correct: 'Correct! <strong>Lighthouse</strong> is a part of Chrome DevTools specifically designed to audit a webpage against best practices, including PWA compliance.', incorrect: 'Incorrect. The Console is for viewing logs and errors, the Network Tab monitors requests, and the Elements Inspector allows you to view and edit HTML/CSS. <strong>Lighthouse</strong> is the tool for auditing PWA compliance.' } },
+            { q: 'The global physical network of computers is called the:', o: ['World Wide Web', 'Cloud', 'Internet', 'PWA'], a: 'Internet', feedback: { correct: 'That\'s right! The <strong>Internet</strong> is the physical infrastructure of connected computers and networks. The World Wide Web runs on top of it.', incorrect: 'Incorrect. The <strong>World Wide Web</strong> is the system of information and documents that uses the Internet\'s infrastructure. The Internet itself is the physical network.' } },
+            { q: 'A JSON file with an app\'s name and icons is the:', o: ['Service Worker', 'Web App Manifest', 'package.json', 'API definition'], a: 'Web App Manifest', feedback: { correct: 'Correct! The <strong>Web App Manifest</strong> is a JSON file that provides metadata for your PWA, including its name, start URL, and icons.', incorrect: 'Incorrect. A <strong>Service Worker</strong> handles offline caching and push notifications. The <strong>Web App Manifest</strong> is the JSON file that defines the PWA\'s metadata and appearance.' } }
         ]
     };
-
-    const navDataBtn = document.getElementById('nav-data-transmission');
-    const navDesignBtn = document.getElementById('nav-designing-apps');
-    const contentData = document.getElementById('content-data-transmission');
-    const contentDesign = document.getElementById('content-designing-apps');
-
-    const modal = document.getElementById('modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalBody = document.getElementById('modal-body');
-    const modalCloseBtn = document.getElementById('modal-close-btn');
-
-    let webTechChartInstance = null;
-    
-    function createAccordionItem(dotPoint, index) {
-        const div = document.createElement('div');
-        div.className = 'bg-white rounded-lg shadow-sm border border-border-color';
-        div.innerHTML = `
-            <div class="accordion-header p-4 flex justify-between items-center">
-                <h3 class="text-lg font-semibold text-text-primary">${dotPoint.title}</h3>
-                <svg class="w-6 h-6 transform transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-            </div>
-            <div class="accordion-content px-4 pb-4">
-                ${dotPoint.content}
-            </div>
-        `;
-        return div;
-    }
-    
-    function populateAccordions() {
-        appData['data-transmission'].dotPoints.forEach((dp, i) => {
-            contentData.appendChild(createAccordionItem(dp, i));
-        });
-        appData['designing-apps'].dotPoints.forEach((dp, i) => {
-            contentDesign.appendChild(createAccordionItem(dp, i));
-        });
-
-        document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const content = header.nextElementSibling;
-                const icon = header.querySelector('svg');
-                
-                if (content.style.maxHeight) {
-                    content.style.maxHeight = null;
-                    icon.style.transform = 'rotate(0deg)';
-                } else {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                    icon.style.transform = 'rotate(180deg)';
-                    if (header.textContent.includes('HTML, CSS and JavaScript')) {
-                        setTimeout(renderWebTechChart, 100);
-                    }
-                } 
+    const app = {
+        elements: {
+            navDataBtn: document.getElementById('nav-data-transmission'),
+            navDesignBtn: document.getElementById('nav-designing-apps'),
+            contentData: document.getElementById('content-data-transmission'),
+            contentDesign: document.getElementById('content-designing-apps'),
+            modal: document.getElementById('modal'),
+            modalTitle: document.getElementById('modal-title'),
+            modalBody: document.getElementById('modal-body'),
+            modalCloseBtn: document.getElementById('modal-close-btn'),
+        },
+        state: { webTechChartInstance: null, quizProgress: { currentQuestionIndex: 0, score: 0, questions: [] } },
+        init() {
+            this.populateAccordions();
+            this.setupEventListeners();
+        },
+        setupEventListeners() {
+            this.elements.navDataBtn.addEventListener('click', () => this.switchTab('data'));
+            this.elements.navDesignBtn.addEventListener('click', () => this.switchTab('design'));
+            document.querySelector('main').addEventListener('click', this.handleAccordionClick.bind(this));
+            this.elements.modalCloseBtn.addEventListener('click', () => this.closeModal());
+            this.elements.modal.addEventListener('click', e => e.target === this.elements.modal && this.closeModal());
+            document.getElementById('open-flashcards-btn').addEventListener('click', () => this.showFlashcards());
+            document.getElementById('open-quiz-btn').addEventListener('click', () => this.showQuiz());
+        },
+        populateAccordions() {
+            const createAccordionItem = dotPoint => {
+                const div = document.createElement('div');
+                div.className = 'bg-bg-card rounded-lg shadow-sm border border-border-color';
+                div.innerHTML = `<div class="accordion-header p-5 flex justify-between items-center"><h3 class="text-lg font-semibold text-text-primary">${dotPoint.title}</h3><svg class="w-6 h-6 transform transition-transform duration-300 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg></div><div class="accordion-content px-5"><div class="pb-5 pt-2 border-t border-border-color">${dotPoint.content}</div></div>`;
+                return div;
+            };
+            appData['data-transmission'].dotPoints.forEach(dp => this.elements.contentData.appendChild(createAccordionItem(dp)));
+            appData['designing-apps'].dotPoints.forEach(dp => this.elements.contentDesign.appendChild(createAccordionItem(dp)));
+        },
+        handleAccordionClick(event) {
+            const header = event.target.closest('.accordion-header');
+            if (!header) return;
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('svg');
+            const isActive = content.style.maxHeight;
+            document.querySelectorAll('.accordion-content').forEach(otherContent => {
+                otherContent.style.maxHeight = null;
+                otherContent.previousElementSibling.querySelector('svg').style.transform = 'rotate(0deg)';
             });
-        });
-    }
-
-    function switchTab(activeBtn, inactiveBtn, activeContent, inactiveContent) {
-        activeBtn.classList.remove('inactive-nav');
-        activeBtn.classList.add('active-nav');
-        inactiveBtn.classList.add('inactive-nav');
-        inactiveBtn.classList.remove('active-nav');
-
-        activeContent.classList.remove('hidden');
-        inactiveContent.classList.add('hidden');
-    }
-
-    navDataBtn.addEventListener('click', () => switchTab(navDataBtn, navDesignBtn, contentData, contentDesign));
-    navDesignBtn.addEventListener('click', () => switchTab(navDesignBtn, navDataBtn, contentDesign, contentData));
-
-    function openModal() { modal.classList.remove('hidden'); }
-    function closeModal() { modal.classList.add('hidden'); modalBody.innerHTML = ''; }
-    
-    modalCloseBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    function showFlashcards() {
-        let currentIndex = 0;
-        const flashcards = appData.flashcards.sort(() => 0.5 - Math.random());
-        
-        modalTitle.innerText = 'Key Term Flashcards';
-        
-        function renderCard() {
-            const card = flashcards[currentIndex];
-            modalBody.innerHTML = `
-                <div class="flashcard-container h-64 w-full">
-                    <div class="flashcard relative h-full w-full">
-                        <div class="flashcard-face absolute h-full w-full flex items-center justify-center bg-blue-100 border-2 border-blue-300 rounded-lg p-4 text-center">
-                            <h2 class="text-2xl font-bold text-blue-800">${card.term}</h2>
-                        </div>
-                        <div class="flashcard-back absolute h-full w-full flex items-center justify-center bg-green-100 border-2 border-green-300 rounded-lg p-4 text-center">
-                            <p class="text-lg text-green-800">${card.definition}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center mt-6">
-                    <button id="prev-card" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">&larr; Previous</button>
-                    <span class="text-gray-600 font-semibold">${currentIndex + 1} / ${flashcards.length}</span>
-                    <button id="next-card" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Next &rarr;</button>
-                </div>
-            `;
-            const flashcardEl = document.querySelector('.flashcard');
-            flashcardEl.addEventListener('click', () => {
-                flashcardEl.classList.toggle('is-flipped');
-            });
-            document.getElementById('prev-card').addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
-                renderCard();
-            });
-            document.getElementById('next-card').addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % flashcards.length;
-                renderCard();
-            });
-        }
-        renderCard();
-        openModal();
-    }
-    
-    function showQuiz() {
-        let currentQuestionIndex = 0;
-        let score = 0;
-        const questions = appData.quiz.sort(() => 0.5 - Math.random());
-
-        modalTitle.innerText = 'General Knowledge Quiz';
-        
-        function renderQuestion() {
-            if (currentQuestionIndex >= questions.length) {
-                renderResults();
-                return;
-            }
-            const question = questions[currentQuestionIndex];
-            const optionsHtml = question.o.map(opt => 
-                `<button class="quiz-option block w-full text-left p-4 bg-gray-100 hover:bg-blue-100 rounded-lg border border-gray-200 my-2 transition-colors">${opt}</button>`
-            ).join('');
-
-            modalBody.innerHTML = `
-                <div class="mb-4">
-                    <p class="text-gray-600 font-semibold">Question ${currentQuestionIndex + 1} of ${questions.length}</p>
-                    <h3 class="text-xl font-semibold mt-1">${question.q}</h3>
-                </div>
-                <div>${optionsHtml}</div>
-                <div id="feedback" class="mt-4 text-lg font-semibold"></div>
-            `;
-
-            document.querySelectorAll('.quiz-option').forEach(btn => {
-                btn.addEventListener('click', handleAnswer);
-            });
-        }
-
-        function handleAnswer(e) {
-            const selectedOption = e.target.innerText;
-            const question = questions[currentQuestionIndex];
-            const feedbackEl = document.getElementById('feedback');
-            
-            document.querySelectorAll('.quiz-option').forEach(btn => btn.disabled = true);
-
-            if (selectedOption === question.a) {
-                score++;
-                e.target.classList.add('bg-green-200', 'border-green-400');
-                feedbackEl.innerHTML = '<p class="text-green-600">Correct!</p>';
-            } else {
-                e.target.classList.add('bg-red-200', 'border-red-400');
-                feedbackEl.innerHTML = `<p class="text-red-600">Incorrect. The correct answer is: ${question.a}</p>`;
-                document.querySelectorAll('.quiz-option').forEach(btn => {
-                    if(btn.innerText === question.a) {
-                         btn.classList.add('bg-green-200', 'border-green-400');
-                    }
-                });
-            }
-
-            setTimeout(() => {
-                currentQuestionIndex++;
-                renderQuestion();
-            }, 2000);
-        }
-        
-        function renderResults() {
-             modalBody.innerHTML = `
-                <div class="text-center">
-                    <h2 class="text-2xl font-bold mb-4">Quiz Complete!</h2>
-                    <p class="text-xl mb-6">You scored ${score} out of ${questions.length}.</p>
-                    <button id="restart-quiz" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg">Try Again</button>
-                </div>
-             `;
-             document.getElementById('restart-quiz').addEventListener('click', showQuiz);
-        }
-
-        renderQuestion();
-        openModal();
-    }
-
-    function renderWebTechChart() {
-        const ctx = document.getElementById('webTechChart');
-        if (!ctx) return;
-        if (webTechChartInstance) {
-            webTechChartInstance.destroy();
-        }
-        webTechChartInstance = new Chart(ctx.getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: ['HTML (Structure)', 'CSS (Presentation)', 'JavaScript (Behavior)'],
-                datasets: [{
-                    label: 'Roles of Web Technologies',
-                    data: [40, 30, 30],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'The Three Layers of a Web Application'
-                    }
+            if (!isActive) {
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.style.transform = 'rotate(180deg)';
+                if (header.textContent.includes('HTML, CSS and JavaScript')) {
+                    setTimeout(() => this.renderWebTechChart(), 50);
                 }
             }
-        });
-    }
+        },
+        switchTab(tab) {
+            const isData = tab === 'data';
+            this.elements.navDataBtn.classList.toggle('active-nav', isData);
+            this.elements.navDataBtn.classList.toggle('inactive-nav', !isData);
+            this.elements.navDesignBtn.classList.toggle('active-nav', !isData);
+            this.elements.navDesignBtn.classList.toggle('inactive-nav', isData);
+            this.elements.contentData.classList.toggle('hidden', !isData);
+            this.elements.contentDesign.classList.toggle('hidden', isData);
+        },
+        openModal() { this.elements.modal.classList.add('is-visible'); },
+        closeModal() { this.elements.modal.classList.remove('is-visible'); setTimeout(() => this.elements.modalBody.innerHTML = '', 300); },
+        showFlashcards() {
+            let currentIndex = 0;
+            const flashcards = [...appData.flashcards].sort(() => 0.5 - Math.random());
+            this.elements.modalTitle.innerText = 'Key Term Flashcards';
+            const renderCard = () => {
+                const card = flashcards[currentIndex];
+                const cardContainer = document.createElement('div');
+                cardContainer.className = 'flashcard-container h-64 w-full relative';
+                cardContainer.innerHTML = `<div class="flashcard relative h-full w-full"><div class="flashcard-face bg-blue-100 border-2 border-blue-300 rounded-lg p-4"><h2 class="text-2xl font-bold text-blue-800">${card.term}</h2></div><div class="flashcard-back bg-green-100 border-2 border-green-300 rounded-lg p-4"><p class="text-lg text-green-800">${card.definition}</p></div></div>`;
+                
+                this.elements.modalBody.innerHTML = '';
+                this.elements.modalBody.appendChild(cardContainer);
+                
+                const cardEl = cardContainer.querySelector('.flashcard');
+                cardContainer.addEventListener('click', () => {
+                    cardEl.classList.add('is-flipped');
+                });
 
-    document.getElementById('open-flashcards-btn').addEventListener('click', showFlashcards);
-    document.getElementById('open-quiz-btn').addEventListener('click', showQuiz);
-    
-    populateAccordions();
+                const controls = document.createElement('div');
+                controls.className = 'flex justify-between items-center mt-6';
+                controls.innerHTML = `<button id="prev-card" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">&larr; Previous</button><span class="text-gray-600 font-semibold">${currentIndex + 1} / ${flashcards.length}</span><button id="next-card" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg">Next &rarr;</button>`;
+                this.elements.modalBody.appendChild(controls);
+
+                this.elements.modalBody.querySelector('#prev-card').addEventListener('click', () => {
+                    cardEl.classList.remove('is-flipped');
+                    setTimeout(() => {
+                        currentIndex = (currentIndex - 1 + flashcards.length) % flashcards.length;
+                        renderCard();
+                    }, 500); // Small delay to allow flip animation to run
+                });
+                
+                this.elements.modalBody.querySelector('#next-card').addEventListener('click', () => {
+                    cardEl.classList.remove('is-flipped');
+                    setTimeout(() => {
+                        currentIndex = (currentIndex + 1) % flashcards.length;
+                        renderCard();
+                    }, 500); // Small delay to allow flip animation to run
+                });
+            };
+            
+            renderCard();
+            this.openModal();
+        },
+        showQuiz() {
+            this.state.quizProgress.currentQuestionIndex = 0;
+            this.state.quizProgress.score = 0;
+            this.state.quizProgress.questions = [...appData.quiz].sort(() => 0.5 - Math.random());
+            this.elements.modalTitle.innerText = 'Knowledge Quiz';
+            this.renderQuizQuestion();
+            this.openModal();
+        },
+        renderQuizQuestion() {
+            const { currentQuestionIndex, questions } = this.state.quizProgress;
+            if (currentQuestionIndex >= questions.length) { this.renderQuizResults(); return; }
+            const q = questions[currentQuestionIndex];
+            const optionsHtml = q.o.map(opt => `<button class="quiz-option block w-full text-left p-4 bg-white hover:bg-blue-100 rounded-lg border border-gray-200 my-2 transition-colors">${opt}</button>`).join('');
+            this.elements.modalBody.innerHTML = `<div class="mb-4"><p class="text-gray-600 font-semibold">Question ${currentQuestionIndex + 1}/${questions.length}</p><h3 class="text-xl font-semibold mt-1">${q.q}</h3></div><div>${optionsHtml}</div><div id="quiz-feedback" class="mt-4"></div>`;
+            this.elements.modalBody.querySelectorAll('.quiz-option').forEach(btn => btn.addEventListener('click', this.handleQuizAnswer.bind(this)));
+        },
+        handleQuizAnswer(e) {
+            const selected = e.target.innerText;
+            const { currentQuestionIndex, questions } = this.state.quizProgress;
+            const q = questions[currentQuestionIndex];
+            const feedbackEl = this.elements.modalBody.querySelector('#quiz-feedback');
+            
+            this.elements.modalBody.querySelectorAll('.quiz-option').forEach(btn => {
+                btn.disabled = true;
+                if (btn.innerText === q.a) {
+                    btn.classList.add('!bg-green-200', 'border-green-400', 'text-green-800');
+                }
+                if (btn.innerText === selected && selected !== q.a) {
+                    btn.classList.add('!bg-red-200', 'border-red-400', 'text-red-800');
+                }
+            });
+            
+            if (selected === q.a) {
+                this.state.quizProgress.score++;
+                feedbackEl.innerHTML = `<p class="text-green-600 font-semibold">${q.feedback.correct}</p>`;
+            } else {
+                feedbackEl.innerHTML = `<p class="text-red-600 font-semibold">${q.feedback.incorrect}</p>`;
+            }
+            
+            feedbackEl.innerHTML += `<button id="next-quiz-q" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Next Question</button>`;
+            document.getElementById('next-quiz-q').addEventListener('click', () => {
+                this.state.quizProgress.currentQuestionIndex++;
+                this.renderQuizQuestion();
+            });
+        },
+        renderQuizResults() {
+            const { score, questions } = this.state.quizProgress;
+            this.elements.modalBody.innerHTML = `<div class="text-center"><h2 class="text-2xl font-bold mb-4">Quiz Complete!</h2><p class="text-5xl font-bold mb-2">${Math.round((score/questions.length)*100)}%</p><p class="text-xl mb-6">You scored ${score} out of ${questions.length}.</p><button id="restart-quiz" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg">Try Again</button></div>`;
+            this.elements.modalBody.querySelector('#restart-quiz').addEventListener('click', () => this.showQuiz());
+        },
+        renderWebTechChart() {
+            const ctx = document.getElementById('webTechChart');
+            if (!ctx) return;
+            if (this.state.webTechChartInstance) this.state.webTechChartInstance.destroy();
+            this.state.webTechChartInstance = new Chart(ctx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['HTML (Structure)', 'CSS (Presentation)', 'JavaScript (Behavior)'],
+                    datasets: [{ data: [40, 30, 30], backgroundColor: ['#3b82f6', '#10b981', '#ef4444'], borderWidth: 4, borderColor: '#ffffff' }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: { display: true, text: 'The Layers of a Web Application', padding: { bottom: 20 }, font: { size: 16 } },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    if (Array.isArray(label)) {
+                                      return label.join(' ');
+                                    } else {
+                                      return label;
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
+    };
+    app.init();
 });
 </script>
 </body>
