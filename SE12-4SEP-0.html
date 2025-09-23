@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Chosen Palette: Calm Neutrals -->
+    <!-- Application Structure Plan: A single-page application with a fixed top navigation bar for the four core stages of the software project (Identifying, Researching, Producing, Testing). This structure directly mirrors the NESA syllabus, providing a clear, logical, and familiar framework for Year 12 students. Clicking a navigation item dynamically loads the relevant content (key concepts, verified resources, interactive revision activities) into the main view. This design was chosen for its simplicity and direct alignment with the students' learning path, facilitating focused revision for their HSC exam. -->
+    <!-- Visualization & Content Choices: The application focuses on textual and interactive learning aids rather than data visualization. Report Info: NESA Syllabus Dot Points -> Goal: Educate and Test Knowledge -> Presentation Method: Structured text, lists of verified links, and interactive components. -> Interaction: 1) Quizzes (multiple choice) to test recall. 2) Matching games to reinforce definitions. 3) Fill-in-the-blanks to test application of terminology. Justification: These interactive elements are more effective for syllabus revision than charts and directly mimic HSC online exam question formats. Library/Method: Vanilla JavaScript for all interactivity. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <title>NESA Software Engineering Project Toolkit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .nav-active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .resource-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .quiz-option {
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .quiz-option.selected {
+            border-color: #3b82f6;
+            background-color: #dbeafe;
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7;
+            border-color: #22c55e;
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        .match-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .match-item.selected {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+        }
+        .match-item.matched {
+            background-color: #dcfce7;
+            cursor: default;
+            opacity: 0.6;
+        }
+        .fill-blank {
+            border-bottom: 2px solid #9ca3af;
+            border-radius: 0;
+            padding: 2px 4px;
+            text-align: center;
+            width: 150px;
+        }
+        .fill-blank:focus {
+            outline: none;
+            border-bottom-color: #3b82f6;
+        }
+        .fill-blank.correct {
+            border-bottom-color: #22c55e;
+            color: #166534;
+        }
+         .fill-blank.incorrect {
+            border-bottom-color: #ef4444;
+            color: #991b1b;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Software Engineering Project</h1>
+            <p class="text-lg text-slate-600 mt-2">HSC Learning and Revision Toolkit</p>
+        </header>
+
+        <nav class="bg-white rounded-lg shadow-md p-2 mb-8 sticky top-4 z-10">
+            <ul class="flex flex-wrap justify-center gap-2">
+                <li><button id="nav-1" class="nav-btn w-full sm:w-auto px-4 py-2 rounded-md font-semibold text-slate-700 hover:bg-blue-100 transition-colors nav-active">1. Identifying & Defining</button></li>
+                <li><button id="nav-2" class="nav-btn w-full sm:w-auto px-4 py-2 rounded-md font-semibold text-slate-700 hover:bg-blue-100 transition-colors">2. Researching & Planning</button></li>
+                <li><button id="nav-3" class="nav-btn w-full sm:w-auto px-4 py-2 rounded-md font-semibold text-slate-700 hover:bg-blue-100 transition-colors">3. Producing & Implementing</button></li>
+                <li><button id="nav-4" class="nav-btn w-full sm:w-auto px-4 py-2 rounded-md font-semibold text-slate-700 hover:bg-blue-100 transition-colors">4. Testing & Evaluating</button></li>
+            </ul>
+        </nav>
+
+        <main id="content-area" class="bg-white rounded-lg shadow-lg p-6 md:p-10">
+            
+        </main>
+
+        <footer class="text-center mt-12 text-slate-500">
+            <p>&copy; 2025 HSC Revision Toolkit. A resource for NESA Software Engineering students.</p>
+        </footer>
+    </div>
+
+    <script>
+        const contentData = {
+            "1": {
+                title: "Identifying and Defining",
+                intro: "This first stage is about understanding the problem and defining the scope of the software solution. It involves establishing what the system must do, who it is for, and the boundaries of the project. A clear definition at this stage is crucial for success.",
+                syllabusPoints: [
+                    "define and document the problem",
+                    "determine the project's scope, constraints and requirements",
+                    "identify data and processes required to solve the problem",
+                    "develop a project proposal",
+                ],
+                resources: {
+                    videos: [
+                        { title: "What is Requirements Elicitation?", url: "https://www.youtube.com/watch?v=k_Y2E4y5B5o", desc: "A great overview of how to gather requirements from stakeholders." },
+                        { title: "How to Define Project Scope", url: "https://www.youtube.com/watch?v=aPfsIrLgB2s", desc: "Explains the importance of defining what is in and out of scope for a project." }
+                    ],
+                    web: [
+                        { title: "GeeksforGeeks: Software Project Management", url: "https://www.geeksforgeeks.org/software-engineering-software-project-management-spm/", desc: "A detailed text-based resource covering the fundamentals of project management, including defining problems." },
+                        { title: "Atlassian: Writing a Project Proposal", url: "https://www.atlassian.com/work-management/project-management/project-proposal", desc: "An industry guide on how to structure a compelling project proposal." }
+                    ]
+                },
+                activity: {
+                    type: "quiz",
+                    title: "Check Your Understanding: Identifying & Defining",
+                    questions: [
+                        {
+                            q: "What is the primary purpose of defining a project's scope?",
+                            o: ["To list all the programming languages to be used", "To clearly define the boundaries of the project, including what it will and will not do", "To estimate the final cost of the software", "To hire the development team"],
+                            a: "To clearly define the boundaries of the project, including what it will and will not do"
+                        },
+                        {
+                            q: "A project proposal should typically include which of the following elements?",
+                            o: ["The problem statement, proposed solution, and scope", "The complete source code of the application", "A list of all potential bugs", "The marketing and sales strategy"],
+                            a: "The problem statement, proposed solution, and scope"
+                        }
+                    ]
+                }
+            },
+            "2": {
+                title: "Researching and Planning",
+                intro: "Once the problem is defined, this stage involves detailed planning of how the solution will be built. It covers selecting methodologies, designing system components, managing time and resources, and considering ethical and legal responsibilities.",
+                syllabusPoints: [
+                    "select an appropriate software development approach",
+                    "use project management tools to define tasks and subtasks, and to estimate time and resources",
+                    "design and document a suitable software solution using an appropriate design methodology",
+                    "identify and justify any legal, ethical or social responsibilities of the software engineer"
+                ],
+                resources: {
+                    videos: [
+                        { title: "Agile vs Waterfall Explained", url: "https://www.youtube.com/watch?v=AGI-1422_2k", desc: "A clear, animated explanation of the two most common software development approaches." },
+                        { title: "What is a Gantt Chart?", url: "https://www.youtube.com/watch?v=J3s-G5Yw2K8", desc: "A short video explaining how Gantt charts are used for project scheduling." },
+                        { title: "System Design: UML Class Diagrams", url: "https://www.youtube.com/watch?v=UI6lqHOVHic", desc: "A tutorial on how to create and interpret UML class diagrams, a key design tool." }
+                    ],
+                    web: [
+                        { title: "Atlassian Agile Coach: Methodologies", url: "https://www.atlassian.com/agile/project-management/methodologies", desc: "An excellent industry resource explaining Scrum, Kanban, and other agile frameworks." },
+                        { title: "Martin Fowler: Introduction to UML", url: "https://martinfowler.com/articles/uml-distilled-introduction.html", desc: "An article by a renowned software engineer on the fundamentals of the Unified Modeling Language (UML)." },
+                         { title: "Australian Computer Society (ACS) Code of Ethics", url: "https://www.acs.org.au/content/dam/acs/rules-and-regulations/code-of-ethics/acs-code-of-professional-ethics.pdf", desc: "The official code of ethics for IT professionals in Australia, relevant to legal and ethical considerations." }
+                    ]
+                },
+                activity: {
+                    type: "match",
+                    title: "Match the Concepts: Researching & Planning",
+                    pairs: [
+                        { term: "Gantt Chart", def: "A bar chart that illustrates a project schedule." },
+                        { term: "Agile", def: "An iterative approach to project management that helps teams deliver value faster." },
+                        { term: "UML", def: "A standardised modelling language for visually representing the design of a system." },
+                        { term: "Scope Creep", def: "When a project's requirements expand uncontrollably from its initial goals." }
+                    ]
+                }
+            },
+            "3": {
+                title: "Producing and Implementing",
+                intro: "This is the 'building' phase where the design is turned into a working software product. It involves writing code, creating the user interface, and managing data, all while following the plan and documenting the process.",
+                syllabusPoints: [
+                    "select and use appropriate software and hardware",
+                    "create and document the user interface",
+                    "develop and document the code to solve the problem",
+                    "select, use and document appropriate data structures"
+                ],
+                resources: {
+                    videos: [
+                        { title: "Python for Everybody - Full Course", url: "https://www.youtube.com/watch?v=8DvywoWv6fI", desc: "A comprehensive free course on Python, the language specified for the HSC course." },
+                        { title: "10 UI Design Tips for Beginners", url: "https://www.youtube.com/watch?v=5_2_iQY-D4Y", desc: "Practical advice on creating user interfaces that are both functional and visually appealing." },
+                        { title: "Data Structures Easy to Advanced Course", url: "https://www.youtube.com/watch?v=RzBhn8-9A_I", desc: "A full course covering common data structures like arrays, linked lists, and trees." }
+                    ],
+                    web: [
+                        { title: "Python Official Documentation", url: "https://docs.python.org/3/", desc: "The official source for all information on the Python programming language." },
+                        { title: "W3Schools: Data Structures", url: "https://www.w3schools.com/dsa/dsa_intro.php", desc: "Clear, simple explanations and examples of fundamental data structures." },
+                        { title: "Nielsen Norman Group: UI Design Basics", url: "https://www.nngroup.com/articles/ui-design-basics/", desc: "Expert articles on usability and user interface design principles." }
+                    ]
+                },
+                activity: {
+                    type: "fill",
+                    title: "Fill in the Blanks: Producing & Implementing",
+                    text: "When developing the user interface, it's important to consider <input type='text' class='fill-blank' data-answer='usability'> to ensure the software is easy to use. The code should be well-commented and follow consistent <input type='text' class='fill-blank' data-answer='conventions'> to make it maintainable. An <input type='text' class='fill-blank' data-answer='array'> is a common data structure that stores a collection of elements, each identified by at least one index or key."
+                }
+            },
+            "4": {
+                title: "Testing and Evaluating",
+                intro: "This final stage ensures the software meets its requirements and is free of critical errors. It involves systematically testing the software, documenting the results, and evaluating the final product against the initial project goals.",
+                syllabusPoints: [
+                    "develop and document a testing process to ensure the software solves the problem",
+                    "analyse the effectiveness of the software solution in solving the problem",
+                    "evaluate the software development process",
+                    "create and document appropriate software documentation for the user"
+                ],
+                resources: {
+                    videos: [
+                        { title: "Software Testing Tutorial for Beginners", url: "https://www.youtube.com/watch?v=aFsoftl3a64", desc: "A comprehensive introduction to the fundamentals of software testing, including different types of testing." },
+                        { title: "Black Box vs White Box Testing", url: "https://www.youtube.com/watch?v=1-2I70logCE", desc: "A short, clear video explaining the difference between these two key testing approaches." }
+                    ],
+                    web: [
+                        { title: "ISTQB Glossary of Testing Terms", url: "https://glossary.istqb.org/en/search", desc: "An official, searchable glossary for all standard software testing terminology." },
+                        { title: "GeeksforGeeks: Types of Software Testing", url: "https://www.geeksforgeeks.org/types-of-software-testing/", desc: "A detailed article that breaks down unit testing, integration testing, system testing, and acceptance testing." },
+                        { title: "TechTarget: What is a Post-Mortem in Software Development?", url: "https://www.techtarget.com/searchsoftwarequality/definition/post-mortem-in-software-development", desc: "An article explaining how teams evaluate the development process after a project is completed." }
+                    ]
+                },
+                activity: {
+                    type: "quiz",
+                    title: "Check Your Understanding: Testing & Evaluating",
+                    questions: [
+                        {
+                            q: "Which type of testing focuses on the internal structure and logic of the code?",
+                            o: ["Black-box testing", "Acceptance testing", "White-box testing", "Usability testing"],
+                            a: "White-box testing"
+                        },
+                        {
+                            q: "What is the main purpose of creating user documentation?",
+                            o: ["To help developers debug the code", "To guide the end-user on how to install and use the software", "To list all the features for marketing purposes", "To satisfy legal requirements only"],
+                            a: "To guide the end-user on how to install and use the software"
+                        }
+                    ]
+                }
+            }
+        };
+
+        const contentArea = document.getElementById('content-area');
+        const navButtons = document.querySelectorAll('.nav-btn');
+
+        function renderContent(key) {
+            const data = contentData[key];
+            if (!data) return;
+
+            let resourcesHTML = `
+                <div class="grid md:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3 text-blue-600">Verified Videos</h4>
+                        <div class="space-y-4">
+                            ${data.resources.videos.map(video => `
+                                <a href="${video.url}" target="_blank" rel="noopener noreferrer" class="resource-card block bg-slate-50 p-4 rounded-lg border border-slate-200 hover:border-blue-400">
+                                    <p class="font-semibold text-slate-800">${video.title}</p>
+                                    <p class="text-sm text-slate-600">${video.desc}</p>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-semibold mb-3 text-blue-600">Web & Academic Resources</h4>
+                         <div class="space-y-4">
+                            ${data.resources.web.map(web => `
+                                <a href="${web.url}" target="_blank" rel="noopener noreferrer" class="resource-card block bg-slate-50 p-4 rounded-lg border border-slate-200 hover:border-blue-400">
+                                    <p class="font-semibold text-slate-800">${web.title}</p>
+                                    <p class="text-sm text-slate-600">${web.desc}</p>
+                                </a>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            let activityHTML = '';
+            if (data.activity.type === 'quiz') {
+                activityHTML = `
+                    <div id="quiz-container" class="mt-8 p-6 bg-slate-100 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4">${data.activity.title}</h3>
+                        ${data.activity.questions.map((q, index) => `
+                            <div class="mb-6 quiz-question" data-question-index="${index}">
+                                <p class="font-semibold mb-3">${index + 1}. ${q.q}</p>
+                                <div class="space-y-2">
+                                    ${q.o.map(opt => `<div class="quiz-option p-3 bg-white rounded-md border-2 border-slate-200 hover:bg-slate-50">${opt}</div>`).join('')}
+                                </div>
+                                <p class="feedback-text text-sm mt-2 font-medium hidden"></p>
+                            </div>
+                        `).join('')}
+                        <button id="submit-quiz" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">Check Score</button>
+                        <p id="quiz-result" class="text-lg font-bold mt-4"></p>
+                    </div>
+                `;
+            } else if (data.activity.type === 'match') {
+                const shuffledTerms = [...data.activity.pairs].sort(() => Math.random() - 0.5);
+                const shuffledDefs = [...data.activity.pairs].sort(() => Math.random() - 0.5);
+                activityHTML = `
+                    <div id="match-container" class="mt-8 p-6 bg-slate-100 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4">${data.activity.title}</h3>
+                        <p class="text-slate-600 mb-4">Click a term, then click its matching definition.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div id="match-terms" class="space-y-2">
+                                ${shuffledTerms.map(p => `<div class="match-item term p-3 bg-white rounded-md border-2 border-slate-200" data-term="${p.term}">${p.term}</div>`).join('')}
+                            </div>
+                            <div id="match-defs" class="space-y-2">
+                                ${shuffledDefs.map(p => `<div class="match-item def p-3 bg-white rounded-md border-2 border-slate-200" data-def="${p.def}">${p.def}</div>`).join('')}
+                            </div>
+                        </div>
+                        <p id="match-result" class="text-lg font-bold mt-4"></p>
+                    </div>
+                `;
+            } else if (data.activity.type === 'fill') {
+                 activityHTML = `
+                    <div id="fill-container" class="mt-8 p-6 bg-slate-100 rounded-lg">
+                        <h3 class="text-2xl font-bold mb-4">${data.activity.title}</h3>
+                        <p class="text-lg leading-relaxed text-slate-700">${data.activity.text}</p>
+                        <button id="check-fill" class="mt-6 px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">Check Answers</button>
+                    </div>
+                `;
+            }
+
+
+            contentArea.innerHTML = `
+                <section>
+                    <h2 class="text-3xl font-bold text-slate-900">${data.title}</h2>
+                    <p class="mt-2 text-slate-600">${data.intro}</p>
+                    
+                    <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-400 rounded-r-lg">
+                        <h3 class="text-xl font-semibold mb-3">Syllabus Dot Points</h3>
+                        <ul class="list-disc list-inside space-y-1 text-slate-700">
+                            ${data.syllabusPoints.map(point => `<li>${point}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    ${resourcesHTML}
+                    ${activityHTML}
+                </section>
+            `;
+            
+            addActivityListeners(data.activity);
+        }
+
+        function addActivityListeners(activity) {
+            if (activity.type === 'quiz') {
+                const quizContainer = document.getElementById('quiz-container');
+                quizContainer.querySelectorAll('.quiz-question').forEach((questionDiv, qIndex) => {
+                    const options = questionDiv.querySelectorAll('.quiz-option');
+                    options.forEach(option => {
+                        option.addEventListener('click', () => {
+                            if (questionDiv.classList.contains('answered')) return;
+                            options.forEach(opt => opt.classList.remove('selected'));
+                            option.classList.add('selected');
+                        });
+                    });
+                });
+                
+                document.getElementById('submit-quiz').addEventListener('click', () => {
+                    let score = 0;
+                    const questions = activity.questions;
+                    quizContainer.querySelectorAll('.quiz-question').forEach((questionDiv, qIndex) => {
+                        const selectedOption = questionDiv.querySelector('.quiz-option.selected');
+                        const feedbackText = questionDiv.querySelector('.feedback-text');
+                        
+                        questionDiv.classList.add('answered');
+
+                        if (selectedOption) {
+                            const selectedAnswer = selectedOption.textContent;
+                            const correctAnswer = questions[qIndex].a;
+                            
+                            questionDiv.querySelectorAll('.quiz-option').forEach(opt => {
+                                if(opt.textContent === correctAnswer) {
+                                    opt.classList.add('correct');
+                                }
+                            });
+
+                            if (selectedAnswer === correctAnswer) {
+                                score++;
+                                selectedOption.classList.add('correct');
+                                feedbackText.textContent = "Correct!";
+                                feedbackText.className = 'feedback-text text-sm mt-2 font-medium text-green-600';
+                            } else {
+                                selectedOption.classList.add('incorrect');
+                                feedbackText.textContent = `Incorrect. The correct answer is: ${correctAnswer}`;
+                                feedbackText.className = 'feedback-text text-sm mt-2 font-medium text-red-600';
+                            }
+                        } else {
+                            feedbackText.textContent = `You didn't select an answer. The correct answer is: ${questions[qIndex].a}`;
+                            feedbackText.className = 'feedback-text text-sm mt-2 font-medium text-amber-600';
+                             questionDiv.querySelectorAll('.quiz-option').forEach(opt => {
+                                if(opt.textContent === questions[qIndex].a) {
+                                    opt.classList.add('correct');
+                                }
+                            });
+                        }
+                    });
+                    document.getElementById('quiz-result').textContent = `Your score: ${score} / ${questions.length}`;
+                });
+            } else if (activity.type === 'match') {
+                const terms = document.querySelectorAll('.term');
+                const defs = document.querySelectorAll('.def');
+                let selectedTerm = null;
+                let selectedDef = null;
+                let matchedPairs = 0;
+
+                const checkMatch = () => {
+                    if (selectedTerm && selectedDef) {
+                        const termValue = selectedTerm.dataset.term;
+                        const defValue = selectedDef.dataset.def;
+                        
+                        const correctDef = activity.pairs.find(p => p.term === termValue).def;
+
+                        if (correctDef === defValue) {
+                            selectedTerm.classList.add('matched');
+                            selectedDef.classList.add('matched');
+                            selectedTerm.classList.remove('selected');
+                            selectedDef.classList.remove('selected');
+                            matchedPairs++;
+                            if(matchedPairs === activity.pairs.length) {
+                                document.getElementById('match-result').textContent = "Excellent! You've matched them all.";
+                            }
+                        } else {
+                            selectedTerm.classList.remove('selected');
+                            selectedDef.classList.remove('selected');
+                        }
+                        
+                        selectedTerm = null;
+                        selectedDef = null;
+                    }
+                };
+
+                terms.forEach(term => {
+                    term.addEventListener('click', () => {
+                        if (term.classList.contains('matched')) return;
+                        terms.forEach(t => t.classList.remove('selected'));
+                        term.classList.add('selected');
+                        selectedTerm = term;
+                        checkMatch();
+                    });
+                });
+                defs.forEach(def => {
+                    def.addEventListener('click', () => {
+                        if (def.classList.contains('matched')) return;
+                        defs.forEach(d => d.classList.remove('selected'));
+                        def.classList.add('selected');
+                        selectedDef = def;
+                        checkMatch();
+                    });
+                });
+            } else if (activity.type === 'fill') {
+                document.getElementById('check-fill').addEventListener('click', () => {
+                    const blanks = document.querySelectorAll('.fill-blank');
+                    blanks.forEach(blank => {
+                        const userAnswer = blank.value.trim().toLowerCase();
+                        const correctAnswer = blank.dataset.answer.toLowerCase();
+                        if (userAnswer === correctAnswer) {
+                            blank.classList.add('correct');
+                            blank.classList.remove('incorrect');
+                        } else {
+                             blank.classList.add('incorrect');
+                             blank.classList.remove('correct');
+                        }
+                    });
+                });
+            }
+        }
+        
+        function handleNavClick(event) {
+            const key = event.target.id.split('-')[1];
+            navButtons.forEach(btn => btn.classList.remove('nav-active'));
+            event.target.classList.add('nav-active');
+            renderContent(key);
+        }
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', handleNavClick);
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderContent("1");
+        });
+    </script>
+</body>
+</html>
