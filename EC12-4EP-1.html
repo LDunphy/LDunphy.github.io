@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year 12 Enterprise Computing - Enterprise Project Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-main: #F0F4F8;
+            --bg-card: #FFFFFF;
+            --text-primary: #1E293B;
+            --text-secondary: #475569;
+            --accent-primary: #38BDF8; /* Light Blue */
+            --accent-secondary: #3B82F6; /* Blue */
+            --accent-tertiary: #EC4899; /* Pink */
+            --border-color: #CBD5E1;
+            --correct-bg: #D1FAE5;
+            --correct-text: #065F46;
+            --incorrect-bg: #FEE2E2;
+            --incorrect-text: #991B1B;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+        }
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active {
+            color: var(--accent-secondary);
+            font-weight: 600;
+            border-bottom-color: var(--accent-secondary);
+        }
+        .nav-link:not(.active):hover {
+            color: var(--accent-secondary);
+        }
+        .resource-card {
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-card);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .resource-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1), 0 4px 6px -2px rgba(59, 130, 246, 0.05);
+        }
+        .quiz-option {
+            border: 2px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .quiz-option:hover {
+            border-color: var(--accent-secondary);
+            background-color: #EFF6FF;
+        }
+        .quiz-option.selected {
+            border-color: var(--accent-secondary);
+            background-color: #DBEAFE;
+        }
+        .quiz-option.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-text);
+            color: var(--correct-text);
+        }
+        .quiz-option.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-text);
+            color: var(--incorrect-text);
+        }
+        .fill-blank-input {
+            border-bottom: 2px solid var(--border-color);
+            background: transparent;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .fill-blank-input:focus {
+            border-color: var(--accent-secondary);
+        }
+        .sticky-nav {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+    </style>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <!-- Chosen Palette: Brilliant Blues (with a pink accent) - This vibrant, high-contrast palette uses engaging blues and a pop of pink to create a modern and energetic feel, suitable for engaging students with the learning material. -->
+    <!-- Application Structure Plan: A single-page, scrolling infographic narrative. The structure follows the four key syllabus stages chronologically, telling the story of an enterprise project from conception to completion. A sticky top navigation allows for easy movement between these core stages. This linear flow is intuitive for learning, while the sticky navigation provides the flexibility of an SPA. Each section combines explanatory text, visual diagrams (built with HTML/CSS), curated external resources, and an interactive quiz to create a multi-faceted learning module. This design prioritizes a clear educational journey. -->
+    <!-- Visualization & Content Choices: Data Point: Iterative Approach -> Goal: Organize -> Chosen Visualization: HTML/CSS Cycle Diagram -> Justification: Visually represents the cyclical nature better than text. (Method: HTML/CSS). Data Point: Agile vs Waterfall -> Goal: Compare -> Chosen Visualization: HTML/CSS Comparison Table -> Justification: A direct, side-by-side comparison is the clearest way to show the differences between the two methodologies. (Method: HTML/CSS). Data Point: Key Concepts -> Goal: Inform -> Chosen Visualization: Interactive Quizzes (MCQ, Matching, etc.) -> Justification: Active recall through quizzes is a proven method for revision and knowledge reinforcement. (Method: JavaScript). The core focus is on visualizing concepts and processes rather than quantitative data, which is more appropriate for the source material. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased">
+
+    <!-- Header & Navigation -->
+    <header class="sticky-nav bg-white/80 backdrop-blur-lg shadow-sm">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                     <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-lg">E</div>
+                     <h1 class="text-xl font-bold text-gray-800">Enterprise Project Infographic</h1>
+                </div>
+                <nav id="nav-menu" class="hidden md:flex space-x-8">
+                    <a href="#section-1" class="nav-link text-gray-600 font-medium">1. Define</a>
+                    <a href="#section-2" class="nav-link text-gray-600 font-medium">2. Plan</a>
+                    <a href="#section-3" class="nav-link text-gray-600 font-medium">3. Produce</a>
+                    <a href="#section-4" class="nav-link text-gray-600 font-medium">4. Evaluate</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 md:py-12">
+
+        <!-- Intro Section -->
+        <section class="text-center mb-16">
+             <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">The Enterprise Project Lifecycle</h1>
+             <p class="text-lg text-gray-600 max-w-3xl mx-auto">A visual toolkit for Year 12 Enterprise Computing students to understand the four key stages of developing a large-scale system, from initial idea to final evaluation.</p>
+        </section>
+
+        <!-- Section 1: Identifying and Defining -->
+        <section id="section-1" class="mb-20">
+            <div class="text-center mb-12">
+                <span class="text-sm font-bold uppercase text-blue-500">Stage 1</span>
+                <h2 class="text-3xl font-bold mt-2">Identifying and Defining</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto mt-4">This foundational stage is about understanding the problem, defining project scope, and setting up the project for success. It's where questions are asked and the core purpose is established.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Visual Concept: Iterative Approach -->
+                <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-lg border-t-4 border-pink-500">
+                    <h3 class="text-xl font-semibold mb-4 text-center">The Iterative Cycle</h3>
+                    <p class="text-sm text-center text-gray-600 mb-6">Instead of a single straight line, projects often run in cycles of refinement. This allows for flexibility and continuous improvement.</p>
+                    <div class="relative flex flex-col items-center space-y-2 text-center">
+                        <div class="w-24 h-24 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-semibold">Prototype</div>
+                        <div class="text-2xl text-blue-400">&darr;</div>
+                        <div class="w-24 h-24 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-semibold">Test</div>
+                        <div class="text-2xl text-blue-400">&darr;</div>
+                        <div class="w-24 h-24 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-semibold">Analyse</div>
+                        <div class="text-2xl text-blue-400">&darr;</div>
+                        <div class="w-24 h-24 rounded-full bg-blue-100 text-blue-800 flex items-center justify-center font-semibold">Refine</div>
+                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -ml-20 -rotate-90 text-2xl text-blue-400" style="top: 50%;">&curvearrowleft;</div>
+                    </div>
+                </div>
+
+                <!-- Resources & Activity -->
+                <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Resources -->
+                    <div class="space-y-4">
+                         <div class="resource-card p-4 rounded-lg">
+                            <h4 class="font-bold">Problem Definition</h4>
+                            <p class="text-sm text-gray-600 mt-1">Clearly articulating the problem, objectives, scope, and constraints. This is the project's 'North Star'.</p>
+                        </div>
+                        <div class="resource-card p-4 rounded-lg">
+                            <h4 class="font-bold">Time and Resource Management</h4>
+                            <p class="text-sm text-gray-600 mt-1">Using tools like Gantt charts to schedule tasks and manage resources.</p>
+                            <a href="https://www.youtube.com/watch?v=E86p5kk_T2E" target="_blank" class="text-sm text-blue-600 hover:underline mt-2 inline-block">Video: What is a Gantt Chart?</a>
+                        </div>
+                        <div class="resource-card p-4 rounded-lg">
+                            <h4 class="font-bold">Changing Nature of Enterprise</h4>
+                            <p class="text-sm text-gray-600 mt-1">Understanding modern work models like offshore development, remote work, and freelance contracts.</p>
+                            <a href="https://asana.com/resources/iterative-process" target="_blank" class="text-sm text-blue-600 hover:underline mt-2 inline-block">Web: Asana on Iterative Processes</a>
+                        </div>
+                    </div>
+                    <!-- Activity -->
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-xl font-semibold mb-4">Activity: Matching Terms</h3>
+                        <p class="text-sm text-gray-600 mb-4">Match the term to its correct definition by selecting from the dropdown.</p>
+                        <div id="matching-activity"></div>
+                        <button id="check-matching" class="mt-4 w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition">Check Answers</button>
+                        <p id="matching-result" class="mt-2 text-sm font-medium text-center"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 2: Researching and Planning -->
+        <section id="section-2" class="mb-20">
+            <div class="text-center mb-12">
+                <span class="text-sm font-bold uppercase text-blue-500">Stage 2</span>
+                <h2 class="text-3xl font-bold mt-2">Researching and Planning</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto mt-4">This stage is about deep thinking and structured planning. It involves exploring solutions, creating detailed plans, and using visual tools to map out the project.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Resources -->
+                <div class="space-y-4">
+                    <div class="resource-card p-4 rounded-lg">
+                        <h4 class="font-bold">Design & Systems Thinking</h4>
+                        <p class="text-sm text-gray-600 mt-1">Using different mental models: computational (breaking down problems), design (user needs), and systems (holistic view).</p>
+                        <a href="https://www.interaction-design.org/literature/topics/design-thinking" target="_blank" class="text-sm text-blue-600 hover:underline mt-2 inline-block">Academic: IDF on Design Thinking</a>
+                    </div>
+                    <div class="resource-card p-4 rounded-lg">
+                        <h4 class="font-bold">Planning Tools</h4>
+                        <p class="text-sm text-gray-600 mt-1">Visualising the project with System Flowcharts, Data Flow Diagrams (DFDs), and Decision Trees.</p>
+                        <a href="https://www.lucidchart.com/pages/data-flow-diagram" target="_blank" class="text-sm text-blue-600 hover:underline mt-2 inline-block">Web: Lucidchart on DFDs</a>
+                    </div>
+                    <div class="resource-card p-4 rounded-lg">
+                        <h4 class="font-bold">Collaboration and Management</h4>
+                        <p class="text-sm text-gray-600 mt-1">Negotiating client needs vs. wants to stay within budget and on schedule is a critical management skill.</p>
+                        <a href="https://www.atlassian.com/work-management/project-collaboration" target="_blank" class="text-sm text-blue-600 hover:underline mt-2 inline-block">Web: Atlassian on Project Collaboration</a>
+                    </div>
+                </div>
+                <!-- Activity -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Activity: Multiple Choice Quiz</h3>
+                    <p class="text-sm text-gray-600 mb-4">Select the best answer for each question to test your understanding of planning concepts.</p>
+                    <div id="mcq-activity"></div>
+                    <button id="check-mcq" class="mt-4 w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition">Submit Quiz</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Producing and Implementing -->
+        <section id="section-3" class="mb-20">
+            <div class="text-center mb-12">
+                <span class="text-sm font-bold uppercase text-blue-500">Stage 3</span>
+                <h2 class="text-3xl font-bold mt-2">Producing and Implementing</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto mt-4">The development phase where plans turn into a tangible system. This section covers how systems are built and deployed into the live enterprise environment.</p>
+            </div>
+            <div class="grid lg:grid-cols-5 gap-8">
+                <!-- Activity -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Activity: Fill in the Blanks</h3>
+                    <p class="text-sm text-gray-600 mb-4">Complete the sentences with the correct terms to test your knowledge of key terminology.</p>
+                    <div id="fill-blank-activity" class="space-y-4"></div>
+                    <button id="check-fill-blank" class="mt-4 w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition">Check Answers</button>
+                </div>
+                <!-- Visual Concept: Development Approaches -->
+                <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-lg border-t-4 border-pink-500">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Development Approaches: Waterfall vs. Agile</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">Waterfall</h4>
+                            <div class="space-y-2 text-sm">
+                                <div class="p-2 bg-gray-100 rounded">Requirements</div>
+                                <div class="font-bold text-gray-400">&darr;</div>
+                                <div class="p-2 bg-gray-100 rounded">Design</div>
+                                <div class="font-bold text-gray-400">&darr;</div>
+                                <div class="p-2 bg-gray-100 rounded">Implement</div>
+                                <div class="font-bold text-gray-400">&darr;</div>
+                                <div class="p-2 bg-gray-100 rounded">Verify</div>
+                                <div class="font-bold text-gray-400">&darr;</div>
+                                <div class="p-2 bg-gray-100 rounded">Maintain</div>
+                                <p class="text-xs text-gray-500 mt-2">A linear, sequential approach. Good for projects with fixed requirements.</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-2">Agile</h4>
+                            <div class="p-4 border-2 border-dashed border-gray-300 rounded-lg h-full flex items-center justify-center">
+                                <div class="relative">
+                                    <p class="font-semibold">Iterate in Sprints</p>
+                                    <div class="absolute text-3xl text-gray-400 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20">&#8635;</div>
+                                </div>
+                            </div>
+                             <p class="text-xs text-gray-500 mt-2">A flexible, cyclical approach. Good for projects where requirements may evolve.</p>
+                        </div>
+                    </div>
+                     <a href="https://www.youtube.com/watch?v=2nCgOk8d0s0" target="_blank" class="text-sm text-blue-600 hover:underline mt-4 inline-block text-center w-full">Video: Agile vs Waterfall Explained</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Testing and Evaluating -->
+        <section id="section-4" class="mb-16">
+            <div class="text-center mb-12">
+                <span class="text-sm font-bold uppercase text-blue-500">Stage 4</span>
+                <h2 class="text-3xl font-bold mt-2">Testing and Evaluating</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto mt-4">The final stage ensures the system works correctly and meets user needs. It involves rigorous testing, gathering feedback, and planning for the system's future.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-pink-500">
+                     <h3 class="text-xl font-semibold mb-4 text-center">Verification vs. Validation</h3>
+                     <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <h4 class="font-bold">Verification</h4>
+                            <p class="text-2xl my-3">&#128270;</p>
+                            <p class="text-sm text-blue-800 font-medium">"Are we building the product right?"</p>
+                            <p class="text-xs text-blue-600 mt-2">Does it meet all the technical specifications and requirements?</p>
+                        </div>
+                        <div class="p-4 bg-pink-50 rounded-lg">
+                             <h4 class="font-bold">Validation</h4>
+                             <p class="text-2xl my-3">&#128172;</p>
+                             <p class="text-sm text-pink-800 font-medium">"Are we building the right product?"</p>
+                             <p class="text-xs text-pink-600 mt-2">Does it actually solve the user's problem and meet their needs?</p>
+                        </div>
+                     </div>
+                      <a href="https://www.guru99.com/verification-v-s-validation.html" target="_blank" class="text-sm text-blue-600 hover:underline mt-4 inline-block text-center w-full">Web: Guru99 on Verification vs Validation</a>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold mb-4">Activity: Multiple Response</h3>
+                    <p class="text-sm text-gray-600 mb-4">Select ALL the correct options. This question type tests deeper understanding.</p>
+                    <div id="multi-response-activity"></div>
+                    <button id="check-multi-response" class="mt-4 w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition">Check Answers</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="text-center py-6 bg-gray-800 text-gray-400 text-sm">
+        <p>NESA Enterprise Computing HSC Revision Toolkit. All external resources belong to their respective owners.</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const navMenu = document.getElementById('nav-menu');
+        const navLinks = navMenu.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main section[id]');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                    });
+                }
+            });
+        }, { rootMargin: '-50% 0px -50% 0px' });
+
+        sections.forEach(section => observer.observe(section));
+
+        const matchingData = {
+            terms: ["Gantt Chart", "Iterative Approach", "Problem Definition", "Offshore Development"],
+            definitions: [
+                "A visual tool used to schedule tasks and track project progress against a timeline.",
+                "A cyclical process of prototyping, testing, analyzing, and refining a product.",
+                "A clear statement of the objectives, scope, and constraints of a new system.",
+                "Using external teams, often in other countries, to complete development tasks."
+            ],
+            correctOrder: [0, 1, 2, 3] 
+        };
+
+        const mcqData = [
+            { question: "Which thinking skill primarily focuses on understanding user needs and developing human-centered solutions?", options: ["Computational Thinking", "Systems Thinking", "Design Thinking", "Critical Thinking"], answer: 2 },
+            { question: "What is the main purpose of a Data Flow Diagram (DFD)?", options: ["To show the sequence of tasks in a project.", "To track the movement of data through a system.", "To model choices and their potential outcomes.", "To allocate resources to team members."], answer: 1 }
+        ];
+        
+        const fillBlankData = [
+            { sentence: ["The ", " development model is a sequential approach, where each phase must be completed before the next begins."], answer: "Waterfall" },
+            { sentence: ["A ", " rollout is an implementation method where the new system is introduced to one part of the enterprise at a time."], answer: "phased" },
+            { sentence: ["Effective user ", " is crucial for ensuring employees can use the new system correctly and efficiently."], answer: "training" }
+        ];
+
+        const multiResponseData = [
+            { question: "Which of the following are examples of operational and maintenance documentation? (Select all that apply)", options: ["User Manual", "Project Budget", "FAQ Page", "System Backup and Recovery Plan"], answers: [0, 2, 3] }
+        ];
+
+        function generateMatchingActivity() {
+            const container = document.getElementById('matching-activity');
+            if(!container) return;
+            const shuffledDefs = [...matchingData.definitions].sort(() => Math.random() - 0.5);
+            matchingData.terms.forEach((term, index) => {
+                let optionsHTML = shuffledDefs.map((def) => `<option value="${def}">${def}</option>`).join('');
+                container.innerHTML += `<div class="mb-3" data-term-index="${index}"><label class="font-semibold block mb-1 text-sm">${term}</label><select class="w-full p-2 border border-gray-300 rounded-md text-sm"><option value="">Select a definition...</option>${optionsHTML}</select></div>`;
+            });
+        }
+        
+        function generateMCQActivity() {
+            const container = document.getElementById('mcq-activity');
+            if(!container) return;
+            mcqData.forEach((q, index) => {
+                const optionsHTML = q.options.map((opt, i) => `<div class="quiz-option p-3 rounded-md" data-option-index="${i}">${opt}</div>`).join('');
+                container.innerHTML += `<div class="mb-6" data-question-index="${index}"><p class="font-semibold mb-3">${q.question}</p><div class="space-y-2 options-container">${optionsHTML}</div><p class="result-text mt-2 text-sm font-medium hidden"></p></div>`;
+            });
+        }
+
+        function generateFillBlankActivity() {
+            const container = document.getElementById('fill-blank-activity');
+            if(!container) return;
+            fillBlankData.forEach((item, index) => {
+                container.innerHTML += `<div data-question-index="${index}"><p class="text-gray-700">${item.sentence[0]}<input type="text" class="fill-blank-input text-blue-600 font-semibold text-center" style="width: 100px;">${item.sentence[1]}</p><p class="result-text mt-1 text-sm font-medium hidden"></p></div>`;
+            });
+        }
+
+        function generateMultiResponseActivity() {
+            const container = document.getElementById('multi-response-activity');
+            if(!container) return;
+            multiResponseData.forEach((q, index) => {
+                const optionsHTML = q.options.map((opt, i) => `<div class="quiz-option p-3 rounded-md" data-option-index="${i}">${opt}</div>`).join('');
+                container.innerHTML += `<div class="mb-6" data-question-index="${index}"><p class="font-semibold mb-3">${q.question}</p><div class="space-y-2 options-container">${optionsHTML}</div><p class="result-text mt-2 text-sm font-medium hidden"></p></div>`;
+            });
+        }
+
+        function checkMatchingAnswers() {
+            let correctCount = 0;
+            const selects = document.querySelectorAll('#matching-activity select');
+            selects.forEach((select) => {
+                const termIndex = select.parentElement.getAttribute('data-term-index');
+                const correctDef = matchingData.definitions[matchingData.correctOrder[termIndex]];
+                const selectedDef = select.value;
+                select.classList.remove('border-green-500', 'border-red-500');
+                if (selectedDef === correctDef) {
+                    correctCount++;
+                    select.classList.add('border-green-500');
+                } else {
+                    select.classList.add('border-red-500');
+                }
+            });
+            const resultEl = document.getElementById('matching-result');
+            resultEl.textContent = `You got ${correctCount} out of ${matchingData.terms.length} correct.`;
+            resultEl.style.color = correctCount === matchingData.terms.length ? 'var(--correct-text)' : 'var(--incorrect-text)';
+        }
+
+        function setupMCQListeners() {
+            document.querySelectorAll('#mcq-activity .options-container').forEach(container => {
+                container.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('quiz-option')) {
+                        container.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                        e.target.classList.add('selected');
+                    }
+                });
+            });
+        }
+
+        function checkMCQAnswers() {
+            document.querySelectorAll('#mcq-activity [data-question-index]').forEach(question => {
+                const qIndex = question.getAttribute('data-question-index');
+                const selectedOption = question.querySelector('.quiz-option.selected');
+                const resultText = question.querySelector('.result-text');
+                if (!selectedOption) return;
+                const selectedIndex = parseInt(selectedOption.getAttribute('data-option-index'));
+                const correctIndex = mcqData[qIndex].answer;
+                resultText.classList.remove('hidden');
+                if (selectedIndex === correctIndex) {
+                    selectedOption.classList.add('correct');
+                    resultText.textContent = 'Correct!';
+                    resultText.style.color = 'var(--correct-text)';
+                } else {
+                    selectedOption.classList.add('incorrect');
+                    question.querySelector(`[data-option-index="${correctIndex}"]`).classList.add('correct');
+                    resultText.textContent = 'Incorrect.';
+                    resultText.style.color = 'var(--incorrect-text)';
+                }
+                question.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
+            });
+        }
+        
+        function checkFillBlankAnswers() {
+            document.querySelectorAll('#fill-blank-activity [data-question-index]').forEach(question => {
+                const qIndex = question.getAttribute('data-question-index');
+                const input = question.querySelector('input');
+                const resultText = question.querySelector('.result-text');
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = fillBlankData[qIndex].answer.toLowerCase();
+                resultText.classList.remove('hidden');
+                if (userAnswer === correctAnswer) {
+                    input.style.borderColor = 'var(--correct-text)';
+                    resultText.textContent = 'Correct!';
+                    resultText.style.color = 'var(--correct-text)';
+                } else {
+                    input.style.borderColor = 'var(--incorrect-text)';
+                    resultText.textContent = `Incorrect. Answer: ${fillBlankData[qIndex].answer}`;
+                    resultText.style.color = 'var(--incorrect-text)';
+                }
+            });
+        }
+        
+        function setupMultiResponseListeners() {
+            document.querySelectorAll('#multi-response-activity .options-container').forEach(container => {
+                container.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('quiz-option')) e.target.classList.toggle('selected');
+                });
+            });
+        }
+        
+        function checkMultiResponseAnswers() {
+            document.querySelectorAll('#multi-response-activity [data-question-index]').forEach(question => {
+                const qIndex = question.getAttribute('data-question-index');
+                const correctAnswers = multiResponseData[qIndex].answers;
+                const options = question.querySelectorAll('.quiz-option');
+                const resultText = question.querySelector('.result-text');
+                let allCorrect = true;
+                options.forEach((opt, i) => {
+                    const isSelected = opt.classList.contains('selected');
+                    const shouldBeSelected = correctAnswers.includes(i);
+                    if (isSelected && shouldBeSelected) opt.classList.add('correct');
+                    else if (isSelected && !shouldBeSelected) { opt.classList.add('incorrect'); allCorrect = false; }
+                    else if (!isSelected && shouldBeSelected) { opt.classList.add('incorrect'); allCorrect = false; }
+                });
+                resultText.classList.remove('hidden');
+                if (allCorrect && question.querySelectorAll('.selected').length === correctAnswers.length) {
+                    resultText.textContent = 'Correct!';
+                    resultText.style.color = 'var(--correct-text)';
+                } else {
+                    resultText.textContent = 'Incorrect. Review the highlighted answers.';
+                    resultText.style.color = 'var(--incorrect-text)';
+                }
+                question.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
+            });
+        }
+
+        generateMatchingActivity();
+        generateMCQActivity();
+        generateFillBlankActivity();
+        generateMultiResponseActivity();
+        setupMCQListeners();
+        setupMultiResponseListeners();
+        document.getElementById('check-matching')?.addEventListener('click', checkMatchingAnswers);
+        document.getElementById('check-mcq')?.addEventListener('click', checkMCQAnswers);
+        document.getElementById('check-fill-blank')?.addEventListener('click', checkFillBlankAnswers);
+        document.getElementById('check-multi-response')?.addEventListener('click', checkMultiResponseAnswers);
+    });
+    </script>
+</body>
+</html>
+
