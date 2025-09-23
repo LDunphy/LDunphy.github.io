@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: The World of Software Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Teal & Amber -->
+    <!-- Application Structure Plan: The infographic is designed as a top-to-bottom narrative scroll, telling a coherent story about software automation. It begins with a high-level hook (What is Automation?), moves into the foundational 'how' (Core Algorithms), then the practical 'with what' (The Programmer's Toolkit), and concludes with the crucial 'why it matters' (The Impact of Automation). This linear, story-driven structure is ideal for an infographic, guiding the student logically through complex topics without the need for interactive navigation, making the information highly digestible and suitable for both initial learning and revision. -->
+    <!-- Visualization & Content Choices: 
+        - Big Stat (Market Size): Goal: Inform. Method: Large text. Justification: A strong, memorable hook to establish relevance.
+        - Linear vs. Polynomial Regression: Goal: Compare. Method: Two Chart.js line charts. Justification: Visually demonstrates the core difference between modeling linear and non-linear data relationships.
+        - Logistic Regression: Goal: Inform. Method: Chart.js line chart showing an S-curve. Justification: Clearly visualizes the concept of classification probability between two states.
+        - ML Models: Goal: Compare/Organize. Method: HTML/CSS flexbox cards with Unicode icons. Justification: Provides a clear, side-by-side breakdown of the three learning paradigms. NO SVG/Mermaid used.
+        - Python Toolkit: Goal: Organize. Method: HTML/CSS flowchart diagram. Justification: Shows the relationship and workflow between essential Python libraries in a process-oriented way. NO SVG/Mermaid used.
+        - AI Bias: Goal: Inform. Method: Chart.js donut chart. Justification: A powerful visual to represent a skewed dataset, making the abstract concept of data bias concrete.
+        - Industry Applications: Goal: Compare. Method: Chart.js horizontal bar chart. Justification: Effectively ranks and compares the adoption of AI across various sectors, highlighting its real-world relevance.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f5f5f4; color: #292524; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+    </style>
+</head>
+<body>
+
+    <header class="bg-white text-center py-10 shadow-md">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-teal-700">The World of Software Automation</h1>
+            <p class="mt-4 text-lg text-stone-600 max-w-3xl mx-auto">A Visual Guide for Year 12 Software Engineering Students on the Core Concepts of Machine Learning and AI.</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 space-y-16">
+        
+        <section class="text-center">
+            <h2 class="text-3xl font-bold text-stone-800 mb-4">The Automation Revolution is Here</h2>
+            <p class="max-w-3xl mx-auto text-stone-600 mb-8">Software automation isn't just a future concept; it's a powerful force reshaping industries today. By using machine learning (ML) and artificial intelligence (AI), we can create programs that learn from data to make predictions, classify information, and perform complex tasks.</p>
+            <div class="bg-teal-600 text-white rounded-xl shadow-lg p-8 max-w-md mx-auto">
+                <p class="text-2xl font-semibold mb-2">Global AI Market Size</p>
+                <p class="text-6xl font-extrabold tracking-tight">$950 Billion+</p>
+                <p class="text-lg font-medium mt-2">Projected by 2026</p>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-bold text-stone-800 text-center mb-10">The Core Algorithms: How Machines Learn to Predict</h2>
+            <p class="max-w-3xl mx-auto text-stone-600 text-center mb-12">At the heart of ML are algorithms that find patterns in data. Regression algorithms are fundamental for prediction tasks. They help us model the relationship between variables to forecast outcomes.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-2">Linear vs. Polynomial Regression</h3>
+                    <p class="text-stone-600 mb-4">Linear regression models a straight-line relationship, which is great for simple, consistent trends. When the data is more complex and follows a curve, polynomial regression can provide a much better fit.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div>
+                            <p class="text-center font-medium mb-2">Linear Fit</p>
+                             <div class="chart-container !h-48">
+                                <canvas id="linearChart"></canvas>
+                            </div>
+                        </div>
+                        <div>
+                             <p class="text-center font-medium mb-2">Polynomial Fit</p>
+                             <div class="chart-container !h-48">
+                                <canvas id="polyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-2">Logistic Regression</h3>
+                    <p class="text-stone-600 mb-4">When the goal isn't to predict a number, but to classify an outcome into one of two categories (like 'Pass'/'Fail' or 'Spam'/'Not Spam'), we use logistic regression. It calculates the probability of an outcome, producing an 'S'-shaped curve to make its decision.</p>
+                     <div class="chart-container !h-64 mt-8">
+                        <canvas id="logisticChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+             <h2 class="text-3xl font-bold text-stone-800 text-center mb-10">Three Ways to Learn: ML Models Explained</h2>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                    <div class="text-4xl mb-4">🏷️</div>
+                     <h3 class="text-xl font-semibold mb-2">Supervised Learning</h3>
+                     <p class="text-stone-600">The machine learns from data that is already labelled with the correct answers. It's like a student learning with a teacher and an answer key. This is used for most regression and classification tasks.</p>
+                 </div>
+                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                     <div class="text-4xl mb-4">🎨</div>
+                     <h3 class="text-xl font-semibold mb-2">Unsupervised Learning</h3>
+                     <p class="text-stone-600">The machine is given unlabelled data and must find its own patterns and structures. It's like a detective looking for hidden clues. This is useful for customer segmentation and anomaly detection.</p>
+                 </div>
+                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
+                     <div class="text-4xl mb-4">🏆</div>
+                     <h3 class="text-xl font-semibold mb-2">Reinforcement Learning</h3>
+                     <p class="text-stone-600">The machine learns by performing actions and receiving rewards or penalties. It's like training a pet with treats. This is the foundation for game-playing AIs and robotics.</p>
+                 </div>
+             </div>
+        </section>
+
+        <section>
+            <h2 class="text-3xl font-bold text-stone-800 text-center mb-10">The Programmer's Toolkit for Automation</h2>
+            <p class="max-w-3xl mx-auto text-stone-600 text-center mb-12">To build these powerful applications, software engineers rely on a mature ecosystem of Python libraries. Each library has a specific role in the machine learning workflow, from handling data to building models and creating visualizations.</p>
+            <div class="bg-white rounded-xl shadow-md p-8">
+                <div class="flex flex-col md:flex-row items-center justify-around space-y-8 md:space-y-0 md:space-x-4">
+                    <div class="text-center">
+                        <div class="bg-amber-100 text-amber-800 font-bold p-4 rounded-lg shadow">1. Load Data with Pandas</div>
+                        <p class="mt-2 text-sm text-stone-500 max-w-xs">Manipulate and analyze data from files like CSVs into powerful tables called DataFrames.</p>
+                    </div>
+                     <div class="text-2xl font-bold text-teal-500 transform rotate-90 md:rotate-0">→</div>
+                    <div class="text-center">
+                        <div class="bg-amber-100 text-amber-800 font-bold p-4 rounded-lg shadow">2. Build Model with Scikit-learn</div>
+                         <p class="mt-2 text-sm text-stone-500 max-w-xs">Access pre-built, optimized ML algorithms for regression, classification, clustering and more.</p>
+                    </div>
+                     <div class="text-2xl font-bold text-teal-500 transform rotate-90 md:rotate-0">→</div>
+                    <div class="text-center">
+                        <div class="bg-amber-100 text-amber-800 font-bold p-4 rounded-lg shadow">3. Visualize with Matplotlib</div>
+                         <p class="mt-2 text-sm text-stone-500 max-w-xs">Create charts and graphs to understand the data, evaluate model performance, and present results.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section>
+            <h2 class="text-3xl font-bold text-stone-800 text-center mb-10">The Impact of Automation: Power and Responsibility</h2>
+             <p class="max-w-3xl mx-auto text-stone-600 text-center mb-12">While AI and automation unlock incredible potential, they also bring significant social and ethical challenges. As future software engineers, understanding these impacts is as important as writing the code itself.</p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-2">The Challenge of AI Bias</h3>
+                    <p class="text-stone-600 mb-4">If the data used to train a model is biased, the model's predictions will also be biased. This can lead to unfair outcomes in critical areas like hiring or loan approvals. The chart shows a loan dataset where one group is heavily underrepresented, which could lead to a biased model.</p>
+                    <div class="chart-container !h-64 mt-4">
+                        <canvas id="biasChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-2">AI Adoption Across Industries</h3>
+                    <p class="text-stone-600 mb-4">Automation is no longer confined to one sector. From diagnosing diseases in healthcare to personalizing shopping experiences in retail, AI is creating new efficiencies and opportunities across the economy. This also raises questions about the future of work and the need for new skills.</p>
+                    <div class="chart-container !h-64 mt-4">
+                        <canvas id="industryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-teal-700 text-white mt-12 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-semibold">Your journey into software automation is just beginning.</p>
+            <p class="text-teal-100 text-sm mt-2">Continue exploring, building, and thinking critically about the technology that will shape our future.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const wrapLabel = (label, maxLength = 16) => {
+        if (label.length <= maxLength) {
+            return label;
+        }
+        const words = label.split(' ');
+        const lines = [];
+        let currentLine = '';
+        for (const word of words) {
+            if ((currentLine + word).length > maxLength) {
+                lines.push(currentLine.trim());
+                currentLine = '';
+            }
+            currentLine += word + ' ';
+        }
+        lines.push(currentLine.trim());
+        return lines;
+    };
+
+    const tooltipTitleCallback = (tooltipItems) => {
+        const item = tooltipItems[0];
+        let label = item.chart.data.labels[item.dataIndex];
+        return Array.isArray(label) ? label.join(' ') : label;
+    };
+
+    const commonChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#44403c', // stone-700
+                    font: {
+                        family: "'Inter', sans-serif"
+                    }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    title: tooltipTitleCallback
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    color: '#57534e' // stone-600
+                },
+                grid: {
+                    color: '#e7e5e4' // stone-200
+                }
+            },
+            x: {
+                ticks: {
+                    color: '#57534e' // stone-600
+                },
+                grid: {
+                    display: false
+                }
+            }
+        }
+    };
+
+    const renderLinearRegressionChart = () => {
+        const ctx = document.getElementById('linearChart')?.getContext('2d');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Data Points',
+                    data: [{x: 1, y: 2}, {x: 2, y: 3.1}, {x: 3, y: 3.9}, {x: 4, y: 5.2}, {x: 5, y: 6}],
+                    backgroundColor: '#0d9488' // teal-600
+                }, {
+                    label: 'Linear Fit',
+                    data: [{x: 0, y: 1}, {x: 6, y: 7}],
+                    type: 'line',
+                    borderColor: '#f59e0b', // amber-500
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.1
+                }]
+            },
+            options: {...commonChartOptions}
+        });
+    };
+
+    const renderPolynomialRegressionChart = () => {
+        const ctx = document.getElementById('polyChart')?.getContext('2d');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Data Points',
+                    data: [{x: 1, y: 2}, {x: 2, y: 5}, {x: 3, y: 6}, {x: 4, y: 4}, {x: 5, y: 2}],
+                    backgroundColor: '#0d9488'
+                }, {
+                    label: 'Polynomial Fit',
+                    data: Array.from({ length: 50 }, (_, i) => i / 8 + 1).map(x => ({ x, y: -0.8*x*x + 5*x - 2 })),
+                    type: 'line',
+                    borderColor: '#f59e0b',
+                    borderWidth: 2,
+                    fill: false,
+                    pointRadius: 0
+                }]
+            },
+            options: {...commonChartOptions}
+        });
+    };
+
+    const renderLogisticRegressionChart = () => {
+        const ctx = document.getElementById('logisticChart')?.getContext('2d');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Low Score', '', '', '', '', 'High Score'],
+                datasets: [{
+                    label: 'Probability of Pass',
+                    data: [0.05, 0.1, 0.3, 0.7, 0.9, 0.95],
+                    borderColor: '#0d9488',
+                    backgroundColor: 'rgba(13, 148, 136, 0.2)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { ...commonChartOptions, scales: { ...commonChartOptions.scales, y: { ...commonChartOptions.scales.y, max: 1 } } }
+        });
+    };
+    
+    const renderBiasChart = () => {
+        const ctx = document.getElementById('biasChart')?.getContext('2d');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Applicants: Group A', 'Applicants: Group B'],
+                datasets: [{
+                    label: 'Loan Application Data',
+                    data: [850, 150],
+                    backgroundColor: ['#0d9488', '#f59e0b'],
+                    borderColor: '#ffffff',
+                    borderWidth: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top', labels: { color: '#44403c', font: { family: "'Inter', sans-serif" } } },
+                    tooltip: { callbacks: { title: tooltipTitleCallback } }
+                }
+            }
+        });
+    };
+
+    const renderIndustryChart = () => {
+        const ctx = document.getElementById('industryChart')?.getContext('2d');
+        if (!ctx) return;
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Healthcare', 'Finance', 'Retail & E-commerce', 'Manufacturing', 'Transportation'].map(label => wrapLabel(label)),
+                datasets: [{
+                    label: 'AI Adoption Rate (%)',
+                    data: [78, 85, 72, 65, 58],
+                    backgroundColor: ['#14b8a6', '#0d9488', '#0f766e', '#115e59', '#042f2e'],
+                }]
+            },
+            options: { ...commonChartOptions, indexAxis: 'y' }
+        });
+    };
+
+    renderLinearRegressionChart();
+    renderPolynomialRegressionChart();
+    renderLogisticRegressionChart();
+    renderBiasChart();
+    renderIndustryChart();
+});
+</script>
+
+</body>
+</html>
