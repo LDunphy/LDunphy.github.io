@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSC Software Engineering: Software Automation Toolkit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The application is structured as a single-page app with a clear three-tab navigation corresponding to the NESA syllabus topics. This thematic structure allows students to focus on one area at a time, moving from foundational concepts (Algorithms) to practical application (Programming) and then to broader implications (Significance & Impact). This user flow is intuitive for study and revision, as it mirrors the logical progression of the curriculum. Each section provides curated resources first, followed by interactive activities, reinforcing a "learn then practice" model which is highly effective for exam preparation. -->
+    <!-- Visualization & Content Choices: Content is organized into cards for clarity. Key concepts are presented as text. Resources are categorized with icons (video, web, academic) for quick identification. Interactions are focused on knowledge reinforcement through quizzes (multiple choice, multiple response), term matching, and fill-in-the-blanks activities. These interactive elements were chosen because they mimic the style of questions in online exams, providing practical and relevant revision. Chart.js is included for potential future data visualizations but is not used in the initial version to maintain focus on the core textual and interactive learning materials. No SVG/Mermaid is used, adhering to the requirements. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+        }
+        .nav-btn {
+            transition: all 0.3s ease;
+        }
+        .nav-btn.active {
+            background-color: #0d9488; /* teal-600 */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .quiz-option:hover {
+            background-color: #f0fdfa; /* teal-50 */
+        }
+        .quiz-option.selected {
+            background-color: #ccfbf1; /* teal-100 */
+            border-color: #14b8a6; /* teal-500 */
+        }
+        .quiz-option.correct {
+            background-color: #dcfce7; /* green-100 */
+            border-color: #22c55e; /* green-500 */
+        }
+        .quiz-option.incorrect {
+            background-color: #fee2e2; /* red-100 */
+            border-color: #ef4444; /* red-500 */
+        }
+        .resource-link:hover {
+            background-color: #f9fafb; /* gray-50 */
+        }
+        .matching-item {
+            cursor: grab;
+        }
+        .matching-target {
+            border: 2px dashed #d1d5db;
+            min-height: 50px;
+        }
+        .matching-target.over {
+            border-color: #0d9488;
+            background-color: #ccfbf1;
+        }
+        .fill-blank {
+            border-bottom: 2px solid #0d9488;
+        }
+    </style>
+</head>
+<body class="text-stone-800">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <h1 class="text-2xl sm:text-3xl font-bold text-teal-700">HSC Software Engineering Revision</h1>
+            <p class="text-md text-stone-600">Software Automation Toolkit</p>
+        </div>
+    </header>
+
+    <nav class="bg-stone-100 py-4">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-4">
+            <button id="nav-1" class="nav-btn w-full sm:w-auto px-6 py-3 rounded-lg font-semibold bg-white text-stone-700 shadow-sm hover:bg-teal-500 hover:text-white">
+                1. Algorithms in Machine Learning
+            </button>
+            <button id="nav-2" class="nav-btn w-full sm:w-auto px-6 py-3 rounded-lg font-semibold bg-white text-stone-700 shadow-sm hover:bg-teal-500 hover:text-white">
+                2. Programming for Automation
+            </button>
+            <button id="nav-3" class="nav-btn w-full sm:w-auto px-6 py-3 rounded-lg font-semibold bg-white text-stone-700 shadow-sm hover:bg-teal-500 hover:text-white">
+                3. Significance & Impact of ML/AI
+            </button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Section 1: Algorithms in Machine Learning -->
+        <section id="content-1" class="content-section space-y-8">
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-teal-700 mb-4">1. Algorithms in Machine Learning</h2>
+                <p class="text-stone-600">This section covers the fundamental machine learning algorithms you need to know. Understanding these concepts is crucial for explaining how software can make predictions from data. You'll learn about different regression techniques for predicting numerical values and classification problems, as well as the main models of machine learning.</p>
+            </div>
+
+            <!-- Syllabus Point 1.1 -->
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Regression Algorithms</h3>
+                <p class="text-sm text-stone-500 mb-4">Syllabus: use of regression algorithms, including: linear regression, polynomial regression, logistic regression</p>
+                
+                <div class="space-y-3">
+                    <a href="https://www.youtube.com/watch?v=iIUq0SqBSH0" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-red-600">▶️</span>
+                        <div><p class="font-semibold">Linear Regression Explained Simply</p><p class="text-sm text-stone-500">A clear, concise video explaining the core concepts of linear regression.</p></div>
+                    </a>
+                    <a href="https://www.statology.org/polynomial-regression/" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-blue-600">🌐</span>
+                        <div><p class="font-semibold">Polynomial Regression: A Step-by-Step Guide</p><p class="text-sm text-stone-500">A web article that details how polynomial regression models non-linear relationships.</p></div>
+                    </a>
+                    <a href="https://www.ibm.com/topics/logistic-regression" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-green-600">🎓</span>
+                        <div><p class="font-semibold">What is Logistic Regression?</p><p class="text-sm text-stone-500">An in-depth academic/industry explanation from IBM on using logistic regression for classification tasks.</p></div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Syllabus Point 1.2 -->
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Machine Learning Models</h3>
+                <p class="text-sm text-stone-500 mb-4">Syllabus: machine learning models, including: supervised learning, unsupervised learning, reinforcement learning</p>
+
+                <div class="space-y-3">
+                    <a href="https://www.geeksforgeeks.org/supervised-unsupervised-reinforcement-learning/" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                         <span class="mr-3 text-blue-600">🌐</span>
+                        <div><p class="font-semibold">Supervised, Unsupervised & Reinforcement Learning</p><p class="text-sm text-stone-500">A great web resource that clearly defines and contrasts the three main types of ML models.</p></div>
+                    </a>
+                    <a href="https://www.youtube.com/watch?v=2-IK3r22b4E" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-red-600">▶️</span>
+                        <div><p class="font-semibold">Machine Learning Models Explained</p><p class="text-sm text-stone-500">A video that visually breaks down the differences between the learning models with examples.</p></div>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Activity Section -->
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                 <h3 class="text-xl font-semibold mb-4">Revision Activities</h3>
+                 <div id="quiz-1" class="quiz-container"></div>
+            </div>
+        </section>
+
+        <!-- Section 2: Programming for Automation -->
+        <section id="content-2" class="content-section space-y-8">
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-teal-700 mb-4">2. Programming for Automation</h2>
+                <p class="text-stone-600">This section bridges theory and practice. It focuses on the specific Python libraries that are industry-standard for implementing machine learning algorithms. You'll explore how to use these tools to load data, build models, and visualize results. The goal is to understand the practical workflow of creating a simple automated program.</p>
+            </div>
+
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Python Frameworks and Libraries</h3>
+                <p class="text-sm text-stone-500 mb-4">Syllabus: use of Python frameworks and libraries for machine learning, including: scikit-learn, pandas, matplotlib</p>
+                <div class="space-y-3">
+                     <a href="https://www.datacamp.com/tutorial/machine-learning-python" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-blue-600">🌐</span>
+                        <div><p class="font-semibold">Scikit-Learn Tutorial for Beginners</p><p class="text-sm text-stone-500">A comprehensive guide on using the essential machine learning library in Python.</p></div>
+                    </a>
+                    <a href="https://www.datacamp.com/tutorial/pandas" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-blue-600">🌐</span>
+                        <div><p class="font-semibold">Pandas Tutorial: The Ultimate Guide</p><p class="text-sm text-stone-500">Learn how to manipulate and analyze data effectively using the Pandas library.</p></div>
+                    </a>
+                     <a href="https://www.datacamp.com/tutorial/matplotlib-tutorial-python" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-blue-600">🌐</span>
+                        <div><p class="font-semibold">Introduction to Plotting with Matplotlib</p><p class="text-sm text-stone-500">A beginner's tutorial on creating static, animated, and interactive visualizations in Python.</p></div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Activity Section -->
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                 <h3 class="text-xl font-semibold mb-4">Revision Activities</h3>
+                 <div id="quiz-2" class="quiz-container"></div>
+            </div>
+        </section>
+
+        <!-- Section 3: Significance & Impact -->
+        <section id="content-3" class="content-section space-y-8">
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h2 class="text-2xl font-bold text-teal-700 mb-4">3. Significance and Impact of ML and AI</h2>
+                <p class="text-stone-600">This section explores the broader context of software automation. Beyond the code and algorithms, it's vital to understand the ethical responsibilities and societal effects of creating intelligent systems. You will investigate issues like bias in AI, how automation affects jobs, and the exciting ways ML and AI are being used across different industries today and in the future.</p>
+            </div>
+            
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Ethical Issues</h3>
+                <p class="text-sm text-stone-500 mb-4">Syllabus: ethical issues associated with machine learning and artificial intelligence, including: bias in data, algorithmic bias</p>
+                 <div class="space-y-3">
+                     <a href="https://www.ibm.com/think/topics/ai-bias" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-green-600">🎓</span>
+                        <div><p class="font-semibold">What is AI Bias?</p><p class="text-sm text-stone-500">An article from IBM explaining the sources of AI bias and its real-world consequences.</p></div>
+                    </a>
+                    <a href="https://annenberg.usc.edu/research/center-public-relations/usc-annenberg-relevance-report/ethical-dilemmas-ai" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-green-600">🎓</span>
+                        <div><p class="font-semibold">The Ethical Dilemmas of AI</p><p class="text-sm text-stone-500">A university resource discussing a wide range of ethical issues, including transparency, privacy, and accountability.</p></div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                <h3 class="text-xl font-semibold mb-2">Social Impacts & Applications</h3>
+                <p class="text-sm text-stone-500 mb-4">Syllabus: social impacts of software automation, current and future applications of ML and AI in a variety of industries</p>
+                 <div class="space-y-3">
+                     <a href="https://seraflux.com/what-is-the-impact-of-automation-on-society/" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-blue-600">🌐</span>
+                        <div><p class="font-semibold">What is the impact of automation on society?</p><p class="text-sm text-stone-500">An article exploring the social impacts of automation, focusing on employment and income inequality.</p></div>
+                    </a>
+                    <a href="https://cloud.google.com/discover/ai-applications" target="_blank" class="resource-link flex items-center p-3 rounded-lg border">
+                        <span class="mr-3 text-green-600">🎓</span>
+                        <div><p class="font-semibold">Applications of artificial intelligence (AI)</p><p class="text-sm text-stone-500">A comprehensive overview from Google Cloud on how AI is used in healthcare, finance, retail, and more.</p></div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Activity Section -->
+            <div class="p-6 bg-white rounded-xl shadow-md">
+                 <h3 class="text-xl font-semibold mb-4">Revision Activities</h3>
+                 <div id="quiz-3" class="quiz-container"></div>
+            </div>
+        </section>
+
+        <!-- Welcome Message -->
+         <section id="welcome" class="content-section text-center p-8 bg-white rounded-xl shadow-md">
+            <h2 class="text-3xl font-bold text-teal-700 mb-4">Welcome to Your Revision Toolkit</h2>
+            <p class="text-lg text-stone-600 max-w-2xl mx-auto">This interactive toolkit is designed to help you master the 'Software Automation' topic for your HSC exam. Select a syllabus section above to begin your learning and revision.</p>
+        </section>
+    </main>
+
+    <footer class="bg-stone-100 mt-12 py-6">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-stone-500 text-sm">
+            <p>This toolkit is aligned with the NESA Software Engineering Stage 6 Syllabus for Year 12.</p>
+            <p>&copy; 2025. Created for educational purposes.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const contentSections = document.querySelectorAll('.content-section');
+    const welcomeSection = document.getElementById('welcome');
+
+    function showSection(id) {
+        contentSections.forEach(section => {
+            section.classList.remove('active');
+        });
+        navButtons.forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        const targetSection = document.getElementById(`content-${id}`);
+        const targetButton = document.getElementById(`nav-${id}`);
+        
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+        if(targetButton) {
+            targetButton.classList.add('active');
+        }
+    }
+
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const id = button.id.split('-')[1];
+            showSection(id);
+        });
+    });
+
+    // Show welcome message by default
+    welcomeSection.classList.add('active');
+
+    // Quizzes Data
+    const quizzes = {
+        'quiz-1': {
+            title: "Check Your Understanding: Algorithms",
+            questions: [
+                {
+                    type: 'mcq',
+                    question: "Which algorithm is best suited for predicting a continuous value, such as a house price?",
+                    options: ["Logistic Regression", "Linear Regression", "Unsupervised Learning", "Reinforcement Learning"],
+                    answer: "Linear Regression"
+                },
+                {
+                    type: 'mcq',
+                    question: "A model is trained on a dataset of images labelled 'cat' or 'dog' to identify new images. What type of learning is this?",
+                    options: ["Supervised Learning", "Unsupervised Learning", "Reinforcement Learning", "Polynomial Learning"],
+                    answer: "Supervised Learning"
+                },
+                {
+                    type: 'mcq',
+                    question: "Which algorithm is designed for classification problems, like determining if an email is 'spam' or 'not spam'?",
+                    options: ["Linear Regression", "Polynomial Regression", "Logistic Regression", "Clustering"],
+                    answer: "Logistic Regression"
+                },
+                {
+                    type: 'matching',
+                    question: 'Match the ML model to its description:',
+                    terms: {
+                        'Supervised Learning': 'Learns from labelled data to make predictions.',
+                        'Unsupervised Learning': 'Finds patterns and structures in unlabelled data.',
+                        'Reinforcement Learning': 'Learns by trial and error through rewards and penalties.'
+                    }
+                }
+            ]
+        },
+        'quiz-2': {
+            title: "Check Your Understanding: Programming",
+            questions: [
+                {
+                    type: 'mrq',
+                    question: "Which of the following are common steps in a machine learning workflow using Python? (Select all that apply)",
+                    options: ["Importing libraries like pandas and scikit-learn", "Loading a dataset into a DataFrame", "Splitting data into training and testing sets", "Writing a new operating system kernel", "Training a model with the .fit() method"],
+                    answer: ["Importing libraries like pandas and scikit-learn", "Loading a dataset into a DataFrame", "Splitting data into training and testing sets", "Training a model with the .fit() method"]
+                },
+                {
+                    type: 'fill',
+                    question: "Fill in the blanks for this basic machine learning code snippet:",
+                    parts: [
+                        { text: "import pandas as pd", type: 'fixed'},
+                        { text: "from sklearn.model_selection import train_test_split", type: 'fixed'},
+                        { text: "from sklearn.linear_model import LinearRegression", type: 'fixed'},
+                        { text: "data = pd.", type: 'fixed'},
+                        { blank: "read_csv", size: 10 },
+                        { text: "('data.csv')", type: 'fixed'},
+                        { text: "X = data[['input']]", type: 'fixed'},
+                        { text: "y = data['output']", type: 'fixed'},
+                        { text: "X_train, X_test, y_train, y_test = train_test_split(X, y)", type: 'fixed'},
+                        { text: "model = LinearRegression()", type: 'fixed'},
+                        { text: "model.", type: 'fixed'},
+                        { blank: "fit", size: 5 },
+                        { text: "(X_train, y_train)", type: 'fixed'},
+                        { text: "predictions = model.", type: 'fixed'},
+                        { blank: "predict", size: 8 },
+                        { text: "(X_test)", type: 'fixed'}
+                    ]
+                }
+            ]
+        },
+        'quiz-3': {
+            title: "Check Your Understanding: Impact & Ethics",
+            questions: [
+                 {
+                    type: 'mcq',
+                    question: "An AI used for loan applications was trained on historical data where loans were approved less often for applicants from certain postcodes. This is an example of:",
+                    options: ["Reinforcement Learning", "Algorithmic Bias", "Fair AI practice", "Data augmentation"],
+                    answer: "Algorithmic Bias"
+                },
+                {
+                    type: 'mcq',
+                    question: "The increasing use of automation in manufacturing and logistics is most likely to lead to which major social impact?",
+                    options: ["Increased job security for all workers", "A decrease in the need for software engineers", "Job displacement for roles involving repetitive manual tasks", "A reduction in data privacy concerns"],
+                    answer: "Job displacement for roles involving repetitive manual tasks"
+                },
+                 {
+                    type: 'mcq',
+                    question: "Using AI to analyze medical scans for early disease detection is an application of AI in which industry?",
+                    options: ["Finance", "Retail", "Transportation", "Healthcare"],
+                    answer: "Healthcare"
+                }
+            ]
+        }
+    };
+
+    function createQuiz(containerId, quizData) {
+        const container = document.getElementById(containerId);
+        let html = `<h4 class="text-lg font-semibold text-stone-800 mb-4">${quizData.title}</h4>`;
+
+        quizData.questions.forEach((q, index) => {
+            html += `<div class="mb-6 p-4 border rounded-lg" data-quiz-id="${containerId}" data-q-index="${index}">`;
+            
+            if(q.type === 'mcq') {
+                html += `<p class="font-semibold mb-3">${q.question}</p>`;
+                q.options.forEach(option => {
+                    html += `<div class="quiz-option border rounded-md p-3 mb-2 cursor-pointer" data-type="mcq">${option}</div>`;
+                });
+            } else if (q.type === 'mrq') {
+                html += `<p class="font-semibold mb-3">${q.question}</p>`;
+                q.options.forEach(option => {
+                    html += `<div class="quiz-option border rounded-md p-3 mb-2 cursor-pointer" data-type="mrq">${option}</div>`;
+                });
+            } else if (q.type === 'matching') {
+                 html += `<p class="font-semibold mb-3">${q.question}</p>`;
+                 const terms = Object.keys(q.terms);
+                 const definitions = Object.values(q.terms).sort(() => Math.random() - 0.5); // Shuffle definitions
+                 html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div>`;
+                 html += `<h5 class="font-medium mb-2 text-center">Terms</h5>`;
+                 terms.forEach(term => {
+                     html += `<div class="matching-item bg-teal-100 p-2 rounded mb-2 text-center" draggable="true" data-term="${term}">${term}</div>`;
+                 });
+                 html += `</div><div>`;
+                 html += `<h5 class="font-medium mb-2 text-center">Definitions</h5>`;
+                 definitions.forEach((def, i) => {
+                     html += `<div class="matching-target p-2 rounded mb-2 flex items-center justify-center text-stone-500" data-def-index="${i}">${def}</div>`;
+                 });
+                 html += `</div></div>`;
+            } else if (q.type === 'fill') {
+                html += `<p class="font-semibold mb-3">${q.question}</p>`;
+                html += `<div class="bg-gray-900 text-white font-mono p-4 rounded-lg text-sm flex flex-wrap items-baseline gap-x-2 gap-y-1">`;
+                q.parts.forEach((part, partIndex) => {
+                    if (part.type === 'fixed') {
+                        html += `<span>${part.text}</span>`;
+                    } else {
+                         html += `<input type="text" class="fill-blank bg-gray-700 text-yellow-300 rounded-sm px-1 focus:outline-none" style="width: ${part.size}ch;" data-part-index="${partIndex}">`;
+                    }
+                });
+                html += `</div>`;
+            }
+
+            html += `<div class="feedback mt-3 text-sm"></div></div>`;
+        });
+
+        html += `<button class="check-answers-btn bg-teal-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-teal-700">Check Answers</button>`;
+        html += `<div class="quiz-results mt-4"></div>`;
+        container.innerHTML = html;
+    }
+
+    Object.keys(quizzes).forEach(quizId => {
+        createQuiz(quizId, quizzes[quizId]);
+    });
+    
+    // Event listeners for quizzes
+    document.querySelectorAll('.quiz-container').forEach(container => {
+        container.addEventListener('click', e => {
+            if (e.target.matches('.quiz-option')) {
+                if (e.target.dataset.type === 'mcq') {
+                    // Deselect siblings
+                    e.target.parentElement.querySelectorAll('.quiz-option').forEach(el => el.classList.remove('selected'));
+                    e.target.classList.add('selected');
+                } else if (e.target.dataset.type === 'mrq') {
+                     e.target.classList.toggle('selected');
+                }
+            }
+        });
+
+        container.querySelector('.check-answers-btn').addEventListener('click', e => {
+            const quizId = e.target.closest('.quiz-container').id;
+            const quizData = quizzes[quizId];
+            let score = 0;
+            let total = 0;
+
+            quizData.questions.forEach((q, index) => {
+                const questionEl = container.querySelector(`[data-q-index="${index}"]`);
+                const feedbackEl = questionEl.querySelector('.feedback');
+                
+                if (q.type === 'mcq') {
+                    total++;
+                    const selected = questionEl.querySelector('.quiz-option.selected');
+                    if (selected) {
+                        const isCorrect = selected.textContent === q.answer;
+                        selected.classList.add(isCorrect ? 'correct' : 'incorrect');
+                        feedbackEl.innerHTML = isCorrect ? `<span class="text-green-600 font-semibold">Correct!</span>` : `<span class="text-red-600 font-semibold">Incorrect.</span> The correct answer is: ${q.answer}`;
+                        if (isCorrect) score++;
+                    } else {
+                         feedbackEl.innerHTML = `<span class="text-orange-600 font-semibold">No answer selected.</span>`;
+                    }
+                } else if (q.type === 'mrq') {
+                    total++;
+                    const selectedOptions = Array.from(questionEl.querySelectorAll('.quiz-option.selected')).map(el => el.textContent);
+                    const correctAnswers = q.answer;
+                    let isFullyCorrect = selectedOptions.length === correctAnswers.length && selectedOptions.every(opt => correctAnswers.includes(opt));
+                    
+                    questionEl.querySelectorAll('.quiz-option').forEach(optEl => {
+                       if (correctAnswers.includes(optEl.textContent)) {
+                           optEl.classList.add('correct');
+                       } else if(selectedOptions.includes(optEl.textContent)){
+                           optEl.classList.add('incorrect');
+                       }
+                    });
+
+                    if (isFullyCorrect) {
+                        score++;
+                        feedbackEl.innerHTML = `<span class="text-green-600 font-semibold">Correct!</span>`;
+                    } else {
+                        feedbackEl.innerHTML = `<span class="text-red-600 font-semibold">Incorrect.</span> The correct options are highlighted in green.`;
+                    }
+
+                } else if (q.type === 'fill') {
+                     total++;
+                     let allCorrect = true;
+                     const inputs = questionEl.querySelectorAll('.fill-blank');
+                     inputs.forEach(input => {
+                        const partIndex = input.dataset.partIndex;
+                        const partData = q.parts[partIndex];
+                        if (input.value.trim().toLowerCase() === partData.blank.toLowerCase()) {
+                            input.classList.remove('border-red-500');
+                            input.classList.add('border-green-500');
+                        } else {
+                            input.classList.remove('border-green-500');
+                            input.classList.add('border-red-500');
+                            allCorrect = false;
+                        }
+                     });
+                     if (allCorrect) {
+                         score++;
+                         feedbackEl.innerHTML = `<span class="text-green-600 font-semibold">Correct! Well done.</span>`;
+                     } else {
+                         feedbackEl.innerHTML = `<span class="text-red-600 font-semibold">Some answers are incorrect. Corrected in place.</span>`;
+                         inputs.forEach(input => {
+                            const partIndex = input.dataset.partIndex;
+                            const partData = q.parts[partIndex];
+                            if (input.value.trim().toLowerCase() !== partData.blank.toLowerCase()) {
+                                input.value = partData.blank;
+                            }
+                         });
+                     }
+                }
+            });
+
+            const resultsEl = container.querySelector('.quiz-results');
+            resultsEl.innerHTML = `<p class="font-bold text-lg">Your score: ${score} / ${total}</p>`;
+        });
+    });
+
+});
+</script>
+</body>
+</html>
