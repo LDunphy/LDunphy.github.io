@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: Data Quality Snapshot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Design Philosophy: "Infographic Style"
+         - High contrast, large typography, and distinct "modules" of information.
+         - Uses a Radar Chart to visualize abstract quality metrics (common in data science).
+         - "Bento Box" grid layout for the Essential Eight to make it visually digestible.
+         - Verified external links are included as subtle footer references in each card.
+    -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #4f46e5, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .infographic-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .infographic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .pill-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- MAIN CONTAINER -->
+    <div class="max-w-6xl mx-auto px-4 py-12 space-y-12">
+
+        <!-- HEADER SECTION -->
+        <div class="text-center space-y-4">
+            <span class="pill-badge bg-indigo-100 text-indigo-700">NESA Enterprise Computing 2.2</span>
+            <h1 class="text-5xl md:text-7xl font-black tracking-tight text-slate-900">DATA <span class="gradient-text">QUALITY</span></h1>
+            <p class="text-xl text-slate-500 max-w-2xl mx-auto">The core principles of collecting, storing, and analysing data responsibly.</p>
+        </div>
+
+        <!-- TOP ROW: DEFINITION & VISUALIZATION -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- CARD 1: THE 6 DIMENSIONS (Chart) -->
+            <div class="lg:col-span-1 bg-white p-6 rounded-3xl shadow-lg border border-slate-100 flex flex-col justify-center items-center infographic-card">
+                <h2 class="text-lg font-bold text-slate-700 mb-2 w-full text-center">6 Dimensions of Quality</h2>
+                <div class="w-full h-64 relative">
+                    <canvas id="qualityRadar"></canvas>
+                </div>
+                <p class="text-xs text-center text-slate-400 mt-4">High quality data scores high on all axes.</p>
+            </div>
+
+            <!-- CARD 2: THE CONTEXT (Text) -->
+            <div class="lg:col-span-2 bg-indigo-900 p-8 rounded-3xl shadow-lg text-white flex flex-col justify-center relative overflow-hidden">
+                <!-- Decorative background circle -->
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-700 rounded-full opacity-50 blur-3xl"></div>
+                
+                <h2 class="text-3xl font-bold mb-6">Why does it matter?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold text-indigo-300 mb-2 uppercase tracking-wider text-sm">The Problem: Data Swamps</h3>
+                        <p class="text-indigo-100 text-sm leading-relaxed">Without quality control, a "Data Lake" becomes a <strong>Data Swamp</strong>. It contains raw, unorganised, and undocumented data that is impossible to navigate or trust.</p>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-indigo-300 mb-2 uppercase tracking-wider text-sm">The Risk: Bias</h3>
+                        <p class="text-indigo-100 text-sm leading-relaxed"><strong>Sampling Bias</strong> occurs when data doesn't represent the whole population. <strong>Algorithmic Bias</strong> happens when systems learn these prejudices, leading to unfair automated decisions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MIDDLE ROW: LEGAL & ETHICAL PILLARS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- PILLAR 1: PRIVACY ACT -->
+            <div class="bg-white p-6 rounded-3xl shadow border border-slate-100 infographic-card group">
+                <div class="h-12 w-12 bg-blue-100 rounded-2xl flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition">⚖️</div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Privacy Act 1988</h3>
+                <p class="text-sm text-slate-500 mb-4">The Australian law governing how personal info is handled.</p>
+                <ul class="space-y-2">
+                    <li class="flex items-center text-sm font-medium text-slate-700">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> 13 APPs (Principles)
+                    </li>
+                    <li class="flex items-center text-sm font-medium text-slate-700">
+                        <span class="w-2 h-2 bg-blue-500 rounded-full mr-2"></span> Regulated by OAIC
+                    </li>
+                </ul>
+            </div>
+
+            <!-- PILLAR 2: ICIP -->
+            <div class="bg-white p-6 rounded-3xl shadow border border-slate-100 infographic-card group">
+                <div class="h-12 w-12 bg-amber-100 rounded-2xl flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition">🤝</div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">ICIP & Sovereignty</h3>
+                <p class="text-sm text-slate-500 mb-4">Indigenous Cultural & Intellectual Property.</p>
+                <div class="text-xs bg-amber-50 p-3 rounded-xl text-amber-800 font-medium leading-snug">
+                    "Data Sovereignty is the right of Indigenous peoples to own, control, and possess data that derives from them."
+                </div>
+            </div>
+
+            <!-- PILLAR 3: INFLUENCE -->
+            <div class="bg-white p-6 rounded-3xl shadow border border-slate-100 infographic-card group">
+                <div class="h-12 w-12 bg-purple-100 rounded-2xl flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition">📢</div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Data Influence</h3>
+                <p class="text-sm text-slate-500 mb-4">How curated data shapes user behaviour.</p>
+                <ul class="space-y-2">
+                    <li class="flex items-center text-sm font-medium text-slate-700">
+                        <span class="w-6 h-6 bg-purple-50 text-purple-600 rounded flex items-center justify-center text-xs mr-2 font-bold">1</span> Signals (Notifications)
+                    </li>
+                    <li class="flex items-center text-sm font-medium text-slate-700">
+                        <span class="w-6 h-6 bg-purple-50 text-purple-600 rounded flex items-center justify-center text-xs mr-2 font-bold">2</span> Filter Bubbles
+                    </li>
+                    <li class="flex items-center text-sm font-medium text-slate-700">
+                        <span class="w-6 h-6 bg-purple-50 text-purple-600 rounded flex items-center justify-center text-xs mr-2 font-bold">3</span> Timeframes (FOMO)
+                    </li>
+                </ul>
+            </div>
+
+            <!-- PILLAR 4: LITERACY -->
+            <div class="bg-white p-6 rounded-3xl shadow border border-slate-100 infographic-card group">
+                <div class="h-12 w-12 bg-emerald-100 rounded-2xl flex items-center justify-center mb-4 text-2xl group-hover:scale-110 transition">🧠</div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">Data Literacy</h3>
+                <p class="text-sm text-slate-500 mb-4">The ability to read, write, and communicate with data.</p>
+                <div class="relative w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-200 mt-4">
+                    <div class="bg-emerald-500 h-2.5 rounded-full" style="width: 45%"></div>
+                </div>
+                <p class="text-xs text-right text-emerald-600 font-bold mt-1">Critical Skill Gap</p>
+            </div>
+
+        </div>
+
+        <!-- BOTTOM SECTION: ESSENTIAL EIGHT (BENTO GRID) -->
+        <div class="bg-slate-900 rounded-3xl p-8 shadow-2xl">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">The ACSC "Essential Eight"</h2>
+                    <p class="text-slate-400">Strategies to mitigate cyber security incidents.</p>
+                </div>
+                <span class="mt-4 md:mt-0 px-4 py-1 rounded-full border border-slate-700 text-slate-300 text-xs font-bold uppercase">Security Pillar</span>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Prevent -->
+                <div class="bg-slate-800 p-4 rounded-2xl border-l-4 border-cyan-500">
+                    <p class="text-cyan-400 text-xs font-bold uppercase mb-1">Prevent</p>
+                    <p class="text-white font-semibold text-sm">Application Control</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-2xl border-l-4 border-cyan-500">
+                    <p class="text-cyan-400 text-xs font-bold uppercase mb-1">Prevent</p>
+                    <p class="text-white font-semibold text-sm">Patch Applications</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-2xl border-l-4 border-cyan-500">
+                    <p class="text-cyan-400 text-xs font-bold uppercase mb-1">Prevent</p>
+                    <p class="text-white font-semibold text-sm">Configure Macros</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-2xl border-l-4 border-cyan-500">
+                    <p class="text-cyan-400 text-xs font-bold uppercase mb-1">Prevent</p>
+                    <p class="text-white font-semibold text-sm">User App Hardening</p>
+                </div>
+
+                <!-- Limit -->
+                <div class="bg-slate-800 p-4 rounded-2xl border-l-4 border-orange-500">
+                    <p class="text-orange-400 text-xs font-bold uppercase mb-1">Limit</p>
+                    <p class="text-white font-semibold text-sm">Restrict Admin</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-2xl border-l-4 border-orange-500">
+                    <p class="text-orange-400 text-xs font-bold uppercase mb-1">Limit</p>
+                    <p class="text-white font-semibold text-sm">Patch OS</p>
+                </div>
+                <div class="bg-slate-800 p-4 rounded-2xl border-l-4 border-orange-500">
+                    <p class="text-orange-400 text-xs font-bold uppercase mb-1">Limit</p>
+                    <p class="text-white font-semibold text-sm">Multi-factor Auth</p>
+                </div>
+
+                <!-- Recover -->
+                <div class="bg-slate-800 p-4 rounded-2xl border-l-4 border-green-500">
+                    <p class="text-green-400 text-xs font-bold uppercase mb-1">Recover</p>
+                    <p class="text-white font-semibold text-sm">Regular Backups</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER RESOURCES -->
+        <div class="text-center pt-8 border-t border-slate-200">
+            <p class="text-sm text-slate-500 mb-4 font-medium">Verified Sources for Further Study:</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="https://www.oaic.gov.au/privacy/australian-privacy-principles" target="_blank" class="text-xs bg-white border border-slate-200 px-4 py-2 rounded-full hover:bg-slate-50 hover:text-indigo-600 transition">OAIC Privacy Principles</a>
+                <a href="https://www.cyber.gov.au/resources-business-and-government/essential-cyber-security/essential-eight" target="_blank" class="text-xs bg-white border border-slate-200 px-4 py-2 rounded-full hover:bg-slate-50 hover:text-indigo-600 transition">ACSC Essential Eight</a>
+                <a href="https://www.artslaw.com.au/information-sheet/indigenous-cultural-intellectual-property-icip-aitb/" target="_blank" class="text-xs bg-white border border-slate-200 px-4 py-2 rounded-full hover:bg-slate-50 hover:text-indigo-600 transition">Arts Law ICIP</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Radar Chart Configuration for "6 Dimensions of Quality"
+        // This visualizes the theoretical components of data quality
+        const ctx = document.getElementById('qualityRadar').getContext('2d');
+        new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Accuracy', 'Completeness', 'Consistency', 'Timeliness', 'Validity', 'Uniqueness'],
+                datasets: [{
+                    label: 'Ideal Data Quality Score',
+                    data: [90, 85, 80, 95, 90, 100],
+                    backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                    borderColor: 'rgba(79, 70, 229, 1)',
+                    pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        angleLines: { color: 'rgba(0,0,0,0.1)' },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        pointLabels: {
+                            font: { size: 10, weight: 'bold' },
+                            color: '#64748b'
+                        },
+                        ticks: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
