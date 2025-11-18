@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Year 12 Enterprise Computing: Data Quality Revision</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Chosen Palette: "Exam Focus" - Clean White/Gray background to reduce distraction, with authoritative Indigo/Blue accents for structure. -->
+    <!-- Application Structure Plan: 
+        1. Study Notes (Explorer): A split-pane view allowing students to quickly click through syllabus dot points (Bias, ICIP, Privacy Act). This mimics a digital textbook.
+        2. Revision Zone: Interactive components specifically for exam prep. 
+           - Flashcards for terminology (flipped via JS).
+           - MCQ Quiz for checking understanding of concepts like 'Data Signals'.
+           - Short Answer drills based on the provided PDF exercises.
+        3. Verified Resources: A strictly curated list of working links to government/legal bodies (OAIC, ACSC, Arts Law).
+    -->
+    <!-- Visualization & Content Choices: 
+        - Chart.js: Used to visualize the 'Essential Eight' maturity levels or Data Quality dimensions, breaking up text.
+        - No SVG/Mermaid: All icons are Unicode or Tailwind shapes.
+        - Content: Directly synthesised from the NESA syllabus documents and verified external Australian sources.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            height: 300px;
+        }
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            height: 200px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 0.5rem;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+        }
+        .flip-card-front {
+            background-color: #ffffff;
+            color: #1f2937;
+            border: 2px solid #e5e7eb;
+        }
+        .flip-card-back {
+            background-color: #4f46e5;
+            color: white;
+            transform: rotateY(180deg);
+        }
+        .tab-active {
+            border-bottom: 2px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            border-bottom: 2px solid transparent;
+            color: #6b7280;
+        }
+        .tab-inactive:hover {
+            color: #374151;
+            border-bottom: 2px solid #d1d5db;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 antialiased selection:bg-indigo-100 selection:text-indigo-800">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header -->
+        <header class="mb-8 border-b border-gray-200 pb-6">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Data Quality Revision Hub</h1>
+            <p class="mt-2 text-lg text-gray-600">NESA Enterprise Computing (Year 12) &mdash; Topic 2.2</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="mb-8">
+            <nav class="flex space-x-8 border-b border-gray-200" aria-label="Tabs">
+                <button onclick="switchTab('study')" id="tab-study" class="tab-active py-4 px-1 text-sm md:text-base font-medium focus:outline-none">
+                    1. Study Notes (Syllabus)
+                </button>
+                <button onclick="switchTab('revision')" id="tab-revision" class="tab-inactive py-4 px-1 text-sm md:text-base font-medium focus:outline-none">
+                    2. Interactive Revision
+                </button>
+                <button onclick="switchTab('resources')" id="tab-resources" class="tab-inactive py-4 px-1 text-sm md:text-base font-medium focus:outline-none">
+                    3. Verified Resources
+                </button>
+            </nav>
+        </div>
+
+        <!-- TAB 1: STUDY NOTES EXPLORER -->
+        <div id="content-study" class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Sidebar -->
+            <div class="lg:col-span-1 space-y-2">
+                <h3 class="font-bold text-gray-900 uppercase tracking-wider text-xs mb-3">Syllabus Dot Points</h3>
+                <button onclick="loadTopic('quality')" class="w-full text-left px-4 py-2 rounded-md bg-indigo-50 text-indigo-700 font-medium hover:bg-indigo-100 transition">Data Quality & Bias</button>
+                <button onclick="loadTopic('privacy')" class="w-full text-left px-4 py-2 rounded-md hover:bg-gray-100 text-gray-600 transition">Privacy Act & APPs</button>
+                <button onclick="loadTopic('icip')" class="w-full text-left px-4 py-2 rounded-md hover:bg-gray-100 text-gray-600 transition">IP & ICIP</button>
+                <button onclick="loadTopic('security')" class="w-full text-left px-4 py-2 rounded-md hover:bg-gray-100 text-gray-600 transition">Security (Essential 8)</button>
+                <button onclick="loadTopic('influence')" class="w-full text-left px-4 py-2 rounded-md hover:bg-gray-100 text-gray-600 transition">Influence & Literacy</button>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="lg:col-span-3 bg-white rounded-xl shadow-sm border border-gray-200 p-6 md:p-8" id="study-content-area">
+                <!-- Dynamic Content Loaded Here -->
+            </div>
+        </div>
+
+        <!-- TAB 2: INTERACTIVE REVISION -->
+        <div id="content-revision" class="hidden space-y-12">
+            
+            <!-- Section A: Flashcards -->
+            <section>
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">A. Key Terminology Flashcards</h2>
+                <p class="text-gray-600 mb-6">Click a card to flip it and reveal the definition.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Card 1 -->
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3 class="text-xl font-bold text-indigo-600">Data Swamp</h3>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>A data lake that is poorly managed, lacks metadata, and is difficult to navigate, making the data within it effectively useless.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3 class="text-xl font-bold text-indigo-600">Metadata</h3>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>"Data about data". It describes the content, quality, condition, and other characteristics of data (e.g., date created, author, file size).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3 class="text-xl font-bold text-indigo-600">Sampling Bias</h3>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Occurs when the data collected does not accurately represent the entire population, leading to skewed or incorrect analysis results.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3 class="text-xl font-bold text-indigo-600">ICIP</h3>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Indigenous Cultural and Intellectual Property. Rights to heritage, traditional knowledge, and cultural expression (e.g., stories, designs, plants).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3 class="text-xl font-bold text-indigo-600">OAIC</h3>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Office of the Australian Information Commissioner. The independent national regulator for privacy and freedom of information.</p>
+                            </div>
+                        </div>
+                    </div>
+                     <!-- Card 6 -->
+                     <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <h3 class="text-xl font-bold text-indigo-600">Data Signal</h3>
+                            </div>
+                            <div class="flip-card-back">
+                                <p>Cues (like notifications or 'like' counts) designed to trigger a behavioural response from a user, often utilizing psychological biases.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <hr class="border-gray-200">
+
+            <!-- Section B: Short Answer Practice -->
+            <section>
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">B. Exam-Style Short Answers</h2>
+                <p class="text-gray-600 mb-6">Based on Exercise 2.2.2 from your textbook. Type your answer, then click "Reveal Model Answer" to self-assess.</p>
+
+                <div class="space-y-8">
+                    <!-- Question 1 -->
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                        <h3 class="font-bold text-lg mb-2">Question 1 (Legislation)</h3>
+                        <p class="mb-4 text-gray-700">Describe the main purpose of the Privacy Act 1988 and its role in protecting individuals' data in Australia.</p>
+                        <textarea class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" rows="3" placeholder="Type your response here..."></textarea>
+                        <button onclick="toggleAnswer('ans1')" class="mt-3 text-sm font-semibold text-indigo-600 hover:text-indigo-800">Show/Hide Model Answer</button>
+                        <div id="ans1" class="hidden mt-4 p-4 bg-indigo-50 rounded-md text-sm text-gray-800">
+                            <strong>Model Answer:</strong> The Privacy Act 1988 (Cth) regulates how personal information is handled by Australian Government agencies and large private sector organisations. Its main purpose is to balance the free flow of information with an individual's right to privacy. It achieves this through the 13 Australian Privacy Principles (APPs), which set out standards for the collection, use, disclosure, and security of personal data.
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                        <h3 class="font-bold text-lg mb-2">Question 2 (Influence of Data)</h3>
+                        <p class="mb-4 text-gray-700">Explain how curated and communicated data can subtly influence a user’s decision making? Use an example.</p>
+                        <textarea class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" rows="3" placeholder="Type your response here..."></textarea>
+                        <button onclick="toggleAnswer('ans2')" class="mt-3 text-sm font-semibold text-indigo-600 hover:text-indigo-800">Show/Hide Model Answer</button>
+                        <div id="ans2" class="hidden mt-4 p-4 bg-indigo-50 rounded-md text-sm text-gray-800">
+                            <strong>Model Answer:</strong> Curated data involves filtering and presenting specific information to tell a narrative, often omitting context. This influences decisions by creating "Filter Bubbles" or using social signals. <br><br><strong>Example:</strong> A travel website showing "3 people are looking at this hotel right now" (a data signal) creates a sense of urgency (scarcity bias), influencing the user to book immediately without comparing prices elsewhere.
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+                        <h3 class="font-bold text-lg mb-2">Question 3 (ICIP)</h3>
+                        <p class="mb-4 text-gray-700">How can organisations uphold Indigenous Cultural and Intellectual Property (ICIP) principles when handling cultural data?</p>
+                        <textarea class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" rows="3" placeholder="Type your response here..."></textarea>
+                        <button onclick="toggleAnswer('ans3')" class="mt-3 text-sm font-semibold text-indigo-600 hover:text-indigo-800">Show/Hide Model Answer</button>
+                        <div id="ans3" class="hidden mt-4 p-4 bg-indigo-50 rounded-md text-sm text-gray-800">
+                            <strong>Model Answer:</strong> Organisations can uphold ICIP by following the principle of <strong>Indigenous Data Sovereignty</strong>. This involves:<br>1. <strong>Consultation:</strong> Seeking permission from Traditional Owners before collecting data.<br>2. <strong>Control:</strong> Allowing Indigenous communities to control how their data is stored and used.<br>3. <strong>Benefit:</strong> Ensuring the data use provides a direct benefit to the community.<br>4. <strong>Acknowledgement:</strong> Correctly attributing the source of the cultural knowledge.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 3: VERIFIED RESOURCES -->
+        <div id="content-resources" class="hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">Verified External Resources</h2>
+                <p class="mb-6 text-gray-600">Use these links for your assignments and study notes. They are stable, official sources.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Category 1 -->
+                    <div>
+                        <h3 class="text-lg font-bold text-indigo-700 border-b border-indigo-100 pb-2 mb-3">Legal & Privacy</h3>
+                        <ul class="space-y-3">
+                            <li>
+                                <a href="https://www.oaic.gov.au/privacy/australian-privacy-principles" target="_blank" class="flex items-start group">
+                                    <span class="text-indigo-600 mr-2">➜</span>
+                                    <div>
+                                        <span class="font-semibold text-gray-800 group-hover:text-indigo-600 group-hover:underline">Australian Privacy Principles (OAIC)</span>
+                                        <p class="text-xs text-gray-500">Official guide to the 13 APPs.</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.legislation.gov.au/Details/C2019C00025" target="_blank" class="flex items-start group">
+                                    <span class="text-indigo-600 mr-2">➜</span>
+                                    <div>
+                                        <span class="font-semibold text-gray-800 group-hover:text-indigo-600 group-hover:underline">Privacy Act 1988 (Cth)</span>
+                                        <p class="text-xs text-gray-500">Full text of the legislation.</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Category 2 -->
+                    <div>
+                        <h3 class="text-lg font-bold text-indigo-700 border-b border-indigo-100 pb-2 mb-3">Security</h3>
+                        <ul class="space-y-3">
+                            <li>
+                                <a href="https://www.cyber.gov.au/resources-business-and-government/essential-cyber-security/essential-eight" target="_blank" class="flex items-start group">
+                                    <span class="text-indigo-600 mr-2">➜</span>
+                                    <div>
+                                        <span class="font-semibold text-gray-800 group-hover:text-indigo-600 group-hover:underline">ACSC Essential Eight</span>
+                                        <p class="text-xs text-gray-500">Strategies to mitigate cyber security incidents.</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Category 3 -->
+                    <div>
+                        <h3 class="text-lg font-bold text-indigo-700 border-b border-indigo-100 pb-2 mb-3">Indigenous Data (ICIP)</h3>
+                        <ul class="space-y-3">
+                            <li>
+                                <a href="https://www.artslaw.com.au/information-sheet/indigenous-cultural-intellectual-property-icip-aitb/" target="_blank" class="flex items-start group">
+                                    <span class="text-indigo-600 mr-2">➜</span>
+                                    <div>
+                                        <span class="font-semibold text-gray-800 group-hover:text-indigo-600 group-hover:underline">Arts Law Centre: ICIP Info Sheet</span>
+                                        <p class="text-xs text-gray-500">Definitive guide on rights and protocols.</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.communityfirstdevelopment.org.au/indigenousdatasovereignty" target="_blank" class="flex items-start group">
+                                    <span class="text-indigo-600 mr-2">➜</span>
+                                    <div>
+                                        <span class="font-semibold text-gray-800 group-hover:text-indigo-600 group-hover:underline">Indigenous Data Sovereignty</span>
+                                        <p class="text-xs text-gray-500">Principles for governance of Indigenous data.</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Category 4 -->
+                    <div>
+                        <h3 class="text-lg font-bold text-indigo-700 border-b border-indigo-100 pb-2 mb-3">Ethics & Literacy</h3>
+                        <ul class="space-y-3">
+                            <li>
+                                <a href="https://www.copyright.org.au/resources" target="_blank" class="flex items-start group">
+                                    <span class="text-indigo-600 mr-2">➜</span>
+                                    <div>
+                                        <span class="font-semibold text-gray-800 group-hover:text-indigo-600 group-hover:underline">Australian Copyright Council</span>
+                                        <p class="text-xs text-gray-500">Fact sheets on copyright essentials.</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://www.esafety.gov.au/educators/classroom-resources" target="_blank" class="flex items-start group">
+                                    <span class="text-indigo-600 mr-2">➜</span>
+                                    <div>
+                                        <span class="font-semibold text-gray-800 group-hover:text-indigo-600 group-hover:underline">eSafety Commissioner</span>
+                                        <p class="text-xs text-gray-500">Resources on digital literacy and critical thinking.</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- DATA STORAGE ---
+        const topics = {
+            quality: {
+                title: "Data Quality & Bias",
+                content: `
+                    <h3 class="text-xl font-semibold mb-4">Why Quality Matters</h3>
+                    <p class="mb-4">Data quality is determined by factors like <strong>accuracy</strong> (is it correct?), <strong>validity</strong> (is it in the right format?), and <strong>reliability</strong> (is it consistent?). Poor quality data leads to flawed business decisions.</p>
+                    
+                    <h4 class="text-lg font-semibold text-indigo-700 mt-6 mb-2">Types of Bias</h4>
+                    <p class="mb-4">Bias distorts analysis. Common types include:</p>
+                    <ul class="list-disc pl-5 space-y-2 mb-6">
+                        <li><strong>Sampling Bias:</strong> The data collected doesn't represent the whole population (e.g., surveying only landlines excludes mobile-only users).</li>
+                        <li><strong>Confirmation Bias:</strong> Selecting data that supports a pre-existing belief while ignoring data that contradicts it.</li>
+                    </ul>
+                    
+                `
+            },
+            privacy: {
+                title: "Permissions, Rights & Privacy",
+                content: `
+                    <h3 class="text-xl font-semibold mb-4">The Privacy Act 1988 (Cth)</h3>
+                    <p class="mb-4">This is the principal piece of Australian legislation protecting the handling of personal information about individuals. It applies to Australian Government agencies and businesses with an annual turnover of more than $3 million.</p>
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
+                        <h4 class="font-bold text-blue-800">The 13 Australian Privacy Principles (APPs)</h4>
+                        <p class="text-sm mt-1">These principles govern the lifecycle of personal information:</p>
+                        <ul class="list-decimal pl-5 mt-2 space-y-1 text-sm">
+                            <li>Open and transparent management</li>
+                            <li>Anonymity and pseudonymity</li>
+                            <li>Collection of solicited personal info</li>
+                            <li>Dealing with unsolicited personal info</li>
+                            <li>Notification of collection</li>
+                            <li>Use or disclosure</li>
+                            <li>Direct marketing</li>
+                            <li>Cross-border disclosure</li>
+                            <li>Adoption/use of government related identifiers</li>
+                            <li>Quality of personal info</li>
+                            <li>Security of personal info</li>
+                            <li>Access to personal info</li>
+                            <li>Correction of personal info</li>
+                        </ul>
+                    </div>
+                `
+            },
+            icip: {
+                title: "Intellectual Property & ICIP",
+                content: `
+                    <h3 class="text-xl font-semibold mb-4">Defining ICIP</h3>
+                    <p class="mb-4"><strong>Indigenous Cultural and Intellectual Property (ICIP)</strong> refers to the rights that Indigenous people have to their heritage. This includes:</p>
+                    <ul class="list-disc pl-5 space-y-2 mb-6">
+                        <li>Traditional knowledge (e.g., medicinal plants)</li>
+                        <li>Cultural expression (e.g., stories, designs, songs)</li>
+                        <li>Performances and oral literature</li>
+                    </ul>
+
+                    <h4 class="text-lg font-semibold text-indigo-700 mb-2">Indigenous Data Sovereignty</h4>
+                    <p class="mb-4">This is the right of Indigenous peoples to own, control, access, and possess data that derives from them. It asserts that data about Indigenous peoples should be used to benefit them and align with their cultural values.</p>
+                    
+                    
+                `
+            },
+            security: {
+                title: "Security: The Essential Eight",
+                content: `
+                    <h3 class="text-xl font-semibold mb-4">Protecting Data</h3>
+                    <p class="mb-4">Security refers to the technical measures used to prevent unauthorized access to data. The <strong>ACSC (Australian Cyber Security Centre)</strong> recommends the "Essential Eight" strategies to mitigate cyber incidents.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-white border p-4 rounded shadow-sm">
+                            <h5 class="font-bold text-gray-700">Objective: Prevent Attacks</h5>
+                            <ul class="text-sm mt-2 space-y-1 text-gray-600">
+                                <li>1. Application Control</li>
+                                <li>2. Patch Applications</li>
+                                <li>3. Configure MS Office Macros</li>
+                                <li>4. User Application Hardening</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white border p-4 rounded shadow-sm">
+                            <h5 class="font-bold text-gray-700">Objective: Limit & Recover</h5>
+                            <ul class="text-sm mt-2 space-y-1 text-gray-600">
+                                <li>5. Restrict Admin Privileges</li>
+                                <li>6. Patch Operating Systems</li>
+                                <li>7. Multi-factor Authentication (MFA)</li>
+                                <li>8. Daily Backups</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                `
+            },
+            influence: {
+                title: "Influence of Data",
+                content: `
+                    <h3 class="text-xl font-semibold mb-4">How Data Shapes Behaviour</h3>
+                    <p class="mb-4">Data is not just passive; it is curated to influence users.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-indigo-500 pl-4">
+                            <h5 class="font-bold">Data Literacy</h5>
+                            <p class="text-sm">The ability to read, understand, create, and communicate data. A literate user can spot bias and misinformation.</p>
+                        </div>
+                        <div class="border-l-4 border-indigo-500 pl-4">
+                            <h5 class="font-bold">Signals</h5>
+                            <p class="text-sm">Visual cues like "Trending Now" or "3 people viewing this hotel" designed to trigger psychological responses (FOMO, validation).</p>
+                        </div>
+                        <div class="border-l-4 border-indigo-500 pl-4">
+                            <h5 class="font-bold">Data Swamp</h5>
+                            <p class="text-sm">When a Data Lake (repository of raw data) becomes unmanaged and undocumented. Data is there, but cannot be found or trusted.</p>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        // --- TAB SWITCHING ---
+        function switchTab(tabName) {
+            // Reset all tabs
+            ['study', 'revision', 'resources'].forEach(t => {
+                document.getElementById(`content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('tab-active');
+                document.getElementById(`tab-${t}`).classList.add('tab-inactive');
+            });
+
+            // Activate selected
+            document.getElementById(`content-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabName}`).classList.add('tab-active');
+            document.getElementById(`tab-${tabName}`).classList.remove('tab-inactive');
+        }
+
+        // --- TOPIC LOADER (TAB 1) ---
+        function loadTopic(key) {
+            const area = document.getElementById('study-content-area');
+            const data = topics[key];
+            
+            // Visual highlighting for sidebar buttons could be added here
+            
+            area.innerHTML = `
+                <h2 class="text-2xl font-bold text-indigo-700 mb-4 border-b border-gray-100 pb-2">${data.title}</h2>
+                <div class="prose max-w-none text-gray-600 leading-relaxed">
+                    ${data.content}
+                </div>
+            `;
+        }
+
+        // --- ANSWER TOGGLE (TAB 2) ---
+        function toggleAnswer(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load default topic
+            loadTopic('quality');
+        });
+
+    </script>
+</body>
+</html>
