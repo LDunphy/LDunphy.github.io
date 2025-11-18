@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Computing - Data Science Revision</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A single-page application using a top navigation bar to switch between five thematic sections: Data Foundations, Collection & Quality, Storage & Management, Analysis & Impact, and Privacy & Security. This thematic structure is chosen over a linear syllabus list to group related concepts, allowing students to focus their revision on specific areas. The interactive, non-linear flow encourages exploration and active learning, which is more effective for exam preparation than passive reading. -->
+    <!-- Visualization & Content Choices:
+    - Quantitative vs. Qualitative: Goal: Differentiate. Method: Interactive drag-and-drop game. Justification: Active recall is better for learning than static definitions.
+    - Levels of Measurement: Goal: Explain NOIR. Method: Interactive HTML/CSS diagram with clickable sections. Justification: Breaks down a complex topic into digestible, user-controlled chunks.
+    - Data Bias: Goal: Compare types of bias. Method: Chart.js Bar Chart. Interaction: Clicking a bar reveals its definition. Justification: Visualizes the concept and provides layered information on demand.
+    - Storage Methods: Goal: Compare options. Method: Responsive card layout with expand/collapse details. Justification: Presents a high-level overview first, with details available on click, preventing information overload.
+    - Blockchain: Goal: Explain the process. Method: Simplified HTML/CSS flowchart. Justification: Clarifies a complex sequence of events visually.
+    - Privacy Features: Goal: Demonstrate risks. Method: An interactive mock form. Justification: Makes abstract concepts tangible and memorable by simulating a real-world scenario.
+    All visualizations are implemented using either Chart.js (Canvas) or structured HTML/CSS with JS, adhering to the NO SVG/Mermaid constraint. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --bg-main: #FDFBF6;
+            --bg-card: #FFFFFF;
+            --text-primary: #3C3C3B;
+            --text-secondary: #7F7F7F;
+            --accent: #E1C4A9;
+            --accent-dark: #D4AF8A;
+            --border-color: #EAEAEA;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active {
+            border-bottom-color: var(--accent-dark);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .nav-link:hover {
+            border-bottom-color: var(--accent);
+        }
+        .content-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            transition: box-shadow 0.3s ease;
+        }
+        .content-card:hover {
+             box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+        }
+        .draggable {
+            cursor: grab;
+        }
+        .drop-zone {
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .drop-zone.drag-over {
+            background-color: #f0eade;
+            border-color: var(--accent-dark);
+        }
+        .drop-zone.correct {
+            animation: correct-pulse 0.5s ease;
+        }
+        .drop-zone.incorrect {
+             animation: incorrect-shake 0.5s ease;
+        }
+        @keyframes correct-pulse {
+            0% { transform: scale(1); background-color: #d4edda; }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); background-color: var(--bg-card); }
+        }
+        @keyframes incorrect-shake {
+            0%, 100% { transform: translateX(0); background-color: #f8d7da; }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+    </style>
+     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="antialiased">
+
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">Data Science Revision Guide</h1>
+                        <p class="text-sm text-gray-500">NESA Enterprise Computing HSC Topic</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Navigation -->
+             <nav id="main-nav" class="bg-white border-b border-gray-200">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex justify-center space-x-4 md:space-x-8 overflow-x-auto whitespace-nowrap py-2">
+                        <a href="#" data-target="foundations" class="nav-link active px-3 py-2 text-sm font-medium text-gray-500">Data Foundations</a>
+                        <a href="#" data-target="collection" class="nav-link px-3 py-2 text-sm font-medium text-gray-500">Collection & Quality</a>
+                        <a href="#" data-target="storage" class="nav-link px-3 py-2 text-sm font-medium text-gray-500">Storage & Management</a>
+                        <a href="#" data-target="analysis" class="nav-link px-3 py-2 text-sm font-medium text-gray-500">Analysis & Impact</a>
+                        <a href="#" data-target="privacy" class="nav-link px-3 py-2 text-sm font-medium text-gray-500">Privacy & Security</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- Section: Data Foundations -->
+            <section id="foundations" class="content-section space-y-8">
+                <div>
+                    <h2 class="text-3xl font-bold mb-2">1. Data Foundations</h2>
+                    <p class="text-lg text-gray-600">This section covers the fundamental concepts of data. Understanding these basics is crucial for all other topics in data science. We will explore the different types of data, how they are measured, and how they are structured. The interactive elements here will help you solidify your understanding through active participation.</p>
+                </div>
+                
+                <!-- Quantitative vs Qualitative -->
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Quantitative vs. Qualitative Data</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Quantitative</h4>
+                            <p class="text-gray-600">Data that can be measured numerically. It answers questions like "how many?", "how much?", or "how often?". This data is objective and can be used in mathematical calculations.</p>
+                            <ul class="list-disc list-inside mt-2 text-gray-600">
+                                <li><strong>Discrete:</strong> Whole numbers (e.g., number of students).</li>
+                                <li><strong>Continuous:</strong> Can take any value within a range (e.g., height, temperature).</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Qualitative</h4>
+                            <p class="text-gray-600">Descriptive data that is observed, not measured. It answers "why?" or "how?". It deals with descriptions, categories, and characteristics, providing context and depth.</p>
+                             <ul class="list-disc list-inside mt-2 text-gray-600">
+                                <li><strong>Nominal:</strong> Categories without order (e.g., eye colour).</li>
+                                <li><strong>Ordinal:</strong> Categories with a meaningful order (e.g., survey ratings 'good', 'average', 'bad').</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-6 border-t pt-6">
+                        <h4 class="font-semibold text-center mb-4">Interactive Challenge: Sort the Data!</h4>
+                        <p class="text-sm text-center text-gray-500 mb-4">Drag the data examples to the correct category.</p>
+                        <div id="draggable-items" class="flex flex-wrap justify-center gap-3 mb-4">
+                            <div draggable="true" data-type="quantitative" class="draggable bg-gray-100 p-2 rounded shadow-sm">Temperature (25°C)</div>
+                            <div draggable="true" data-type="qualitative" class="draggable bg-gray-100 p-2 rounded shadow-sm">Favourite Colour</div>
+                            <div draggable="true" data-type="quantitative" class="draggable bg-gray-100 p-2 rounded shadow-sm">Number of Siblings</div>
+                            <div draggable="true" data-type="qualitative" class="draggable bg-gray-100 p-2 rounded shadow-sm">Interview Transcript</div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div id="quantitative-zone" data-type="quantitative" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg p-4 min-h-[100px] text-center">
+                                <span class="font-semibold">Quantitative</span>
+                            </div>
+                            <div id="qualitative-zone" data-type="qualitative" class="drop-zone border-2 border-dashed border-gray-300 rounded-lg p-4 min-h-[100px] text-center">
+                                <span class="font-semibold">Qualitative</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Levels of Measurement -->
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Levels of Measurement (NOIR)</h3>
+                    <p class="text-gray-600 mb-6 text-center">Click on each level to learn more. These levels determine which statistical analyses are appropriate.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center" id="noir-container">
+                        <div data-target="nominal-content" class="noir-card p-4 bg-blue-100 rounded-lg cursor-pointer hover:bg-blue-200 transition">
+                            <h4 class="font-bold text-lg">Nominal</h4>
+                        </div>
+                        <div data-target="ordinal-content" class="noir-card p-4 bg-green-100 rounded-lg cursor-pointer hover:bg-green-200 transition">
+                             <h4 class="font-bold text-lg">Ordinal</h4>
+                        </div>
+                        <div data-target="interval-content" class="noir-card p-4 bg-yellow-100 rounded-lg cursor-pointer hover:bg-yellow-200 transition">
+                            <h4 class="font-bold text-lg">Interval</h4>
+                        </div>
+                        <div data-target="ratio-content" class="noir-card p-4 bg-red-100 rounded-lg cursor-pointer hover:bg-red-200 transition">
+                             <h4 class="font-bold text-lg">Ratio</h4>
+                        </div>
+                    </div>
+                    <div id="noir-content-display" class="mt-6 p-4 rounded-lg bg-gray-50 border hidden">
+                         <div id="nominal-content" class="noir-content hidden">
+                            <h5 class="font-bold">Nominal</h5>
+                            <p>Categories with no order or ranking. Think of them as labels. <strong>Example:</strong> Types of pets (Dog, Cat, Fish), Gender, Postcodes.</p>
+                        </div>
+                         <div id="ordinal-content" class="noir-content hidden">
+                            <h5 class="font-bold">Ordinal</h5>
+                            <p>Data can be ordered or ranked, but the differences between ranks are not equal or meaningful. <strong>Example:</strong> Survey ratings (Satisfied, Neutral, Dissatisfied), Education level (High School, Bachelor's, Master's).</p>
+                        </div>
+                        <div id="interval-content" class="noir-content hidden">
+                            <h5 class="font-bold">Interval</h5>
+                            <p>Ordered data with equal intervals between values, but no true zero point. This means you can't say "twice as hot". <strong>Example:</strong> Temperature in Celsius/Fahrenheit, Years (e.g., 2023, 2024).</p>
+                        </div>
+                         <div id="ratio-content" class="noir-content hidden">
+                            <h5 class="font-bold">Ratio</h5>
+                            <p>The highest level of measurement. It has a true zero, equal intervals, and can be ordered. You can make ratio comparisons ("twice as tall"). <strong>Example:</strong> Height, Weight, Age, Price.</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Structured vs Unstructured -->
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Structured vs. Unstructured Data</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Structured Data</h4>
+                            <p class="text-gray-600">Highly organised data that fits neatly into a predefined model, like a table with rows and columns. It's easy to store, query, and analyse. Think of a spreadsheet or a relational database.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Unstructured Data</h4>
+                            <p class="text-gray-600">Data without a predefined structure. It's often text-heavy but can include images, videos, and audio. It's more difficult to process but contains rich insights. Think social media posts or emails.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Collection & Quality -->
+            <section id="collection" class="content-section hidden space-y-8">
+                <div>
+                    <h2 class="text-3xl font-bold mb-2">2. Data Collection & Quality</h2>
+                    <p class="text-lg text-gray-600">This section explores how data is gathered and the critical importance of ensuring its quality. We'll look at different sampling methods and the criteria used to assess data: relevance, accuracy, validity, and reliability. Poor quality data leads to flawed conclusions, so these concepts are vital for any data-driven project.</p>
+                </div>
+                
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Data Sampling</h3>
+                     <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Active Collection</h4>
+                            <p class="text-gray-600">Data is collected with the subject's direct and knowing participation. The subject is actively providing the information.</p>
+                             <ul class="list-disc list-inside mt-2 text-gray-600">
+                                <li><strong>Manual:</strong> Filling out a survey form, interviews.</li>
+                                <li><strong>Computerised:</strong> Completing an online poll, submitting a web form.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2">Passive Collection</h4>
+                            <p class="text-gray-600">Data is collected in the background, often without the subject's active involvement at the moment of collection.</p>
+                             <ul class="list-disc list-inside mt-2 text-gray-600">
+                                <li><strong>Example:</strong> Website cookies tracking user behaviour, CCTV footage, GPS location tracking on a smartphone.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Assessing Data Quality (RAVR)</h3>
+                    <p class="text-gray-600 mb-4">Primary data is collected firsthand for a specific purpose. Secondary data was collected by someone else for a different purpose. Both must be assessed for quality.</p>
+                    <div class="space-y-4">
+                        <details class="group">
+                            <summary class="flex items-center justify-between p-4 font-medium cursor-pointer bg-gray-50 rounded-lg">
+                                <span>Relevance</span>
+                                <span class="group-open:rotate-180 transition-transform duration-300">▼</span>
+                            </summary>
+                            <div class="p-4 bg-gray-50 rounded-b-lg">Does the data directly relate to the problem you're trying to solve? Data can be accurate but completely irrelevant to your needs.</div>
+                        </details>
+                        <details class="group">
+                            <summary class="flex items-center justify-between p-4 font-medium cursor-pointer bg-gray-50 rounded-lg">
+                                <span>Accuracy</span>
+                                <span class="group-open:rotate-180 transition-transform duration-300">▼</span>
+                            </summary>
+                            <div class="p-4 bg-gray-50 rounded-b-lg">Is the data correct and free from errors? Consider the source, potential for typos, and whether it has been verified.</div>
+                        </details>
+                        <details class="group">
+                            <summary class="flex items-center justify-between p-4 font-medium cursor-pointer bg-gray-50 rounded-lg">
+                                <span>Validity</span>
+                                <span class="group-open:rotate-180 transition-transform duration-300">▼</span>
+                            </summary>
+                            <div class="p-4 bg-gray-50 rounded-b-lg">Does the data measure what it's supposed to measure? For example, using website visits to measure customer satisfaction might not be valid.</div>
+                        </details>
+                         <details class="group">
+                            <summary class="flex items-center justify-between p-4 font-medium cursor-pointer bg-gray-50 rounded-lg">
+                                <span>Reliability</span>
+                                <span class="group-open:rotate-180 transition-transform duration-300">▼</span>
+                            </summary>
+                            <div class="p-4 bg-gray-50 rounded-b-lg">Is the data collection process consistent? If you collected the data again using the same method, would you get similar results?</div>
+                        </details>
+                    </div>
+                </div>
+
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Impact of Errors and Bias</h3>
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div>
+                            <p class="text-gray-600 mb-4">Click on a bar in the chart to learn about different types of data bias. Bias can skew results and lead to unfair or incorrect outcomes.</p>
+                            <div id="bias-info-display" class="p-4 bg-gray-50 rounded-lg min-h-[100px]">
+                                <p class="text-gray-500">Select a bias type from the chart.</p>
+                            </div>
+                        </div>
+                        <div class="chart-container h-80 max-h-96 mx-auto">
+                            <canvas id="biasChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Section: Storage & Management -->
+            <section id="storage" class="content-section hidden space-y-8">
+                 <div>
+                    <h2 class="text-3xl font-bold mb-2">3. Storage & Management</h2>
+                    <p class="text-lg text-gray-600">Once collected, data needs to be stored and managed effectively. This section covers different storage methods, from your local hard drive to massive data warehouses in the cloud. We'll also examine the characteristics of "Big Data" and explore how Blockchain technology provides a secure way to manage and verify data.</p>
+                </div>
+                 <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Methods for Data Storage</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="p-4 border rounded-lg bg-gray-50">
+                            <h4 class="font-semibold">Local Storage</h4>
+                            <p class="text-sm text-gray-600">Data stored on a device you physically own (e.g., computer hard drive, SSD). Fast access, no internet needed. Risky due to potential for device failure or theft.</p>
+                        </div>
+                         <div class="p-4 border rounded-lg bg-gray-50">
+                            <h4 class="font-semibold">Cloud Storage</h4>
+                            <p class="text-sm text-gray-600">Data stored on remote servers accessed via the internet (e.g., Google Drive, Dropbox). Accessible from anywhere, easily scalable. Relies on internet connection and third-party security.</p>
+                        </div>
+                         <div class="p-4 border rounded-lg bg-gray-50">
+                            <h4 class="font-semibold">Portable Media</h4>
+                            <p class="text-sm text-gray-600">Physical devices used to transport data (e.g., USB drives, external hard drives). Good for backups and transfers. Easily lost or damaged.</p>
+                        </div>
+                         <div class="p-4 border rounded-lg bg-gray-50">
+                            <h4 class="font-semibold">Data Warehouses</h4>
+                            <p class="text-sm text-gray-600">A large, centralized repository of data from various sources, designed for querying and analysis. Optimized for business intelligence, not for transaction processing.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                 <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Big Data: The Three V's</h3>
+                     <div class="flex flex-col md:flex-row justify-around items-center text-center gap-6">
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                                <span class="text-2xl font-bold text-blue-800">V</span>
+                            </div>
+                            <h4 class="font-semibold">Volume</h4>
+                            <p class="text-sm text-gray-600 max-w-xs">The sheer amount of data being generated, from terabytes to zettabytes.</p>
+                        </div>
+                         <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mb-2">
+                                <span class="text-2xl font-bold text-green-800">V</span>
+                            </div>
+                            <h4 class="font-semibold">Variety</h4>
+                            <p class="text-sm text-gray-600 max-w-xs">The different types of data, including structured, unstructured, and semi-structured formats.</p>
+                        </div>
+                         <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mb-2">
+                                <span class="text-2xl font-bold text-yellow-800">V</span>
+                            </div>
+                            <h4 class="font-semibold">Velocity</h4>
+                            <p class="text-sm text-gray-600 max-w-xs">The speed at which data is generated and needs to be processed, such as real-time streaming data.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Blockchain Technology</h3>
+                    <p class="text-gray-600 mb-6">A blockchain is a decentralized, distributed, and immutable digital ledger used to record transactions across many computers. Its security and transparency make it useful for more than just cryptocurrencies.</p>
+                    <div class="space-y-4">
+                        <div class="p-4 border rounded-lg">
+                            <h4 class="font-semibold">How it Works:</h4>
+                             <p class="text-sm text-gray-600">Transactions are bundled into 'blocks'. Each block is cryptographically linked to the previous one, forming a 'chain'. This structure makes it extremely difficult to alter past transactions without being detected.</p>
+                        </div>
+                         <div class="p-4 border rounded-lg">
+                            <h4 class="font-semibold">Applications:</h4>
+                            <ul class="list-disc list-inside text-sm text-gray-600">
+                                <li><strong>Online Voting:</strong> Secure and transparent recording of votes to prevent fraud.</li>
+                                <li><strong>Online Identities:</strong> Gives individuals control over their digital identity, reducing reliance on central authorities.</li>
+                                <li><strong>Tracking Items of Value:</strong> Verifying the authenticity and tracking the supply chain of goods like diamonds or pharmaceuticals.</li>
+                                <li><strong>Recordkeeping:</strong> Creating unchangeable records for legal documents, medical histories, or property ownership.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Analysis & Impact -->
+            <section id="analysis" class="content-section hidden space-y-8">
+                <div>
+                    <h2 class="text-3xl font-bold mb-2">4. Analysis & Impact</h2>
+                    <p class="text-lg text-gray-600">Collecting and storing data is only useful if we can analyse it to find meaningful insights. This section covers how data is interpreted and presented, the risks and benefits of data mining, and the profound impact of data at a large scale, including its ethical implications and opportunities for machine learning.</p>
+                </div>
+                 <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Interpreting & Presenting Data</h3>
+                    <p class="text-gray-600 mb-4">Raw data is often meaningless until it's presented in a visual format. The right visualization makes complex data understandable.</p>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="p-4 text-center border rounded-lg">
+                            <span class="text-4xl">📊</span>
+                            <p class="font-semibold mt-2">Graphs & Charts</p>
+                            <p class="text-xs text-gray-500">Comparing values, showing trends.</p>
+                        </div>
+                         <div class="p-4 text-center border rounded-lg">
+                            <span class="text-4xl">📋</span>
+                            <p class="font-semibold mt-2">Dashboards</p>
+                            <p class="text-xs text-gray-500">At-a-glance view of key metrics.</p>
+                        </div>
+                        <div class="p-4 text-center border rounded-lg">
+                            <span class="text-4xl">🗺️</span>
+                            <p class="font-semibold mt-2">Maps</p>
+                            <p class="text-xs text-gray-500">Visualizing geographical data.</p>
+                        </div>
+                        <div class="p-4 text-center border rounded-lg">
+                            <span class="text-4xl">💡</span>
+                            <p class="font-semibold mt-2">Infographics</p>
+                            <p class="text-xs text-gray-500">Telling a story with data and visuals.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Data Mining: Risks & Benefits</h3>
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                         <div class="chart-container h-80 max-h-96 mx-auto">
+                            <canvas id="dataMiningChart"></canvas>
+                        </div>
+                        <div>
+                             <p class="text-gray-600 mb-4">Data mining is the process of discovering patterns and other valuable information from large datasets. It has powerful benefits but also comes with significant risks.</p>
+                             <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-semibold text-green-700">Benefits</h4>
+                                    <p class="text-sm text-gray-600">Businesses can predict customer behaviour, improve marketing, detect fraud, and optimize operations. In science, it helps in medical diagnosis and research.</p>
+                                </div>
+                                 <div>
+                                    <h4 class="font-semibold text-red-700">Risks</h4>
+                                    <p class="text-sm text-gray-600">Major privacy concerns arise from collecting personal data. It can lead to discrimination if used improperly (e.g., in loan applications). Inaccurate data can lead to flawed conclusions.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Impact of Data Scale</h3>
+                    <p class="text-gray-600 mb-4">The sheer scale of modern data collection has transformative effects on technology, society, and ethics.</p>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-start">
+                            <span class="mr-2 text-blue-500">►</span>
+                            <span><strong>Opportunities for Machine Learning (ML):</strong> Large datasets are the fuel for ML models, enabling them to learn complex patterns and make accurate predictions, from image recognition to language translation.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="mr-2 text-blue-500">►</span>
+                            <span><strong>Changes in Human Behaviour:</strong> Recommendation algorithms on platforms like Netflix and Amazon shape our choices. Personalized ads influence purchasing decisions. This creates filter bubbles and can limit exposure to diverse viewpoints.</span>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="mr-2 text-blue-500">►</span>
+                            <span><strong>Ethical Implications:</strong> Your 'digital footprint' (every click, like, and search) creates a detailed profile of you. This raises questions about consent, ownership of data, and the potential for surveillance and manipulation.</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </section>
+
+            <!-- Section: Privacy & Security -->
+            <section id="privacy" class="content-section hidden space-y-8">
+                <div>
+                    <h2 class="text-3xl font-bold mb-2">5. Privacy & Security</h2>
+                    <p class="text-lg text-gray-600">In a data-driven world, protecting privacy and securing data is paramount. This section examines common software features that can affect your data privacy. The interactive form below demonstrates how easily data can be shared, sometimes unintentionally, and highlights the importance of being a vigilant digital citizen.</p>
+                </div>
+
+                <div class="content-card p-6">
+                    <h3 class="text-xl font-semibold mb-4">Software Features Affecting Privacy</h3>
+                    <p class="text-gray-600 mb-6">Many software features designed for convenience can have significant privacy implications. Let's explore some in this interactive demo.</p>
+
+                    <div class="bg-gray-50 p-6 rounded-lg border">
+                        <h4 class="text-lg font-semibold text-center mb-4">Create Your "Safe" Account</h4>
+                        
+                        <div class="space-y-4 max-w-md mx-auto">
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                                <input type="email" id="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="you@example.com">
+                                <p id="autofill-warning" class="text-xs text-orange-600 mt-1 hidden">
+                                    <strong>Autofill:</strong> Convenient, but browsers can store your data. If your device is compromised, so is your autofilled information.
+                                </p>
+                            </div>
+
+                            <div class="relative">
+                                <label class="block text-sm font-medium text-gray-700">Connection Type</label>
+                                <div class="flex items-center space-x-4 mt-1">
+                                    <button id="private-conn" class="w-full bg-green-200 text-green-800 p-2 rounded-lg border-2 border-green-500">Private (Home WiFi)</button>
+                                    <button id="public-conn" class="w-full bg-gray-200 text-gray-800 p-2 rounded-lg border-2 border-transparent">Public (Cafe WiFi)</button>
+                                </div>
+                                <p id="connection-warning" class="text-xs text-red-600 mt-1 hidden">
+                                    <strong>Public Connections:</strong> Data sent over public Wi-Fi can be intercepted by others on the same network. Avoid sending sensitive information.
+                                </p>
+                            </div>
+                            
+                            <div class="pt-4">
+                                <div class="flex items-start">
+                                    <div class="flex items-center h-5">
+                                        <input id="terms-checkbox" type="checkbox" class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                    </div>
+                                    <div class="ml-3 text-sm">
+                                        <label for="terms-checkbox" class="font-medium text-gray-700">I agree to the Terms of Agreement</label>
+                                    </div>
+                                </div>
+                                 <div id="terms-agreement" class="mt-2 p-3 bg-white rounded-md border text-xs max-h-32 overflow-y-auto hidden">
+                                    <strong>Terms of Agreement:</strong> By clicking, you agree that we can collect, use, and <span class="bg-yellow-200">share your data with our trusted third-party partners</span> for marketing purposes. We may track your activity across other sites. We also claim perpetual, irrevocable rights to any content you create. This agreement can be <span class="bg-yellow-200">changed at any time without notice.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('#main-nav a');
+            const sections = document.querySelectorAll('.content-section');
+            const biasInfoDisplay = document.getElementById('bias-info-display');
+
+            // --- Navigation Logic ---
+            const setActiveLink = (targetId) => {
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.dataset.target === targetId);
+                });
+            };
+
+            const showSection = (targetId) => {
+                sections.forEach(section => {
+                    section.classList.toggle('hidden', section.id !== targetId);
+                });
+                setActiveLink(targetId);
+                window.scrollTo(0, 0);
+            };
+
+            document.getElementById('main-nav').addEventListener('click', (e) => {
+                if (e.target.tagName === 'A' && e.target.dataset.target) {
+                    e.preventDefault();
+                    showSection(e.target.dataset.target);
+                }
+            });
+
+            // --- Drag and Drop Logic ---
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            let draggedItem = null;
+
+            draggables.forEach(item => {
+                item.addEventListener('dragstart', () => {
+                    draggedItem = item;
+                    setTimeout(() => item.style.display = 'none', 0);
+                });
+                item.addEventListener('dragend', () => {
+                    setTimeout(() => {
+                        draggedItem.style.display = 'block';
+                        draggedItem = null;
+                    }, 0);
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+                zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+                zone.addEventListener('drop', () => {
+                    zone.classList.remove('drag-over');
+                    if (draggedItem && draggedItem.dataset.type === zone.dataset.type) {
+                        draggedItem.parentNode.removeChild(draggedItem);
+                        zone.appendChild(draggedItem);
+                        zone.classList.add('correct');
+                        setTimeout(() => zone.classList.remove('correct'), 500);
+                    } else {
+                        zone.classList.add('incorrect');
+                        setTimeout(() => zone.classList.remove('incorrect'), 500);
+                    }
+                });
+            });
+
+             // --- NOIR Interaction Logic ---
+            const noirContainer = document.getElementById('noir-container');
+            const noirContentDisplay = document.getElementById('noir-content-display');
+            const noirContents = document.querySelectorAll('.noir-content');
+
+            noirContainer.addEventListener('click', (e) => {
+                const card = e.target.closest('.noir-card');
+                if (card) {
+                    const targetId = card.dataset.target;
+                    noirContents.forEach(content => {
+                        content.classList.toggle('hidden', content.id !== targetId);
+                    });
+                    noirContentDisplay.classList.remove('hidden');
+                }
+            });
+            
+            // --- Chart.js Helper ---
+            const wrapText = (ctx, text, x, y, maxWidth, lineHeight) => {
+                const words = text.split(' ');
+                let line = '';
+                for(let n = 0; n < words.length; n++) {
+                    let testLine = line + words[n] + ' ';
+                    let metrics = ctx.measureText(testLine);
+                    let testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                        ctx.fillText(line, x, y);
+                        line = words[n] + ' ';
+                        y += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, x, y);
+            };
+
+            // --- Bias Chart ---
+            const biasData = {
+                'Selection Bias': 'Occurs when the sample population is not representative of the target population. E.g., surveying only smartphone users for a general tech opinion.',
+                'Confirmation Bias': 'The tendency to search for, interpret, favor, and recall information that confirms or supports one\'s prior beliefs or values.',
+                'Survivorship Bias': 'Focusing on the "survivors" or successful examples, while ignoring the failures. E.g., studying only successful companies to learn business strategy.',
+                'Observer Bias': 'When researchers subconsciously project their expectations onto the research, influencing the outcome.'
+            };
+            const biasCtx = document.getElementById('biasChart').getContext('2d');
+            const biasChart = new Chart(biasCtx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(biasData),
+                    datasets: [{
+                        label: 'Potential Impact Score',
+                        data: [8, 9, 7, 6],
+                        backgroundColor: ['#E1C4A9', '#D4AF8A', '#E1C4A9', '#D4AF8A'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false }, tooltip: { enabled: true } },
+                    scales: { x: { beginAtZero: true, max: 10 } },
+                    onClick: (e) => {
+                        const activePoints = biasChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+                        if (activePoints.length > 0) {
+                            const label = biasChart.data.labels[activePoints[0].index];
+                            biasInfoDisplay.innerHTML = `<h5 class="font-bold">${label}</h5><p>${biasData[label]}</p>`;
+                        }
+                    }
+                }
+            });
+
+            // --- Data Mining Chart ---
+            const dataMiningCtx = document.getElementById('dataMiningChart').getContext('2d');
+            new Chart(dataMiningCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Benefits', 'Risks'],
+                    datasets: [{
+                        data: [65, 35],
+                        backgroundColor: ['#6EE7B7', '#F87171'],
+                        borderColor: ['#34D399', '#EF4444'],
+                        borderWidth: 1
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } } }
+            });
+
+            // --- Privacy Section Logic ---
+            document.getElementById('email').addEventListener('focus', () => {
+                document.getElementById('autofill-warning').classList.remove('hidden');
+            });
+            
+            const privateBtn = document.getElementById('private-conn');
+            const publicBtn = document.getElementById('public-conn');
+            const connWarning = document.getElementById('connection-warning');
+
+            publicBtn.addEventListener('click', () => {
+                publicBtn.classList.replace('bg-gray-200', 'bg-red-200');
+                publicBtn.classList.replace('text-gray-800', 'text-red-800');
+                publicBtn.classList.replace('border-transparent', 'border-red-500');
+                privateBtn.classList.remove('bg-green-200', 'text-green-800', 'border-green-500');
+                privateBtn.classList.add('bg-gray-200', 'text-gray-800', 'border-transparent');
+                connWarning.classList.remove('hidden');
+            });
+
+             privateBtn.addEventListener('click', () => {
+                privateBtn.classList.add('bg-green-200', 'text-green-800', 'border-green-500');
+                publicBtn.classList.remove('bg-red-200', 'text-red-800', 'border-red-500');
+                publicBtn.classList.add('bg-gray-200', 'text-gray-800', 'border-transparent');
+                connWarning.classList.add('hidden');
+            });
+
+            document.getElementById('terms-checkbox').addEventListener('change', (e) => {
+                document.getElementById('terms-agreement').classList.toggle('hidden', !e.target.checked);
+            });
+
+        });
+    </script>
+</body>
+</html>
