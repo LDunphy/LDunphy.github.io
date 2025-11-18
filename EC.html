@@ -41,15 +41,14 @@
             transform: translateY(-1px);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        .accordion-content a {
-            padding: 8px 12px;
-            border-radius: 6px;
-            transition: background-color 0.2s;
-            display: inline-block;
-        }
-        .accordion-content a:hover {
-            background-color: #dcfce7;
-            text-decoration: none;
+        /* Style for the sub-topic buttons */
+        .sub-topic-buttons a {
+            padding: 4px 8px; /* Slightly smaller padding for sub-topic buttons */
+            font-size: 0.65rem; /* Smaller font size */
+            line-height: 1;
+            margin-left: 0.5rem;
+            display: inline-flex;
+            align-items: center;
         }
     </style>
 </head>
@@ -90,8 +89,8 @@
                             <span class="text-lg font-semibold text-green-900 flex-grow">1. Interactive media and the user experience</span>
                             <div class="flex items-center space-x-2 ml-4">
                                 <a href="https://curriculum.nsw.edu.au/learning-areas/tas/enterprise-computing-11-12-2022/content/year-11/fa90aca463" target="_blank" class="syllabus-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Syllabus</a>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
-                                <a href="#" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Infographic</a>
+                                <a href="EC11-1IM-0.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <a href="EC11-1IM-1.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Infographic</a>
                             </div>
                         </div>
                         <svg class="w-6 h-6 text-green-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -100,15 +99,24 @@
                         <ul class="list-disc list-outside space-y-2 pl-6">
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Ubiquity of interactive media</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-1IM-U.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-1IM-UI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Capture, store and integrate data</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-1IM-C.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-1IM-CI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Create interactive media systems</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-1IM-S.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-1IM-SI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -121,8 +129,8 @@
                             <span class="text-lg font-semibold text-green-900 flex-grow">2. Networking systems and social computing</span>
                             <div class="flex items-center space-x-2 ml-4">
                                 <a href="https://curriculum.nsw.edu.au/learning-areas/tas/enterprise-computing-11-12-2022/content/year-11/facfb79b0d" target="_blank" class="syllabus-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Syllabus</a>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
-                                <a href="#" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Infographic</a>
+                                <a href="EC11-2NS-0.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <a href="EC11-2NS-1.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Infographic</a>
                             </div>
                         </div>
                         <svg class="w-6 h-6 text-green-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -131,19 +139,31 @@
                         <ul class="list-disc list-outside space-y-2 pl-6">
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Introduction to human-centric computing</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-2NS-H.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-2NS-HI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Storage and workflow in enterprise networks</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-2NS-W.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-2NS-WI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Network architecture and infrastructure</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-2NS-A.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-2NS-AI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Creating a network</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-2NS-C.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-2NS-CI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -156,8 +176,8 @@
                             <span class="text-lg font-semibold text-green-900 flex-grow">3. Principles of cybersecurity</span>
                             <div class="flex items-center space-x-2 ml-4">
                                 <a href="https://curriculum.nsw.edu.au/learning-areas/tas/enterprise-computing-11-12-2022/content/year-11/fab568d36f" target="_blank" class="syllabus-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Syllabus</a>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
-                                <a href="#" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Infographic</a>
+                                <a href="EC11-3CS-0.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <a href="EC11-3CS-1.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Infographic</a>
                             </div>
                         </div>
                         <svg class="w-6 h-6 text-green-600 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -166,15 +186,24 @@
                         <ul class="list-disc list-outside space-y-2 pl-6">
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Understanding privacy and security</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-3CS-P.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-3CS-PI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Security awareness</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-3CS-A.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-3CS-AI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Cyber law and ethics</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC11-3CS-L.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC11-3CS-LI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -184,7 +213,7 @@
 
             <!-- Year 12 Section -->
             <section class="mb-8 p-4 sm:p-6 bg-green-100 rounded-lg border border-green-200">
-                <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-4">Year 12 Topics</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold text-green-800 mb-4">Year 12 Topics </h2>
 
                 <!-- Topic 1: Data science -->
                 <div class="mb-4">
@@ -203,16 +232,24 @@
                         <ul class="list-disc list-outside space-y-2 pl-6">
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Collecting, storing and analysing data</span>
-                                <a href="EC12-1DS1-Explore.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
-                                <a href="EC12-1DS1-IG.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Infographic</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-1DS-C.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-1DS-CI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Data quality</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-1DS-Q.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-1DS-QI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Processing and presenting data</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-1DS-P.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-1DS-PI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -235,26 +272,38 @@
                         <ul class="list-disc list-outside space-y-2 pl-6">
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Using data to tell a story</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-2DV-S.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-2DV-SI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Interpreting data visualisations</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-2DV-I.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-2DV-II.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Designing for user experience</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-2DV-D.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-2DV-DI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Creating data visualisations</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-2DV-C.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-2DV-CI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </div>
 
-                 <!-- Topic 3: Intelligent systems -->
-                 <div class="mb-4">
+                <!-- Topic 3: Intelligent systems -->
+                <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-green-200 rounded-lg">
                         <div class="flex-grow flex items-center">
                             <span class="text-lg font-semibold text-green-900 flex-grow">3. Intelligent systems</span>
@@ -270,22 +319,31 @@
                         <ul class="list-disc list-outside space-y-2 pl-6">
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Systems and their applications</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-3IS-A.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-3IS-AI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Data and intelligent systems</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-3IS-D.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-3IS-DI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Creating intelligent systems</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-3IS-C.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-3IS-CI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
                 </div>
 
-                 <!-- Topic 4: Enterprise project -->
-                 <div class="mb-4">
+                <!-- Topic 4: Enterprise project -->
+                <div class="mb-4">
                     <div class="accordion-header flex items-center justify-between p-4 bg-green-200 rounded-lg">
                         <div class="flex-grow flex items-center">
                             <span class="text-lg font-semibold text-green-900 flex-grow">4. Enterprise project</span>
@@ -301,20 +359,31 @@
                         <ul class="list-disc list-outside space-y-2 pl-6">
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Identifying and defining</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Infographic</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-4EP-I.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-4EP-II.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Researching and planning</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-4EP-R.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-4EP-RI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Producing and implementing</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-4EP-P.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-4EP-PI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                             <li class="flex justify-between items-center">
                                 <span class="text-green-700">Testing and evaluating</span>
-                                <a href="#" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1.5 px-3 rounded-full transition-colors duration-200">Explore</a>
+                                <div class="sub-topic-buttons flex items-center">
+                                    <a href="EC12-4EP-T.html" target="_blank" class="explore-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Explore</a>
+                                    <a href="EC12-4EP-TI.html" target="_blank" class="infographic-button bg-green-500 hover:bg-green-600 text-white text-xs font-bold transition-colors duration-200">Infographic</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -324,18 +393,49 @@
     </div>
 
     <script>
+        // JavaScript for the accordion functionality
         document.querySelectorAll('.accordion-header').forEach(header => {
             header.addEventListener('click', (event) => {
-                // Check if the click target is any of the buttons to prevent the accordion from collapsing
+                // Check if the click target is any of the buttons (or a descendant) to prevent the accordion from collapsing when buttons are clicked
                 if (!event.target.closest('a')) {
                     const content = header.nextElementSibling;
                     const icon = header.querySelector('svg');
                     
                     // Toggle active class on content to show/hide
-                    content.classList.toggle('active');
+                    if (content.classList.contains('active')) {
+                        content.classList.remove('active');
+                        content.style.maxHeight = null;
+                    } else {
+                        // Open the accordion
+                        content.classList.add('active');
+                        // Use a fixed max-height or calculate content height for smooth transition
+                        content.style.maxHeight = content.scrollHeight + "px";
+
+                        // Close all other open accordions in the same section
+                        header.closest('section').querySelectorAll('.accordion-content.active').forEach(otherContent => {
+                            if (otherContent !== content) {
+                                otherContent.classList.remove('active');
+                                otherContent.style.maxHeight = null;
+                                // Rotate icon back on other headers
+                                otherContent.previousElementSibling.querySelector('svg').classList.remove('rotate-180');
+                            }
+                        });
+                    }
+
 
                     // Rotate the icon
                     icon.classList.toggle('rotate-180');
+                }
+            });
+        });
+
+        // Add a smooth transition effect for max-height change (requires recalculating max-height)
+        document.querySelectorAll('.accordion-content').forEach(content => {
+            // Recalculate max height on resize for responsive transitions (simple version)
+            window.addEventListener('resize', () => {
+                if (content.classList.contains('active')) {
+                    content.style.maxHeight = 'none'; // Temporarily unset for recalculation
+                    content.style.maxHeight = content.scrollHeight + "px";
                 }
             });
         });
