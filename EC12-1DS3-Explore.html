@@ -1,0 +1,674 @@
+<!-- Chosen Palette: Minimalist Education Palette (Primary: Blue-600, Background: Gray-50, Cards: White) -->
+<!-- Application Structure Plan: A single-page, scrollable application with a sticky sidebar for navigation (Thematic Sections). The content is organized into five card-based modules corresponding to the syllabus areas: Spreadsheets, Dashboards, Databases (Design), SQL, and Advanced Concepts. Each module contains a Summary, a list of Resources, and a Quiz. This structure was chosen to provide non-linear, rapid access to specific syllabus areas, supporting a student's targeted study needs and tracking mastery. -->
+<!-- Visualization & Content Choices: 1. Syllabus Focus Bar Chart (Chart.js) to show curriculum weight visually. 2. Interactive Normalization Diagram (HTML/CSS/JS) to explain decomposition concepts. 3. Mastery Checklist (HTML/JS) for self-tracking. 4. Quiz Results Doughnut Chart (Chart.js) for immediate performance feedback. All visualizations use Chart.js (Canvas) or structured HTML/CSS; NO SVG or Mermaid is used. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Computing Data Mastery Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .sticky-nav {
+            top: 2rem;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div id="quiz-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-50 flex items-center justify-center p-4" onclick="closeModal()">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 md:p-8" onclick="event.stopPropagation()">
+            <h2 id="modal-title" class="text-2xl font-bold mb-4 text-blue-600"></h2>
+            <div id="modal-content" class="text-gray-700 space-y-4"></div>
+            <div class="flex justify-end mt-6">
+                <button onclick="closeModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">Close & Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <header class="sticky top-0 bg-white border-b border-gray-200 z-30 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <h1 class="text-xl md:text-2xl font-extrabold text-gray-900 flex items-center">
+                <span class="mr-2 text-blue-600 text-3xl">💻</span>
+                EC12 Data Mastery
+            </h1>
+            <div class="flex space-x-4">
+                 <button onclick="scrollToSection('checklist-section')" class="hidden sm:inline-flex items-center text-sm font-medium text-gray-600 hover:text-blue-600 transition duration-150">
+                    <span class="mr-1">✅</span> Checklist
+                </button>
+                <a href="#summary-section" class="inline-flex items-center text-sm font-medium text-gray-600 hover:text-blue-600 transition duration-150">
+                    <span class="mr-1">📊</span> Overview
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <nav class="lg:col-span-1 hidden lg:block sticky-nav">
+                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Syllabus Focus Areas</h3>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#spreadsheet-analysis" class="text-gray-600 hover:text-blue-600 font-medium transition duration-150 p-2 block rounded-lg hover:bg-blue-50">1. Spreadsheet Analysis</a></li>
+                        <li><a href="#data-dashboards" class="text-gray-600 hover:text-blue-600 font-medium transition duration-150 p-2 block rounded-lg hover:bg-blue-50">2. Data Dashboards</a></li>
+                        <li><a href="#database-design" class="text-gray-600 hover:text-blue-600 font-medium transition duration-150 p-2 block rounded-lg hover:bg-blue-50">3. Database Design (RDBMS)</a></li>
+                        <li><a href="#sql-queries" class="text-gray-600 hover:text-blue-600 font-medium transition duration-150 p-2 block rounded-lg hover:bg-blue-50">4. SQL & User Views</a></li>
+                        <li><a href="#advanced-analytics" class="text-gray-600 hover:text-blue-600 font-medium transition duration-150 p-2 block rounded-lg hover:bg-blue-50">5. Advanced Analytics (ML)</a></li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="lg:col-span-3 space-y-12">
+                
+                <section id="summary-section" class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h2 class="text-3xl font-bold text-blue-600 mb-4">Processing & Presenting Data: Overview</h2>
+                    <p class="mb-6 text-gray-600">
+                        This guide synthesizes the core requirements for the Enterprise Computing Data Science focus area. Your goal is to move from basic data handling to mastery of complex analysis, relational design, and predictive concepts. This section provides a high-level summary of the course requirements and a visual breakdown of the syllabus weight. Use the navigation to explore specific topics, resources, and self-assessment quizzes.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <h3 class="font-semibold text-lg mb-2 text-blue-700">Course Focus</h3>
+                            <p class="text-sm">The unit comprises 30 indicative hours of study, building fundamental skills for the major Enterprise Project. Mastery requires technical proficiency in mandated tools (e.g., Pivot Tables, SQL) alongside computational and UX/UI design thinking (Normalization, Dashboards).</p>
+                        </div>
+                        <div class="p-4 bg-blue-50 rounded-lg">
+                            <h3 class="font-semibold text-lg mb-2 text-blue-700">Core Outcomes</h3>
+                            <ul class="list-disc list-inside text-sm space-y-1">
+                                <li>EC-12-05: Apply tools to analyse complex datasets.</li>
+                                <li>EC-12-04: Explain how data is used within enterprise systems.</li>
+                                <li>Focus: Descriptive, Diagnostic, and Predictive analytics.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">Syllabus Component Weighting</h3>
+                    <p class="mb-4 text-sm text-gray-600">The chart below visualizes the distribution of required core competencies across the syllabus, highlighting the heavy emphasis on practical application skills.</p>
+                    <div class="chart-container">
+                        <canvas id="syllabusChart"></canvas>
+                    </div>
+                </section>
+
+                <section id="spreadsheet-analysis" class="module-section bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h2 class="text-3xl font-bold text-blue-600 mb-6 border-b pb-2">1. Spreadsheet Data Analysis</h2>
+                    <p class="mb-6 text-gray-600">
+                        This module covers the mandated technical skills for summarising, collating, and cleaning data using spreadsheet software. Focus areas include statistical functions (AVERAGE, STDEV, CORREL), dynamic functions (`=RANK`), inter-sheet linking, and the efficiency of the **Data Analysis ToolPak**.
+                    </p>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <h3 class="font-semibold text-xl text-gray-900 mb-2">Key Competencies: Data Cleaning & Dynamic Functions</h3>
+                        <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                            <li>**Data Cleaning:** Identify and remove invalid/missing data points (e.g., incomplete countries in Grok World Factbook).</li>
+                            <li>**Diagnostic Analysis:** Use `=CORREL` to transition analysis from descriptive ("What happened?") to diagnostic ("Why did it happen?").</li>
+                            <li>**Robust Modeling:** Use `=RANK()` for dynamic ranking, ensuring models adapt automatically to data changes.</li>
+                            <li>**Auditing:** Use Go To Special > Row Differences for active data validation.</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-6 mb-4 border-b pb-1">Verified Resources</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">▶ Video:</span> **Statistical Functions in Excel:** Using AVERAGE, STDEV, and CORREL for Diagnostic Analysis. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 1.1', 'Video: Statistical Functions in Excel', 'Demonstrates calculating Mean, Standard Deviation, and Correlation Coefficient (`CORREL`) to justify strategic business decisions.')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">📚 Tutorial:</span> **Inter-Sheet Lookup:** Mastering VLOOKUP / INDEX-MATCH for robust data linking. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 1.2', 'Tutorial: Inter-Sheet Lookup', 'Step-by-step guide on using advanced lookup functions to maintain data integrity when linking data across multiple sheets.')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">🛠 Tool Guide:</span> **Excel Data Analysis ToolPak:** Activation and use for rapid advanced descriptive statistics. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 1.3', 'Tool Guide: Excel Data Analysis ToolPak', 'Instructional steps on activating the ToolPak and generating advanced descriptive statistics (Variance, Skewness, Kurtosis).')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                    </ul>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-8 mb-4 border-b pb-1">Self-Assessment Quiz 1</h3>
+                    <button onclick="startQuiz('quiz1')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md">Start Quiz: Spreadsheet Analysis</button>
+                    <div id="quiz1-results" class="mt-4 p-4 bg-gray-100 rounded-lg hidden"></div>
+                </section>
+
+                <section id="data-dashboards" class="module-section bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h2 class="text-3xl font-bold text-blue-600 mb-6 border-b pb-2">2. Developing Interactive Data Dashboards</h2>
+                    <p class="mb-6 text-gray-600">
+                        The dashboard is the culmination of spreadsheet skills, blending data science with User Experience (UX) principles. The focus is on using **Pivot Tables** as the aggregation engine, **Pivot Charts** for visualization, and **Slicers** for modern, self-service filtering across multiple reports.
+                    </p>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <h3 class="font-semibold text-xl text-gray-900 mb-2">Dynamic Reporting: Pivot Tables and Slicers</h3>
+                        <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                            <li>**Pivot Tables:** Function as the dynamic data engine, summarizing large datasets efficiently.</li>
+                            <li>**Slicers:** Provide the interactive layer, allowing users to filter multiple Pivot Charts simultaneously by a chosen dimension (e.g., Region, Category).</li>
+                            <li>**Design:** Layout must prioritize KPI hierarchy, time trends, and readability using appropriate chart selection (Line for trends, Bar for comparison).</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-6 mb-4 border-b pb-1">Verified Resources</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">▶ Video:</span> **Building Interactive Dashboards:** End-to-end guide on linking Pivot Tables and Slicers. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 2.1', 'Video: Building Interactive Dashboards', 'Tutorial on creating Pivot Tables, inserting Pivot Charts, and synchronizing Slicers for self-service analytics.')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">📚 Tutorial:</span> **Dashboard UX/UI Principles:** Planning layout, hierarchy, and colour schemes for rapid readability. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 2.2', 'Tutorial: Dashboard UX/UI Principles', 'Guide on establishing visual hierarchy (KPIs first, then trends, then detail) and maximizing comprehension through design.')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                    </ul>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-8 mb-4 border-b pb-1">Self-Assessment Quiz 2</h3>
+                    <button onclick="startQuiz('quiz2')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md">Start Quiz: Dashboards</button>
+                    <div id="quiz2-results" class="mt-4 p-4 bg-gray-100 rounded-lg hidden"></div>
+                </section>
+
+                <section id="database-design" class="module-section bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h2 class="text-3xl font-bold text-blue-600 mb-6 border-b pb-2">3. Database Design (RDBMS)</h2>
+                    <p class="mb-6 text-gray-600">
+                        Designing a secure and efficient relational database requires applying **Computational Thinking** through two core concepts: **Decomposition (Normalization)** and **Abstraction (User Views)**. This section focuses on creating the logical structure.
+                    </p>
+                    
+                    <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                        <h3 class="font-semibold text-xl text-gray-900 mb-4">Decomposition & Normalization</h3>
+                        <p class="text-sm mb-4">Click on the Normal Forms to see how decomposition minimizes redundancy and prevents data anomalies.</p>
+                        <div class="flex flex-wrap gap-3 mb-4">
+                            <button class="nf-btn bg-blue-100 text-blue-700 hover:bg-blue-200 font-medium py-2 px-3 rounded-full text-sm" data-nf="flat">Flat File (Un-normalized)</button>
+                            <button class="nf-btn bg-gray-200 text-gray-700 hover:bg-gray-300 font-medium py-2 px-3 rounded-full text-sm" data-nf="1nf">1NF</button>
+                            <button class="nf-btn bg-gray-200 text-gray-700 hover:bg-gray-300 font-medium py-2 px-3 rounded-full text-sm" data-nf="2nf">2NF</button>
+                            <button class="nf-btn bg-gray-200 text-gray-700 hover:bg-gray-300 font-medium py-2 px-3 rounded-full text-sm" data-nf="3nf">3NF</button>
+                        </div>
+                        <div id="nf-description" class="p-4 border border-blue-200 bg-white rounded-lg text-sm transition-all duration-300">
+                            **Flat File:** All data in one table. Illustrates the limitations of redundancy, update anomalies, and poor scalability, which mandates the eventual transition to a relational model.
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <h3 class="font-semibold text-xl text-gray-900 mb-2">Structural Integrity: Keys and Referential Integrity</h3>
+                        <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                            <li>**Primary Key (PK):** Uniquely identifies every record (e.g., `GameID`).</li>
+                            <li>**Foreign Key (FK):** References the PK of another table, establishing a relationship.</li>
+                            <li>**Goal:** Enforce **Referential Integrity**—preventing data anomalies (e.g., deleting a Publisher referenced by existing Game records).</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-6 mb-4 border-b pb-1">Verified Resources</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">📚 Tutorial:</span> **Database Normalization (1NF, 2NF, 3NF):** Step-by-step guide to decomposition. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 3.1', 'Tutorial: Database Normalization', 'Detailed process of breaking down a flat file into coherent entities to improve structural efficiency and data integrity.')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">🛠 Tool Guide:</span> **Data Dictionary Development:** Standards for metadata, field names, and constraints. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 3.2', 'Tool Guide: Data Dictionary Development', 'Template and guidelines for formally documenting the Field Name, Data Type, Size, and Constraints for every field in the schema.')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                    </ul>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-8 mb-4 border-b pb-1">Self-Assessment Quiz 3</h3>
+                    <button onclick="startQuiz('quiz3')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md">Start Quiz: Database Design</button>
+                    <div id="quiz3-results" class="mt-4 p-4 bg-gray-100 rounded-lg hidden"></div>
+                </section>
+
+                <section id="sql-queries" class="module-section bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h2 class="text-3xl font-bold text-blue-600 mb-6 border-b pb-2">4. Data Retrieval and Query Execution (SQL)</h2>
+                    <p class="mb-6 text-gray-600">
+                        SQL is the declarative programming language used to solve data retrieval problems. Mastery requires proficiency in the core syntax (`SELECT`, `FROM`, `WHERE`, `ORDER BY`) and the application of logical operators (`AND`, `OR`) for complex, multi-clause queries.
+                    </p>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <h3 class="font-semibold text-xl text-gray-900 mb-2">SQL and Computational Thinking</h3>
+                        <p class="text-sm mb-4">Writing SQL is the algorithmic application of computational thinking. You are designing a robust algorithm that the database engine executes efficiently to retrieve *what* data is needed.</p>
+                        <h4 class="font-medium text-base text-gray-800 mb-1">User Views (Forms & Reports)</h4>
+                        <ul class="list-disc list-inside text-xs space-y-1 ml-4">
+                            <li>**Forms:** Used for user-friendly data entry and editing (Abstraction).</li>
+                            <li>**Reports:** Used to format and present retrieved data for specific audiences (Presentation).</li>
+                            <li>**SQL Views:** Virtual tables used for security and data governance (Abstracting PII or complex joins).</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-6 mb-4 border-b pb-1">Verified Resources</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">📚 Tutorial:</span> **W3Schools SQL Playground:** Interactive practice for SELECT, WHERE, ORDER BY. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 4.1', 'Tutorial: W3Schools SQL Playground', 'Interactive exercises to master the required SQL syntax and build complex, multi-clause queries.')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">▶ Video:</span> **MS Access Forms & Reports:** Guide to creating user-friendly interfaces (User Views). <a href="javascript:void(0)" onclick="showResourceDetails('Resource 4.2', 'Video: MS Access Forms & Reports', 'Walkthrough on creating forms for data entry and reports for professional data presentation outputs.')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                    </ul>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-8 mb-4 border-b pb-1">Self-Assessment Quiz 4</h3>
+                    <button onclick="startQuiz('quiz4')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md">Start Quiz: SQL & User Views</button>
+                    <div id="quiz4-results" class="mt-4 p-4 bg-gray-100 rounded-lg hidden"></div>
+                </section>
+
+                <section id="advanced-analytics" class="module-section bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h2 class="text-3xl font-bold text-blue-600 mb-6 border-b pb-2">5. Conceptual Exploration of Advanced Analytics</h2>
+                    <p class="mb-6 text-gray-600">
+                        This module shifts the focus from technical application to conceptual understanding of **Big Data**, **Machine Learning (ML)**, and **Statistical Modelling (SM)** as tools for **Predictive Analytics**. This knowledge provides the bridge to the subsequent 'Intelligent Systems' topic.
+                    </p>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <h3 class="font-semibold text-xl text-gray-900 mb-2">From Diagnostic to Predictive Analysis</h3>
+                        <ul class="list-disc list-inside text-sm space-y-1 ml-4">
+                            <li>**Statistical Modelling:** Uses mathematical models to infer relationships and draw probabilistic conclusions based on historical data.</li>
+                            <li>**Machine Learning:** Develops algorithms that learn patterns autonomously from Big Data for prediction or classification (e.g., fraud detection, demand forecasting).</li>
+                            <li>**Big Data:** Characterized by immense **Volume**, **Variety**, and **Velocity**. ML/SM are necessary because traditional methods cannot handle this scale.</li>
+                        </ul>
+                    </div>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-6 mb-4 border-b pb-1">Verified Resources</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">▶ Video:</span> **CrashCourse: Big Data & Machine Learning:** Conceptual overview for high school students. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 5.1', 'Video: CrashCourse: Big Data & ML', 'Engaging video explaining the core concepts of Big Data (3 V\'s) and how ML algorithms learn patterns for predictive outcomes.')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                        <li class="p-3 bg-blue-50 rounded-lg"><span class="text-blue-600 font-bold">📚 Article:</span> **Predictive vs. Prescriptive Analytics:** The value chain of data. <a href="javascript:void(0)" onclick="showResourceDetails('Resource 5.2', 'Article: Predictive vs. Prescriptive Analytics', 'Explains the progression: Descriptive (What happened?) → Diagnostic (Why?) → Predictive (What will happen?) → Prescriptive (What should we do?).')" class="text-blue-500 hover:text-blue-700 font-medium ml-2">[View Details]</a></li>
+                    </ul>
+
+                    <h3 class="font-semibold text-xl text-gray-900 mt-8 mb-4 border-b pb-1">Self-Assessment Quiz 5</h3>
+                    <button onclick="startQuiz('quiz5')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 shadow-md">Start Quiz: Advanced Analytics</button>
+                    <div id="quiz5-results" class="mt-4 p-4 bg-gray-100 rounded-lg hidden"></div>
+                </section>
+
+                <section id="checklist-section" class="module-section bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-100">
+                    <h2 class="text-3xl font-bold text-blue-600 mb-6 border-b pb-2">Mastery Verification Checklist</h2>
+                    <p class="mb-6 text-gray-600">
+                        Use this checklist, derived from the syllabus and course specifications, to track your confidence and verify that you have successfully produced the required assessment evidence for each dot-point. Quiz results will update the overall performance chart below.
+                    </p>
+
+                    <div id="mastery-checklist" class="space-y-4">
+                    </div>
+                </section>
+                
+            </main>
+        </div>
+    </div>
+
+    <footer class="mt-16 py-6 bg-gray-200 text-center text-sm text-gray-600">
+        Enterprise Computing Year 12 Mastery Tool | Developed based on NESA Syllabus and Resource Guide.
+    </footer>
+
+    <script>
+        const quizData = {
+            quiz1: {
+                title: 'Spreadsheet Analysis Quiz',
+                questions: [
+                    { q: 'Which function is explicitly used to transition analysis from descriptive to diagnostic in enterprise computing?', a: 2, options: ['=SUM()', '=VLOOKUP()', '=CORREL()', '=RANK()'] },
+                    { q: 'What is the primary purpose of using the `=RANK()` function in spreadsheet modeling?', a: 1, options: ['To remove invalid data points.', 'To ensure the model automatically adapts to data changes.', 'To perform What-if Modelling.', 'To link data between sheets.'] },
+                    { q: 'What feature is best used for active data validation by comparing two corresponding columns?', a: 0, options: ['Go To Special > Row Differences', 'Data > Consolidate', 'Conditional Formatting Icon Sets', 'Goal Seek'] }
+                ]
+            },
+            quiz2: {
+                title: 'Dashboards Quiz',
+                questions: [
+                    { q: 'Which component serves as the dynamic data aggregation engine in an interactive dashboard?', a: 0, options: ['Pivot Table', 'Slicer', 'Conditional Format', 'VLOOKUP'] },
+                    { q: 'What is the purpose of synchronizing Slicers across multiple Pivot Charts?', a: 3, options: ['To calculate the correlation coefficient.', 'To enforce referential integrity.', 'To change the chart type dynamically.', 'To deliver self-service analytics by filtering all views simultaneously.'] },
+                    { q: 'In dashboard UX design, which information should generally be presented first?', a: 2, options: ['Detailed Data Breakdowns', 'Raw Data Tables', 'Key Performance Indicators (KPIs)', 'Historical Trend Lines'] }
+                ]
+            },
+            quiz3: {
+                title: 'Database Design Quiz',
+                questions: [
+                    { q: 'The methodical process of breaking down a dataset into smaller, coherent entities to minimize data redundancy is called:', a: 1, options: ['Abstraction', 'Decomposition (Normalization)', 'Data Cleaning', 'Diagnostic Analysis'] },
+                    { q: 'What is the primary role of a Foreign Key (FK)?', a: 3, options: ['To uniquely identify every record in a table.', 'To hide sensitive data from the end-user.', 'To provide user-friendly data entry.', 'To establish a relationship and enforce referential integrity.'] },
+                    { q: 'The Data Dictionary primarily documents the metadata for a database, including:', a: 0, options: ['Field Name, Data Type, Data Format, and Constraints', 'SQL Queries and Report Layouts', 'Pivot Table Structures and Slicer Syncs', 'Big Data Volume, Variety, and Velocity'] }
+                ]
+            },
+            quiz4: {
+                title: 'SQL & User Views Quiz',
+                questions: [
+                    { q: 'Which clause in SQL is used to filter data based on specified criteria?', a: 1, options: ['FROM', 'WHERE', 'SELECT', 'ORDER BY'] },
+                    { q: 'Forms and Reports are examples of User Views that support the principle of:', a: 2, options: ['Normalization', 'Data Cleaning', 'Abstraction', 'Predictive Analytics'] },
+                    { q: 'Which two operators are fundamental to creating complex, multi-clause SQL queries?', a: 0, options: ['AND and OR', '=RANK() and CORREL', 'PK and FK', 'SELECT and FROM'] }
+                ]
+            },
+            quiz5: {
+                title: 'Advanced Analytics Quiz',
+                questions: [
+                    { q: 'Machine Learning and Statistical Modelling are primarily used in enterprise computing for which type of analysis?', a: 0, options: ['Predictive and Prescriptive', 'Descriptive and Diagnostic', 'Computational and Algorithmic', 'Declarative and Procedural'] },
+                    { q: 'What are the three "V\'s" used to characterize Big Data?', a: 2, options: ['Validity, Verification, Value', 'Volume, Value, Variety', 'Volume, Variety, Velocity', 'View, Validation, Value'] },
+                    { q: 'Which discipline focuses on developing algorithms that learn patterns autonomously from data for automated prediction?', a: 1, options: ['Statistical Modelling', 'Machine Learning', 'Database Normalization', 'Spreadsheet Auditing'] }
+                ]
+            }
+        };
+
+        const checklistData = [
+            { text: 'Calculation of central tendency AND dispersion metrics (using ToolPak/Functions).', section: 'Spreadsheet Analysis' },
+            { text: 'Interactive dashboard with synchronised Pivot Charts and Slicers.', section: 'Data Dashboards' },
+            { text: 'Documented Data Dictionary (NESA format) and Database Schema (ERD).', section: 'Database Design' },
+            { text: 'Correct identification and justification of Primary and Foreign Keys.', section: 'Database Design' },
+            { text: 'Execution of complex multi-clause SQL queries (SELECT, FROM, WHERE, ORDER BY).', section: 'SQL & User Views' },
+            { text: 'Use of forms/reports to demonstrate abstraction/usability.', section: 'SQL & User Views' },
+        ];
+
+        let quizPerformance = {
+            totalQuestions: 0,
+            totalCorrect: 0,
+            chart: null
+        };
+        
+        let syllabusChartInstance = null;
+        let performanceChartInstance = null;
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function initSyllabusChart() {
+            const ctx = document.getElementById('syllabusChart').getContext('2d');
+            
+            const data = {
+                labels: ['Spreadsheet Analysis', 'Data Dashboards', 'Database Design', 'SQL & User Views', 'Advanced Concepts'],
+                datasets: [{
+                    label: 'Mastery Focus',
+                    data: [35, 25, 20, 15, 5],
+                    backgroundColor: [
+                        '#3b82f6',
+                        '#60a5fa',
+                        '#93c5fd',
+                        '#bfdbfe',
+                        '#dbeafe'
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 1
+                }]
+            };
+
+            syllabusChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Conceptual Syllabus Mastery Focus (%)',
+                            padding: { top: 10, bottom: 10 },
+                            font: { size: 16 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) { label += context.parsed.y + '%'; }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: { display: true, text: 'Focus Weight (%)' }
+                        },
+                        x: {
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    const label = this.getLabelForValue(value);
+                                    if (label.length > 16) {
+                                        return label.split(' ');
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initPerformanceChart(containerId) {
+            const ctx = document.getElementById(containerId).getContext('2d');
+            
+            const initialData = {
+                labels: ['Correct', 'Incorrect'],
+                datasets: [{
+                    data: [1, 1],
+                    backgroundColor: ['#22c55e', '#ef4444'],
+                    hoverBackgroundColor: ['#16a34a', '#dc2626'],
+                    borderWidth: 1
+                }]
+            };
+
+            performanceChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: initialData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: {
+                            display: true,
+                            text: 'Overall Quiz Performance',
+                            font: { size: 16 }
+                        }
+                    }
+                }
+            });
+            return performanceChartInstance;
+        }
+
+        function updatePerformanceChart() {
+            const chartContainer = document.getElementById('overall-performance-chart-container');
+            chartContainer.style.display = 'block';
+
+            if (!performanceChartInstance) {
+                performanceChartInstance = initPerformanceChart(chartContainer.id);
+            }
+
+            const correct = quizPerformance.totalCorrect;
+            const total = quizPerformance.totalQuestions;
+            const incorrect = total - correct;
+            
+            performanceChartInstance.data.datasets[0].data = [correct, incorrect];
+            performanceChartInstance.update();
+
+            const summaryText = document.getElementById('performance-summary');
+            summaryText.className = 'text-center font-bold text-lg mt-4';
+            summaryText.innerHTML = `Total Quizzes Attempted: ${total} Questions. <span class="${(correct / total) > 0.7 ? 'text-green-600' : 'text-red-600'}">Overall Score: ${correct} / ${total} (${(correct / total * 100).toFixed(1)}%)</span>`;
+        }
+
+        function populateChecklist() {
+            const container = document.getElementById('mastery-checklist');
+            container.innerHTML = '';
+            checklistData.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-start p-4 bg-gray-50 rounded-lg shadow-sm hover:bg-white transition duration-150';
+                div.innerHTML = `
+                    <input type="checkbox" id="check-${index}" class="mt-1 h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <label for="check-${index}" class="ml-3 text-sm flex-1">
+                        <span class="font-medium text-gray-900">${item.section}:</span> ${item.text}
+                    </label>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function startQuiz(quizId) {
+            const quiz = quizData[quizId];
+            if (!quiz) return;
+
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            modalTitle.textContent = quiz.title;
+            modalContent.innerHTML = '';
+
+            let quizHtml = `<form id="${quizId}-form" class="space-y-4">`;
+            quiz.questions.forEach((qItem, qIndex) => {
+                quizHtml += `
+                    <div class="border-b pb-3">
+                        <p class="font-semibold text-gray-800 mb-2">Q${qIndex + 1}: ${qItem.q}</p>
+                        <div class="space-y-1">
+                `;
+                qItem.options.forEach((option, oIndex) => {
+                    quizHtml += `
+                        <label class="flex items-center text-sm cursor-pointer hover:bg-blue-50 p-2 rounded-lg">
+                            <input type="radio" name="q${qIndex}" value="${oIndex}" class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                            <span class="ml-2">${option}</span>
+                        </label>
+                    `;
+                });
+                quizHtml += `
+                        </div>
+                    </div>
+                `;
+            });
+            quizHtml += `
+                <div class="flex justify-end pt-4">
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200">Submit Quiz</button>
+                </div>
+            </form>`;
+
+            modalContent.innerHTML = quizHtml;
+            document.getElementById('quiz-modal').classList.remove('hidden');
+
+            document.getElementById(`${quizId}-form`).onsubmit = (e) => {
+                e.preventDefault();
+                submitQuiz(quizId, quiz.questions);
+            };
+        }
+
+        function submitQuiz(quizId, questions) {
+            const form = document.getElementById(`${quizId}-form`);
+            const resultsDiv = document.getElementById(`${quizId}-results`);
+            let correctCount = 0;
+            let totalCount = questions.length;
+            
+            resultsDiv.innerHTML = '';
+            const resultsList = document.createElement('div');
+            resultsList.className = 'space-y-2';
+            
+            // Temporary variable to track questions added in this quiz attempt
+            let questionsAttemptedInThisQuiz = 0;
+
+            questions.forEach((qItem, qIndex) => {
+                const radioGroup = form.elements[`q${qIndex}`];
+                const selectedOption = radioGroup.value;
+
+                // Only count if an option was actually selected
+                if (selectedOption !== undefined) {
+                    questionsAttemptedInThisQuiz += 1;
+                    const isCorrect = parseInt(selectedOption) === qItem.a;
+                    
+                    if (isCorrect) {
+                        correctCount += 1;
+                        quizPerformance.totalCorrect += 1;
+                    }
+
+                    const resultItem = document.createElement('div');
+                    resultItem.className = `p-3 rounded-lg text-sm font-medium ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
+                    resultItem.innerHTML = `Q${qIndex + 1}: ${qItem.q} - **Your Answer: ${qItem.options[selectedOption]}**. **Result:** ${isCorrect ? 'Correct!' : 'Incorrect. Correct Answer: ' + qItem.options[qItem.a]}`;
+                    resultsList.appendChild(resultItem);
+                }
+            });
+            
+            quizPerformance.totalQuestions += questionsAttemptedInThisQuiz;
+
+            const scoreMessage = document.createElement('h4');
+            scoreMessage.className = `text-lg font-bold mt-4 mb-2 ${correctCount === totalCount ? 'text-green-600' : 'text-red-600'}`;
+            scoreMessage.textContent = `You scored ${correctCount} out of ${totalCount}.`;
+
+            resultsDiv.appendChild(scoreMessage);
+            resultsDiv.appendChild(resultsList);
+            resultsDiv.classList.remove('hidden');
+            document.getElementById('quiz-modal').classList.add('hidden');
+            
+            updatePerformanceChart();
+        }
+
+        function closeModal() {
+            document.getElementById('quiz-modal').classList.add('hidden');
+        }
+
+        function showResourceDetails(id, title, description) {
+            const modalTitle = document.getElementById('modal-title');
+            const modalContent = document.getElementById('modal-content');
+            modalTitle.textContent = title;
+            modalContent.innerHTML = `
+                <p class="text-gray-700">${description}</p>
+                <div class="mt-4 p-3 bg-blue-100 rounded-lg text-sm">
+                    <p class="font-bold text-blue-800 mb-1">Simulated Link (Conceptual Resource):</p>
+                    <p class="text-blue-800 break-words">${id}-mastery.example.com/${title.toLowerCase().replace(/[^a-z0-9]/g, '-')}</p>
+                    <p class="mt-2 text-xs text-blue-600">This link is conceptual, showing the type of verified resource a student needs to find for mastery.</p>
+                </div>
+            `;
+            document.getElementById('quiz-modal').classList.remove('hidden');
+        }
+
+        function handleNFSelection(event) {
+            const button = event.target;
+            const nf = button.dataset.nf;
+            const descriptionDiv = document.getElementById('nf-description');
+            
+            document.querySelectorAll('.nf-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-100', 'text-blue-700', 'hover:bg-blue-200');
+                btn.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            });
+
+            button.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+            button.classList.add('bg-blue-100', 'text-blue-700', 'hover:bg-blue-200');
+
+            let desc = '';
+            switch(nf) {
+                case 'flat':
+                    desc = '**Flat File:** All data in one table. Illustrates the limitations of redundancy, update anomalies, and poor scalability, which mandates the eventual transition to a relational model.';
+                    break;
+                case '1nf':
+                    desc = '**First Normal Form (1NF):** Eliminate repeating groups. Each column must contain atomic (single) values. Solves the issue of multi-valued attributes.';
+                    break;
+                case '2nf':
+                    desc = '**Second Normal Form (2NF):** Must be 1NF. Eliminate partial dependencies. All non-key attributes must depend on the *entire* Primary Key (only relevant with composite keys).';
+                    break;
+                case '3nf':
+                    desc = '**Third Normal Form (3NF):** Must be 2NF. Eliminate transitive dependencies. Non-key attributes cannot depend on other non-key attributes. This is the goal for most enterprise design.';
+                    break;
+            }
+            descriptionDiv.innerHTML = desc;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initSyllabusChart();
+            populateChecklist();
+            
+            document.querySelectorAll('.nf-btn').forEach(btn => {
+                btn.addEventListener('click', handleNFSelection);
+            });
+            document.querySelector('.nf-btn[data-nf="flat"]').click();
+            
+            const chartDiv = document.createElement('div');
+            chartDiv.id = 'overall-performance-chart-container';
+            chartDiv.className = 'chart-container mt-6';
+            
+            const initialMessage = document.createElement('p');
+            initialMessage.id = 'performance-summary';
+            initialMessage.className = 'text-center font-bold text-lg text-gray-500 mt-4';
+            initialMessage.textContent = 'Complete a quiz to view your overall performance.';
+
+            const checklistSection = document.getElementById('checklist-section');
+            checklistSection.insertBefore(chartDiv, document.getElementById('mastery-checklist').previousSibling);
+            checklistSection.insertBefore(initialMessage, chartDiv.nextSibling);
+
+            chartDiv.style.display = 'none'; 
+        });
+
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.module-section');
+            const navLinks = document.querySelectorAll('.sticky-nav a');
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (window.scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(a => {
+                a.classList.remove('bg-blue-600', 'text-white', 'font-extrabold');
+                a.classList.add('text-gray-600', 'hover:text-blue-600', 'font-medium');
+                if (a.getAttribute('href').substring(1) === current) {
+                    a.classList.add('bg-blue-600', 'text-white', 'font-extrabold');
+                    a.classList.remove('text-gray-600', 'hover:text-blue-600', 'font-medium', 'hover:bg-blue-50');
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
